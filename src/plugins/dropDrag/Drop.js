@@ -2,7 +2,6 @@ import util from './utils/index'
 import dragDropBase from './dragDropBase'
 import store from './store'
 import List from './plugins/List'
-var transform = util.getTransform();
 
 class Drop extends dragDropBase {
     /**
@@ -15,7 +14,8 @@ class Drop extends dragDropBase {
 
         let defaultOptions = {
             innerDrag: false,
-            innerDrop: false
+            innerDrop: false,
+            ignoreSelf: false, // 启动innerDrop时，当前拖动对象忽略自己的位置
         }
 
         this.el = util.$(el);
@@ -24,7 +24,9 @@ class Drop extends dragDropBase {
         this.innerDragPosition = new List();
         this.innerDrag = new List();
         this.innerDragIng = false;
-        this.currentInnerIndex = -1;
+        this.currentInnerPosIndex = -1; // 当前拖动对象所处的位置
+        this.index = -1;
+        this.currentInnerIndex = -1; // 当前拖动对象的index
         if (!this.options) {
             return false;
         }
@@ -38,7 +40,7 @@ class Drop extends dragDropBase {
         }
     }
     initPosition() {
-        var pos = this.el.getBoundingClientRect();
+        let pos = this.el.getBoundingClientRect();
         if (this.isInitOk) {
             store.targetPosition[this.posIndex] = pos;
         } else {
@@ -57,6 +59,7 @@ class Drop extends dragDropBase {
         this.innerDragPosition.clear();
 
         this.innerDrag.front();
+
         for (; i < len; i++) {
             this.innerDragPosition.add(this.innerDrag.getElement().getBoundingClientRect());
             this.innerDrag.next();
@@ -82,6 +85,8 @@ class Drop extends dragDropBase {
         store.dragEndHandleList[index] = this.onDragEnd.bind(this);
     }
     onDragStart(params) {
+        let dataRef =  this.innerDrag.find(params.sourceEl);//Number.parseInt(params.sourceEl.getAttribute('data-ref'));
+        this.currentInnerIndex = dataRef !== -1 ? dataRef : -1;
         this.emit('onDragStart', params);
     }
     onDragEnter(params) {
@@ -89,19 +94,36 @@ class Drop extends dragDropBase {
     }
     onDragMove(params) {
         let index = this.collision(params.pos);
-        if (index != -1) {
+        if (index !== -1) {
 
             if (this.options.innerDrag && this.innerDrag.size) {
-                this.emit('onInnerDrag', {
-                    target: this.innerDrag.getElement(index),
-                    data: params.data,
-                    el: params.el
-                });
-                this.innerDrag.getElement(index).innerHTML = 'left: ' + params.pos.left + '  top: ' + params.pos.top
+                // 离开上一个马上进入下一个
+                if (this.currentInnerPosIndex !== -1) {
+                    this.emit('onInnerDragLeave', {
+                        target: this.innerDrag.getElement(this.currentInnerPosIndex),
+                        data: params.data,
+                        el: params.el,
+                        index: this.currentInnerPosIndex
+                    });
+                    // 忽略自己
+                    if (this.options.ignoreSelf && (  (this.currentInnerIndex === index) || (this.currentInnerIndex - 1 === index) )) {
+                        return 0;
+                    } else {
+                        this.emit('onInnerDrag', {
+                            target: this.innerDrag.getElement(index),
+                            data: params.data,
+                            el: params.el,
+                            index: index
+                        });
+                    }
+
+                }
+
                 this.innerDragIng = true;
-                this.currentInnerIndex = index;
+                this.currentInnerPosIndex = index;
             }
         } else {
+
             this.innerDragIng = false;
             this.emit('onDragMove', params);
         }
@@ -112,13 +134,13 @@ class Drop extends dragDropBase {
     onDrop(params) {
         params.index = this.innerDrag.size;
         this.initPosition();
-
         if (this.innerDragIng) {
             this.emit('onInnerDrop', {
-                target: this.innerDrag.getElement(this.currentInnerIndex),
+                target: this.innerDrag.getElement(this.currentInnerPosIndex),
                 el: params.el,
                 data: params.data,
-                index: this.innerDrag.size
+                index: this.innerDrag.size,
+                sourceEl: params.sourceEl
             });
         } else {
             this.emit('onDrop', params);

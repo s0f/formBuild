@@ -16,8 +16,8 @@ class dragDropBase {
     }
 
     emit() {
-        var args = Array.from(arguments);
-        var eventName = args.shift(),
+        let args = Array.from(arguments);
+        let eventName = args.shift(),
             eventParams = args.shift();
         typeof this.options[eventName] === 'function' && this.options[eventName].call(this,eventParams);
     }

@@ -26,7 +26,9 @@ class Drag extends dragDropBase {
         this.wrap = util.$(el);
         this.options = util.checkOptions(options);
         if (!this.options) {
-            return false;
+            this.options = {
+                inner: false
+            }
         }
         this.isMouseDragging = false;
         this.init();
@@ -50,7 +52,7 @@ class Drag extends dragDropBase {
     }
     // 开始拖动时
     startHandler(event) {
-        var target = util.parents(event.target, '.drag-item');
+        let target = util.parents(event.target, '.drag-item');
 
         if( !target ) {
             return false;
@@ -61,7 +63,9 @@ class Drag extends dragDropBase {
             y: event.pageY
         };
         this.cloneNode = target.cloneNode(true);
-        this.cloneNode.style = 'position: absolute;left: 0;right: 0;margin: inherit;list-style: none;';
+        this.cloneNode.style = 'position: absolute;margin: inherit;list-style: none;';
+        this.cloneNode.style += 'left:' + event.pageX + 'px;';
+        this.cloneNode.style += 'top:' + event.pageY + 'px;';
         document.addEventListener('mouseup', this._endHandler, false);
         this.wrap.addEventListener('mousemove', this._moveHandler, false);
         this.wrap.addEventListener('mouseup', this._endHandler, false);
@@ -70,16 +74,16 @@ class Drag extends dragDropBase {
 
     moveHandler(event) {
         if (this.isMouseDragging) return false;
-        var target = util.parents(event.target, '.drag-item');
+        let target = util.parents(event.target, '.drag-item');
 
         this.isMouseDragging = true;
 
         store.onDragStart(this.options.data, target);
 
-        var markNode = util.createMarkNode(),
+        let markNode = util.createMarkNode(),
             offset = null,
-            tempOffset = null,
-            params = null;
+            tempOffset,
+            params;
 
         document.body.appendChild(markNode);
         markNode.appendChild(this.cloneNode);
@@ -96,12 +100,14 @@ class Drag extends dragDropBase {
         } else {
             offset = tempOffset;
         }
-        this.startX = this.options.inner ? offset.left : event.pageX;
-        this.startY = this.options.inner ? offset.top : event.pageY;
+        // this.startX = this.options.inner ? offset.left : event.pageX;
+        // this.startY = this.options.inner ? offset.top : event.pageY;
+        this.startX = event.pageX;
+        this.startY = event.pageY;
         this.sourceX = tempOffset.left;
         this.sourceY = tempOffset.top;
         this.setTargetPosition({
-            X: offset.lef,
+            X: offset.left,
             Y: offset.top
         });
 
@@ -124,11 +130,11 @@ class Drag extends dragDropBase {
 
         var currentX = event.pageX,
             currentY = event.pageY,
-            distanceX = currentX - this.startX,
-            distanceY = currentY - this.startY,
+            distanceX = this.startX - this.sourceX,//currentX - this.startX,
+            distanceY = this.startY - this.sourceY,//currentY - this.startY,
             targetPos = {
-                X: Number.parseInt((distanceX + this.sourceX).toFixed()),
-                Y: Number.parseInt((distanceY + this.sourceY).toFixed()),
+                X: Number.parseInt((currentX-distanceX /*+ this.sourceX*/).toFixed()),
+                Y: Number.parseInt((currentY-distanceY /*+ this.sourceY*/).toFixed()),
             };
 
         this.setTargetPosition(targetPos);
@@ -174,26 +180,25 @@ class Drag extends dragDropBase {
     }
 
     getTargetPosition(elem) {
-        var pos = {
+        let pos = {
             X: 0,
             Y: 0
         },
             x = 0,
             y = 0,
-            transformValue = '',
-            defaultPosition = [];
+            transformValue = '';
 
         if (this.transform) {
             transformValue = util.getStyle(elem, this.transform);
-            if (transformValue == 'none') {
+            if (transformValue === 'none') {
                 elem.style[this.transform] = 'translate(0,0)';
             } else {
-                var temp = transformValue.match(/-?\d+/g);
+                let temp = transformValue.match(/-?\d+/g);
                 x = temp[4].trim();
                 y = temp[5].trim();
             }
         } else {
-            if (util.getStyle(elem, 'position') == 'static') {
+            if (util.getStyle(elem, 'position') === 'static') {
                 elem.style['position'] = 'absolute';
             } else {
                 x = util.getStyle(elem, 'left');

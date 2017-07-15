@@ -1,184 +1,248 @@
 <template>
     <div class="sft-main">
         <headTo></headTo>
-        <section class="flex sft-contain">
-            <section class="sft-left">
-                <section class="sft-left_item shadow">
-                    <Widget :baseWidgetTitle="baseWidgetTitle" :baseWidgets="baseWidgets"></Widget>
-                    <Widget :baseWidgetTitle="picWidgetTitle" :baseWidgets="picWidgets"></Widget>
-                    <Widget :baseWidgetTitle="auxiliaryTitle" :baseWidgets="auxiliarys"></Widget>
-                </section>
-                <section class="sft-left_item shadow">
-                    <Widget :baseWidgetTitle="contactsTitle" :baseWidgets="contacts"></Widget>
-                    <Widget :baseWidgetTitle="imTitle" :baseWidgets="ims"></Widget>
-                </section>
-            </section>
+        <section class="clearfix flex sft-contain">
+            <homeBar></homeBar>
             <section class="sft-content shadow">
                 <h2 class="sft-content-title">新的表单</h2>
-                <section class="sft-form">
-
+                <section class="sft-form" @click="toggleActive">
+                    <div v-for="(element ,index) in elementList" :is="element.element"
+                         :data-type="element.element" :data-ref="index"
+                         :class="[index== activeRef ? 'clicked' : '', 'drag-item']">
+                    </div>
+                    <div class="sft-flag" ref="flag"><strong>放在这里</strong></div>
                 </section>
                 <footer class="sft-content-footer">
                     <button class="btn btn-mini btn-primary">提交</button>
                 </footer>
             </section>
+            <homeSetting></homeSetting>
         </section>
     </div>
 </template>
 
 <script>
-import headTo from '../../components/header/header'
-import Widget from '../../components/widget/baseWidget'
-import dropDrag from '../../assets/plugins/dropDrag/main.js'
-export default {
-    name: '',
-    data() {
-        return {
-            baseWidgetTitle: '基础组件',
-            baseWidgets: [
-                ['text', '文本框', '&#xe600;'],
-                ['radio', '选择', '&#xe627;&#xe6dc;'],
-                ['select', '下拉', '&#xe6dc;'],
-                ['select-multiple', '多行下拉', '&#xe6dc;&#xe6dc;'],
-                ['date', '日期', '&#xe604;'],
-                ['table', '表格', '&#xe661;'],
-                ['number', '数字', '&#xe60b;'],
-                ['score', '评分', '&#xe623;'],
-                ['sort', '排序', '&#xe654;'],
-                ['currency', '货币', '&#xe6af;'],
-                ['enclosure', '附件', '&#xe652;'],
-                ['commodity', '商品', '&#xe616;'],
-                ['city', '城市', '&#xe649;'],
-            ],
-            picWidgetTitle: '图片类组件',
-            picWidgets: [
-                ['pic-upload', '图片上传', '&#xe698;'],
-                ['pic-select', '图片选择', ' &#xe6d3;'],
-                ['pic-show', '图片展示', '&#xe601;'],
-            ],
-            auxiliaryTitle: '辅助类组件',
-            auxiliarys: [
-                ['text-multiple', '文本描述', '&#xe7e1;'],
-                ['line', '分割线', '&#xe634;'],
-                ['paging', '分页', '&#xe609;'],
-            ],
-            contactsTitle: '联系人组件',
-            contacts: [
-                ['contact', '联系人', '&#xe606;'],
-                ['phone', '手机', '&#xe611;'],
-                ['email', '邮箱', '&#xe659;'],
-                ['company', '公司', '&#xe63f;'],
-                ['job', '职位', '&#xe678;'],
-                ['department', '部门', '&#xe61f;'],
-                ['portrait', '头像', '&#xe62f;'],
-                ['telephone', '电话', '&#xe647;'],
-                ['area', '地址', '&#xe624;'],
-                ['birthday', '生日', '&#xe63a;'],
-                ['link', '链接', '&#xe6d4;'],
-                ['location', '所在地', '&#xe639;'],
-            ],
-            imTitle: '即时通讯',
-            ims: [
-                ['weixin', '微信', '&#xe78a;'],
-                ['qq', 'QQ', '&#xe617;'],
-                ['weibo', '微博', '&#xe603;'],
-            ]
-        }
-    },
-    components: {
-        headTo,
-        Widget
-    },
-    mounted: function () {
-        var dragItem = new dropDrag.Drag('.sft-left', {
-            data: '',
-        }),
-            dropItem = new dropDrag.Drop('.sft-form', {
+    import {mapState} from 'vuex'
+    import store from '../../store/index'
+    import headTo from '../../components/header/header'
+    import homeBar from '../../pages/home/homeBar'
+    import homeSetting from '../../pages/home/homeSetting'
+    import Einput from '../../components/element/Einput'
+    import Eradio from '../../components/element/Eradio'
+    import dropDrag from '../../plugins/dropDrag/main.js'
+    import $ from '../../common/query'
+    export default {
+        name: 'Home',
+        data() {
+            return {}
+        },
+        store,
+        components: {
+            headTo,
+            homeBar,
+            homeSetting,
+            Einput,
+            Eradio,
+        },
+        computed: {
+            ...mapState({
+                activeRef: state => state.activeComponentRef,
+                elementList: state => state.elementList
+            })
+        },
+        mounted: function () {
+            const self = this;
+            const dragItem = new dropDrag.Drag('.sft-left', {
+                data: '',
+            });
+            const dropItem = new dropDrag.Drop('.sft-form', {
                 innerDrag: true,
                 innerDrop: true,
+                ignoreSelf: true,
                 onDragStart(params) {
-                    // console.log('drop1 监听到 drag start事件');
                 },
                 onDragEnter(params) {
-                    params.el.style.background = '#ddd'
-                    console.log('drop1 监听到 drag 进入')
                 },
                 onDragMove() {
-                    // console.log('drop1 监听到 在drop上移动')
                 },
                 onDragLeave(params) {
-                    params.el.style.background = '#fff'
-                    // console.log('drop1 监听到 drag 离开')
                 },
                 onDrop(params) {
-                    dropHandle.call(this, params);
+                    const componentName = params.sourceEl.getAttribute('data-type');
+
+                    if (componentName) {
+                        self.$store.commit('addElement', {
+                            index: params.index,
+                            componentName: componentName,
+                            insert: -1
+                        });
+                        self.$nextTick(function () {
+                            const dropDom = document.querySelector('[data-ref="' + params.index + '"]');
+                            dropItem.innerDrag.add(dropDom);
+                            dropItem.innerDragPosition.add(dropDom.getBoundingClientRect());
+                        });
+                    }
                 },
                 onDragEnd(params) {
                 },
                 onInnerDrag(params) {
-                    innerDragHandle.call(this, params);
+                    params.target.appendChild(self.$refs.flag);
+                    params.target.querySelector('.sft-flag').style.display = 'block';
                 },
                 onInnerDragLeave(params) {
-                    params.target && (params.target.style = "border-bottom: none;");
-                    // document.querySelector('.hr').remove();
+                    self.$refs.flag.style.display = 'none';
+//                    console.log(params)
+//                    params.target.querySelector('.sft-flag').remove();
                 },
                 onInnerDrop(params) {
-                    innerDropHandle.call(this, params);
+                    /*
+                    * 两种插入方式
+                    * 1. 从工具栏拉入
+                    *    a. 找出要插入的位置
+                    *    b. commit addElement 事件
+                    *    c. 在innerDrag 的pos位置添加元素
+                    * 2. 表单区拖放
+                    *    a. 拖动元素DOM插入到目标元素后面
+                    *    b.
+                    * */
+                    let inner = params.sourceEl.getAttribute('data-ref'),
+                        pos = -1,
+                        componentName = '';
+                    if (!!inner) {
+                        pos = this.innerDrag.find(params.target);
+                        let splicePos = this.innerDrag.find(params.sourceEl);
+                        componentName = params.sourceEl.getAttribute('data-type');
+                        self.$store.commit('addElement', {
+                            index: pos,
+                            componentName: componentName,
+                            insert: pos,
+                            splice: splicePos
+                        });
+                        self.$nextTick(function () {
+                            dropItem.innerDrag.clear();
+                            dropItem.innerDrag.addList(document.querySelectorAll('.sft-form .drag-item'));
+                            dropItem.initInnerTargetPosition();
+                        });
+
+                    } else {
+                        pos = this.innerDrag.find(params.target);
+                        componentName = params.sourceEl.getAttribute('data-type');
+                        self.$store.commit('addElement', {
+                            index: pos,
+                            componentName: componentName,
+                            insert: pos
+                        });
+
+                        self.$nextTick(function () {
+                            let newElement = document.querySelector('[data-ref="'+ (params.index-1) +'"]');
+                            dropItem.innerDrag.clear();
+                            dropItem.innerDrag.addList(document.querySelectorAll('.sft-form .drag-item'));
+                            dropItem.initInnerTargetPosition();
+                        });
+                    }
+                    self.$refs.flag.style.display = 'none';
                 }
             });
-    }
+            const dragItem2 = new dropDrag.Drag('.sft-form', {
+                data: 'inner',
+                inner: true
+            })
+        },
+        methods: {
+            toggleActive: function (event) {
+                let target = event.target;
+                target = target.classList.contains('sft-element') ? target : target.parentElement;
+                const ref = target.getAttribute('data-ref');
+                this.$store.commit('toggleActiveComponentRef', {ref: Number.parseInt(ref)});
 
-}
+            }
+        }
+    }
 </script>
 
 <style scoped lang="scss">
-@import '../../style/common';
+    @import '../../style/common';
 
-.shadow {
-    box-shadow: rgba(0, 0, 0, .2) 0 0 5px 2px;
-}
+    .shadow {
+        box-shadow: rgba(0, 0, 0, .2) 0 0 5px 2px;
+    }
 
-.sft-main {}
+    .sft-main {
+    }
 
-.sft-contain {
-    position: relative;
-    width: 1500px;
-    margin: 40px auto 0;
-}
+    .sft-flag {
+        display: none;
+        position: relative;
+        height: 40px;
+        line-height: 40px;
+        background-color: #f1f1f1;
+        color: #999;
 
-.sft-left {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 245px;
-}
+        strong {
+            position: absolute;
+            left: 50%;
+            z-index: 2;
+            margin-left: -40px;
+            background-color: #f1f1f1;
+            display: block;
+            width: 80px;
+        }
 
-.sft-left_item {
-    margin-bottom: 40px;
-}
+        &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            z-index: 0;
+            margin-top: -1px;
+            width: 100%;
+            height: 0;
+            border-bottom: 2px dashed #dddddd;
+        }
+    }
 
-.sft-content {
-    position: absolute;
-    top: 0;
-    left: 365px;
-    width: 800px;
-}
+    .sft-contain {
+        position: relative;
+        width: 1500px;
+        margin: 40px auto 0;
+    }
 
-.sft-content-title {
-    height: 46px;
-    background-color: #efefef;
-    line-height: 46px;
-    font-size: 20px;
-    color: #606060;
-}
+    .sft-left {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 245px;
+    }
 
-.sft-content-footer {
-    height: 46px;
-    background: #efefef;
-    line-height: 46px;
-}
+    .sft-left_item {
+        margin-bottom: 40px;
+    }
 
-.sft-form {
-    padding: 20px 0;
-}
+    .sft-content {
+        position: absolute;
+        top: 0;
+        left: 365px;
+        width: 800px;
+    }
+
+    .sft-content-title {
+        height: 46px;
+        background-color: #efefef;
+        line-height: 46px;
+        font-size: 20px;
+        color: #606060;
+    }
+
+    .sft-content-footer {
+        height: 46px;
+        background: #efefef;
+        line-height: 46px;
+    }
+
+    .sft-form {
+        padding: 20px 0;
+        min-height: 400px;
+        user-select: none;
+        cursor: pointer;
+    }
 </style>

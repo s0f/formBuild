@@ -1,7 +1,7 @@
 
-var utils = {
+const utils = {
     getTransform() {
-        var transform = '',
+        let transform = '',
             transformPrefix = ['transform', 'webkitTransform', 'MozTransform', 'msTransform', 'oTransform'],
             divStyle = document.createElement('div').style,
             len = transformPrefix.length,
@@ -14,10 +14,10 @@ var utils = {
         return transform;
     },
     $(selector) {
-        return (typeof selector === 'string' && selector != '') ? document.querySelector(selector) : console.error('请提供正确的选择器');
+        return (typeof selector === 'string' && selector !== '') ? document.querySelector(selector) : console.error('请提供正确的选择器');
     },
     hasClass(el, className) {
-        return el.className.indexOf(className) != -1 ? true : false;
+        return el.classList.contains(className);
     },
     getStyle(elem, property) {
         return document.defaultView.getComputedStyle
@@ -26,7 +26,7 @@ var utils = {
 
     },
     checkOptions(options) {
-        return typeof options == 'object' ? options : console.error('请传入配置参数!');
+        return typeof options === 'object' ? options : console.error('请传入配置参数!');
     },
     on(el, event, fn, capture) {
         el.addEventListener(event, fn, capture || false);
@@ -41,11 +41,11 @@ var utils = {
         }, time || 30);
     },
     createMarkNode() {
-        var markDom = null;
+        let markDom = null;
         utils.createMarkNode = (function () {
             if (!markDom) {
                 markDom = document.createElement('div');
-                var styles = {
+                const styles = {
                     position: 'absolute',
                     top: '0',
                     left: '0',
@@ -53,7 +53,7 @@ var utils = {
                     height: '100%',
                     zIndex: '10',
                     display: 'block'
-                }
+                };
                 markDom.className = 'x-drag-mark';
                 for (let style in styles) {
                     markDom.style[style] = styles[style];
@@ -71,7 +71,7 @@ var utils = {
         document.body.removeChild(this.$('.x-drag-mark'))
     },
     getOffset(elem) {
-        var offsetLeft = elem.offsetLeft,
+        let offsetLeft = elem.offsetLeft,
             offsetTop = elem.offsetTop,
             parent = elem.parentChild;
         while (parent) {
@@ -86,24 +86,24 @@ var utils = {
         }
     },
     insertAfter(targetElement, newElement) {
-        var parentEl = targetElement.parentElement;
-        if (parentEl.lastElementChild == targetElement) {
+        let parentEl = targetElement.parentElement;
+        if (parentEl.lastElementChild === targetElement) {
             parentEl.appendChild(newElement);
         } else {
             targetElement.nextElementSibling.insertBefore(newElement);
         }
     },
     getMin(array) {
-        var min = array[0],
+        let min = array[0],
             idx = 0;
-        if (array.length == 0) {
+        if (array.length === 0) {
             return {
                 value: -1,
                 index: -1
             }
         }
         array.forEach(function (element, index) {
-            if (index != 0) {
+            if (index !== 0) {
                 if (element < min) {
                     min = element;
                     idx = index;
@@ -118,7 +118,7 @@ var utils = {
         }
     },
     parents: function (el, selector) {
-        var matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;
+        let matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;
 
         while (el) {
             if (matchesSelector.call(el, selector)) {
@@ -130,4 +130,4 @@ var utils = {
     }
 }
 
-export default utils
+export default utils;

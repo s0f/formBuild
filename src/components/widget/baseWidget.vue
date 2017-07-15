@@ -3,7 +3,7 @@
         <h3 class="widget-title">{{baseWidgetTitle}}</h3>
         <div class="widget-content">
             <div class="widget-list clearfix">
-                <div class="widget-list_item drag-item" v-for="item in baseWidgets" :data-type="item[0]">
+                <div class="widget-list_item drag-item" v-for="item in baseWidgets" :data-type="'E'+item[0]">
                     <span class="icon-box">
                         <i class="icon" v-html="item[2]"></i>
                     </span>
