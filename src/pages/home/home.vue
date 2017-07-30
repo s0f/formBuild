@@ -6,10 +6,10 @@
             <section class="sft-content shadow">
                 <h2 class="sft-content-title">新的表单</h2>
                 <section class="sft-form" @click="toggleActive">
-                    <div v-for="(element ,index) in elementList" :is="element.element"
+                    <component v-for="(element ,index) in elementList" :key="index" :is="element.element"
                          :data-type="element.element" :data-ref="index"
-                         :class="[index== activeRef ? 'clicked' : '', 'drag-item']" v-if="element">
-                    </div>
+                         :class="[index== activeRef ? 'clicked' : '', 'drag-item']" v-if="element" @deleteHandle="deleteElement">
+                    </component>
                     <div class="sft-flag" ref="flag"><strong>放在这里</strong></div>
                 </section>
                 <footer class="sft-content-footer">
@@ -51,7 +51,7 @@
                 elementList: state => state.elementList
             })
         },
-        mounted: function () {
+        mounted () {
             const self = this;
             const dragItem = new dropDrag.Drag('.sft-left', {
                 data: '',
@@ -149,7 +149,7 @@
             })
         },
         methods: {
-            toggleActive: function (event) {
+            toggleActive (event) {
                 let target = event.target;
                 target = target.classList.contains('sft-element') ? target : target.parentElement;
                 if( target.classList.contains('sft-element') ) {
@@ -157,8 +157,11 @@
                         name = target.getAttribute('data-type').split(this.$store.state.elementPrefix)[1];
                     this.$store.commit('toggleActiveComponentRef', {ref: Number.parseInt(ref), name: name});
                 }
-
+            },
+            deleteElement (type) {
+                console.log(type)
             }
+
         }
     }
 </script>

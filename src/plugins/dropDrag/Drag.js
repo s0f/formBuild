@@ -63,9 +63,9 @@ class Drag extends dragDropBase {
             y: event.pageY
         };
         this.cloneNode = target.cloneNode(true);
-        this.cloneNode.style = 'position: absolute;margin: inherit;list-style: none;';
-        this.cloneNode.style += 'left:' + event.pageX + 'px;';
-        this.cloneNode.style += 'top:' + event.pageY + 'px;';
+        this.cloneNode.setAttribute('style', 'position: fixed;display: none;margin: inherit;list-style: none;');
+        this.cloneNode.style.left = event.pageX + 'px;';
+        this.cloneNode.style.top =  event.pageY + 'px;';
         document.addEventListener('mouseup', this._endHandler, false);
         this.wrap.addEventListener('mousemove', this._moveHandler, false);
         this.wrap.addEventListener('mouseup', this._endHandler, false);
@@ -116,8 +116,12 @@ class Drag extends dragDropBase {
             el: target
         };
 
-
         this.emit('onDragStart', params);
+
+        // 延迟100ms显示移动中的元素，避免元素最开始拖动时的快速闪到鼠标位置
+        setTimeout(()=>{
+            this.cloneNode.style.display = 'block';
+        },100);
     }
 
     endHandler() {

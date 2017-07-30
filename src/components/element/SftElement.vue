@@ -4,7 +4,7 @@
         <div class="sft-element-body">
             <slot></slot>
         </div>
-        <div class="icon sft-delete"></div>
+        <div class="icon sft-delete" @click="deleteHandle"></div>
     </div>
 </template>
 <script>
@@ -20,6 +20,11 @@ export default {
             default: 'text',
             required: true
         }
+    },
+    methods: {
+        deleteHandle() {
+            this.$emit('deleteHandle', {type: this.type})
+        }
     }
 }
 </script>
@@ -32,14 +37,15 @@ export default {
     &:active {
         background-color: #f0f0f0;
     }
+    &:hover{
+        .sft-delete{
+            display: block;
+        }
+    }
     &:hover,
     &.clicked{
         .sft-border {
             border-color: #ddd;
-        }
-
-        .sft-delete{
-            display: block;
         }
     }
     &.clicked{
@@ -95,4 +101,5 @@ export default {
             color: #ffffff;
         }
     }
+
 </style>

@@ -1,22 +1,22 @@
 <template>
-<div class="stf-setting-global">
-    <panel title="全局设置">
-        <div class="stf-field-checkbox">
-            <div class="stf-field-checkbox-wrap">
-                <i class="icon icon-checkbox"></i> 插入题号
+    <div class="stf-setting-global">
+        <div class="stf-panel-title">标题</div>
+        <div class="stf-field-item">
+            <div class="stf-field-checkbox">
+                <div class="stf-field-checkbox-wrap">
+                    <i class="icon icon-fangxingweixuanzhong"></i> 插入题号
+                </div>
             </div>
         </div>
-    </panel>
-</div>
+    </div>
 </template>
 <script>
-export default {
-  name: "globalPanel",
-  data () {
-    return {
-    };
-  }
-}
+    export default {
+        name: "globalPanel",
+        data() {
+            return {};
+        }
+    }
 </script>
 <style lang="scss" scoped>
 </style>

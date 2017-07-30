@@ -1,11 +1,11 @@
 <template>
     <panel title="选择">
         <div class="stf-field-item"  slot="header">
-            <span class="stf-fiedl-title">切换组件类型</span>
-            <div class="sft-fiedl-content">
-                <select name="" id="">
-                    <option value="">单选</option>
-                    <option value="">多选</option>
+            <span class="stf-field-title">切换组件类型</span>
+            <div class="sft-field-content">
+                <select name="" id="" v-model="selectModel">
+                    <option value="0">单选</option>
+                    <option value="1">多选</option>
                 </select>
             </div>
         </div>
@@ -20,6 +20,7 @@ export default {
   name: "selectPanel",
   data () {
     return {
+        selectModel: 0
     };
   }
 }

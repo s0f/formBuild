@@ -9,12 +9,26 @@ import getters from './getters';
 import mutations from './mutations';
 Vue.use(Vuex);
 
+/**
+ *
+ * @type {{elementPrefix: string, elementList: Array, activeComponentRef: number, activeComponentName: string, activeComponent: null}}
+ * elementList:[{
+     *  element: "Einput",
+     *  index: 0,
+     *  property: {
+     *
+     *  }
+ * }]
+ */
 let state = {
     elementPrefix: 'E',
     elementList: [],
     activeComponentRef: -1,
     activeComponentName: '',
     activeComponent: null,
+    globalSetting: {
+        insertQuestionNumber: false
+    }
 }
 
 export default new Vuex.Store({

@@ -5,7 +5,7 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 import Panel from './components/panel/panel'
-
+import store from './store/'
 // 为了能使用 this.$http.get
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
@@ -16,6 +16,7 @@ Vue.component('Panel', Panel);
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+    store,
   router,
   template: '<App/>',
   components: {App}
