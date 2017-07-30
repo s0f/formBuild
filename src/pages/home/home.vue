@@ -8,7 +8,7 @@
                 <section class="sft-form" @click="toggleActive">
                     <div v-for="(element ,index) in elementList" :is="element.element"
                          :data-type="element.element" :data-ref="index"
-                         :class="[index== activeRef ? 'clicked' : '', 'drag-item']">
+                         :class="[index== activeRef ? 'clicked' : '', 'drag-item']" v-if="element">
                     </div>
                     <div class="sft-flag" ref="flag"><strong>放在这里</strong></div>
                 </section>
@@ -31,6 +31,7 @@
     import Eradio from '../../components/element/Eradio'
     import dropDrag from '../../plugins/dropDrag/main.js'
     import $ from '../../common/query'
+
     export default {
         name: 'Home',
         data() {
@@ -66,6 +67,7 @@
                 onDragMove() {
                 },
                 onDragLeave(params) {
+                    self.$refs.flag.style.display = 'none';
                 },
                 onDrop(params) {
                     const componentName = params.sourceEl.getAttribute('data-type');
@@ -86,13 +88,11 @@
                 onDragEnd(params) {
                 },
                 onInnerDrag(params) {
-                    params.target.appendChild(self.$refs.flag);
+                    params.target.appendChild(self.$refs.flag)
                     params.target.querySelector('.sft-flag').style.display = 'block';
                 },
                 onInnerDragLeave(params) {
                     self.$refs.flag.style.display = 'none';
-//                    console.log(params)
-//                    params.target.querySelector('.sft-flag').remove();
                 },
                 onInnerDrop(params) {
                     /*
@@ -152,8 +152,11 @@
             toggleActive: function (event) {
                 let target = event.target;
                 target = target.classList.contains('sft-element') ? target : target.parentElement;
-                const ref = target.getAttribute('data-ref');
-                this.$store.commit('toggleActiveComponentRef', {ref: Number.parseInt(ref)});
+                if( target.classList.contains('sft-element') ) {
+                    const ref = target.getAttribute('data-ref'),
+                        name = target.getAttribute('data-type').split(this.$store.state.elementPrefix)[1];
+                    this.$store.commit('toggleActiveComponentRef', {ref: Number.parseInt(ref), name: name});
+                }
 
             }
         }

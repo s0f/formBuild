@@ -2,9 +2,9 @@
     <div :class="['sft-element', 'sft-element-'+type]" :type="type">
         <div class="sft-border"></div>
         <div class="sft-element-body">
-            <slot>
-            </slot>
+            <slot></slot>
         </div>
+        <div class="icon sft-delete"></div>
     </div>
 </template>
 <script>
@@ -26,7 +26,7 @@ export default {
 <style lang="scss" scoped>
 .sft-element {
     position: relative;
-    padding: 10px 0 6px;
+    padding: 16px 0;
     max-width: 800px;
     width: 100%;
     &:active {
@@ -36,6 +36,10 @@ export default {
     &.clicked{
         .sft-border {
             border-color: #ddd;
+        }
+
+        .sft-delete{
+            display: block;
         }
     }
     &.clicked{
@@ -53,7 +57,7 @@ export default {
 
     text-align: left;
     font-size: 14px;
-    color: #666;
+    color: #ddd;
 }
 
 .sft-element-content {
@@ -68,4 +72,27 @@ export default {
     right: 0;
     border: 1px dashed transparent;
 }
+    .sft-delete{
+        display: none;
+        position: absolute;
+        right: -9px;
+        top: -9px;
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+        text-align: center;
+        border-radius: 50%;
+        background-color: #f13131;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+        cursor: pointer;
+
+        &:hover{
+            background-color: #ff4242;
+        }
+        &::before{
+            content: '\e62e';
+            font-size: 14px;
+            color: #ffffff;
+        }
+    }
 </style>
