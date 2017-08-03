@@ -33,20 +33,29 @@ let elementPropertys = {};
 elementTypes.forEach((type, index) => {
     elementPropertys[type] = Object.assign(elementBaseProperty, elementProperty[type]);
 });
+
+
 const mutations = {
-    toggleActiveComponentRef: function (state, payload) {
-        state.activeComponentName = payload.name;
-        // state.activeComponent = payload
-        state.activeComponentRef = payload.ref;
+    toggleActiveComponentRef(state, payload) {
+        // TODO 如果不判断会有莫名错误=>state undefined.不应该报错
+        if (state) {
+            state.activeComponentName = payload.name;
+            state.activeComponentRef = payload.ref;
+        }
     },
-    addElement: function (state, payload) {
+    addElement(state, payload) {
         const type = elementTypes[elementTypes.indexOf(payload.componentName)];
         let element;
 
-        element = Object.assign({
+        /*element = Object.assign({},{
             index: state.elementList.length,
             element: payload.componentName,
-        }, elementPropertys[payload.componentName]);
+        }, elementPropertys[payload.componentName]);*/
+
+        element = JSON.parse(JSON.stringify(Object.assign({},{
+            index: state.elementList.length,
+            element: payload.componentName,
+        }, elementPropertys[payload.componentName])));
 
         if (payload.insert !== -1) {
             if (payload.splice !== undefined && payload.splice !== -1) {
@@ -65,14 +74,18 @@ const mutations = {
             state.elementList.push(element);
         }
     },
+    deleteElement(state, payload) {
+        state.elementList.splice(payload.ref, 1);
+    },
     updateProperty(state, payload) {
-        let newElement = Object.assign({}, state.elementList[state.activeComponentRef]);
-        if( payload.title ) {
-            newElement.base.title = payload.title;
+        // let newElement = Object.assign({}, state.elementList[state.activeComponentRef]);
+        if (payload.title) {
+            state.elementList[state.activeComponentRef].base.title = payload.title;
         } else {
-            newElement.base.desc = payload.desc;
+            state.elementList[state.activeComponentRef].base.desc = payload.desc;
         }
-        state.elementList[state.activeComponentRef] = newElement
+        console.log(state.elementList[state.activeComponentRef])
+        // state.elementList[state.activeComponentRef] = newElement
     }
 };
 export default mutations;

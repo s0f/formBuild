@@ -8,8 +8,11 @@
     </div>
 </template>
 <script>
+import store from '../../store/';
+
 export default {
     name: "Element",
+    store,
     data() {
         return {
         };
@@ -22,8 +25,12 @@ export default {
         }
     },
     methods: {
-        deleteHandle() {
-            this.$emit('deleteHandle', {type: this.type})
+        deleteHandle(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            let target = event.target,
+                parent = target.parentElement;
+            this.$store.commit('deleteElement', {type: this.type, ref: Number.parseInt(parent.getAttribute('data-ref'))});
         }
     }
 }

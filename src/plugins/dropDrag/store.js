@@ -72,6 +72,8 @@ const store = {
         }
     },
     onDragEnd(data) {
+        console.log(data)
+        console.log(this)
         if (this.preIndex === -1) {
             this.dragEndHandleList.forEach((method, index) => method && method({
                 el: document.body,

@@ -25,9 +25,8 @@
         computed: {
             title: {
                 get() {
-                    console.log(this.$store)
-                    if(this.$store.state.activeComponentRef){
-                        return state.elementList[state.activeComponentRef].base.title;
+                    if(this.$store.state.activeComponentRef != -1){
+                        return this.$store.state.elementList[this.$store.state.activeComponentRef].base.title;
                     } else {
                         return '';
                     }
@@ -38,8 +37,8 @@
             },
             desc: {
                 get() {
-                    if(this.$store.state.activeComponentRef){
-                        return state.elementList[state.activeComponentRef].base.desc;
+                    if(this.$store.state.activeComponentRef != -1){
+                        return this.$store.state.elementList[this.$store.state.activeComponentRef].base.desc;
                     } else {
                         return '';
                     }

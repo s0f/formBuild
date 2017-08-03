@@ -34,13 +34,6 @@
             Eradio
         },
         computed: {
-            activeData() {
-                if (this.$store.state.activeComponentRef && this.$store.state.elementList[this.$store.state.activeComponentRef]) {
-                    return this.$store.state.elementList[this.$store.state.activeComponentRef]
-                } else {
-                    return {};
-                }
-            },
             activeComponent() {
                 if (this.$store.state.activeComponentName) {
                     return this.$store.state.elementPrefix + this.$store.state.activeComponentName

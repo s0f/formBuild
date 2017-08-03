@@ -8,7 +8,7 @@
                 <section class="sft-form" @click="toggleActive">
                     <component v-for="(element ,index) in elementList" :key="index" :is="element.element"
                          :data-type="element.element" :data-ref="index"
-                         :class="[index== activeRef ? 'clicked' : '', 'drag-item']" v-if="element" @deleteHandle="deleteElement">
+                         :class="[index== activeRef ? 'clicked' : '', 'drag-item']" v-if="element">
                     </component>
                     <div class="sft-flag" ref="flag"><strong>放在这里</strong></div>
                 </section>
@@ -71,7 +71,7 @@
                 },
                 onDrop(params) {
                     const componentName = params.sourceEl.getAttribute('data-type');
-
+                    console.log('xx')
                     if (componentName) {
                         self.$store.commit('addElement', {
                             index: params.index,
@@ -157,11 +157,7 @@
                         name = target.getAttribute('data-type').split(this.$store.state.elementPrefix)[1];
                     this.$store.commit('toggleActiveComponentRef', {ref: Number.parseInt(ref), name: name});
                 }
-            },
-            deleteElement (type) {
-                console.log(type)
             }
-
         }
     }
 </script>
