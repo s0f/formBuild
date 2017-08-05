@@ -71,9 +71,7 @@ const store = {
             }
         }
     },
-    onDragEnd(data) {
-        console.log(data)
-        console.log(this)
+    onDragEnd(data, isInner) {
         if (this.preIndex === -1) {
             this.dragEndHandleList.forEach((method, index) => method && method({
                 el: document.body,
@@ -85,7 +83,8 @@ const store = {
             let params = {
                 el: this.targets[this.preIndex].el,
                 sourceEl: this.sourceEl,
-                data: data
+                data: data,
+                inner: isInner
             };
             this.preIndex >= 0 && (this.dropHandleList[this.preIndex](params));
             this.dragEndHandleList.forEach((method, index) => method && method(params));

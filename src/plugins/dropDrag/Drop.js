@@ -142,7 +142,7 @@ class Drop extends dragDropBase {
                 index: this.innerDrag.size,
                 sourceEl: params.sourceEl
             });
-        } else {
+        } else if(!params.inner){ // 在目标区域不会生产新的元素
             this.emit('onDrop', params);
         }
     }

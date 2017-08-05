@@ -33,28 +33,32 @@ class Drag extends dragDropBase {
         this.isMouseDragging = false;
         this.init();
     }
+
     init() {
         this.bindHandle();
         this.registerEvent();
         this.transform = util.getTransform();
     }
+
     bindHandle() {
         this._startHandler = this.startHandler.bind(this);
         this._endHandler = this.endHandler.bind(this);
         this._moveHandler = this.moveHandler.bind(this);
         this.wrap.addEventListener('mousedown', this._startHandler, false);
     }
+
     /**
      * 先store注册回调事件
      */
     registerEvent() {
 
     }
+
     // 开始拖动时
     startHandler(event) {
         let target = util.parents(event.target, '.drag-item');
 
-        if( !target ) {
+        if (!target) {
             return false;
         }
 
@@ -65,7 +69,7 @@ class Drag extends dragDropBase {
         this.cloneNode = target.cloneNode(true);
         this.cloneNode.setAttribute('style', 'position: fixed;display: none;margin: inherit;list-style: none;');
         this.cloneNode.style.left = event.pageX + 'px;';
-        this.cloneNode.style.top =  event.pageY + 'px;';
+        this.cloneNode.style.top = event.pageY + 'px;';
         document.addEventListener('mouseup', this._endHandler, false);
         this.wrap.addEventListener('mousemove', this._moveHandler, false);
         this.wrap.addEventListener('mouseup', this._endHandler, false);
@@ -119,9 +123,9 @@ class Drag extends dragDropBase {
         this.emit('onDragStart', params);
 
         // 延迟100ms显示移动中的元素，避免元素最开始拖动时的快速闪到鼠标位置
-        setTimeout(()=>{
+        setTimeout(() => {
             this.cloneNode.style.display = 'block';
-        },100);
+        }, 100);
     }
 
     endHandler() {
@@ -137,8 +141,8 @@ class Drag extends dragDropBase {
             distanceX = this.startX - this.sourceX,//currentX - this.startX,
             distanceY = this.startY - this.sourceY,//currentY - this.startY,
             targetPos = {
-                X: Number.parseInt((currentX-distanceX /*+ this.sourceX*/).toFixed()),
-                Y: Number.parseInt((currentY-distanceY /*+ this.sourceY*/).toFixed()),
+                X: Number.parseInt((currentX - distanceX /*+ this.sourceX*/).toFixed()),
+                Y: Number.parseInt((currentY - distanceY /*+ this.sourceY*/).toFixed()),
             };
 
         this.setTargetPosition(targetPos);
@@ -153,7 +157,11 @@ class Drag extends dragDropBase {
     markNodeMouseUp() {
         this.markNode.onmousemove = null;
         this.markNode.onmouseup = null;
-        store.onDragEnd(this.options.data);
+        if (this.options.inner) {
+            store.onDragEnd(this.options.data, true);
+        } else {
+            store.onDragEnd(this.options.data);
+        }
         util.clearMarkNode();
         this.cloneNode.remove();
         this.isMouseDragging = false;
@@ -185,9 +193,9 @@ class Drag extends dragDropBase {
 
     getTargetPosition(elem) {
         let pos = {
-            X: 0,
-            Y: 0
-        },
+                X: 0,
+                Y: 0
+            },
             x = 0,
             y = 0,
             transformValue = '';
