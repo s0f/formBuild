@@ -2,13 +2,13 @@
     <div class="sft-main">
         <headTo></headTo>
         <section class="clearfix flex sft-contain">
-            <homeBar></homeBar>
+            <homeBar v-on:widgetClickHandle="addElement"></homeBar>
             <section class="sft-content shadow">
                 <h2 class="sft-content-title">新的表单</h2>
                 <section class="sft-form" @click="toggleActive">
                     <component v-for="(element ,index) in elementList" :key="index" :is="element.element"
-                         :data-type="element.element" :data-ref="index"
-                         :class="[index== activeRef ? 'clicked' : '', 'drag-item']" v-if="element">
+                               :data-type="element.element" :data-ref="index"
+                               :class="[index== activeRef ? 'clicked' : '', 'drag-item']" v-if="element">
                     </component>
                     <div class="sft-flag" ref="flag"><strong>放在这里</strong></div>
                 </section>
@@ -32,6 +32,8 @@
     import dropDrag from '../../plugins/dropDrag/main.js'
     import $ from '../../common/query'
 
+    var dragItem,dragItem2,dropItem;
+
     export default {
         name: 'Home',
         data() {
@@ -51,12 +53,12 @@
                 elementList: state => state.elementList
             })
         },
-        mounted () {
+        mounted() {
             const self = this;
-            const dragItem = new dropDrag.Drag('.sft-left', {
+            dragItem = new dropDrag.Drag('.sft-left', {
                 data: '',
             });
-            const dropItem = new dropDrag.Drop('.sft-form', {
+            dropItem = new dropDrag.Drop('.sft-form', {
                 innerDrag: true,
                 innerDrop: true,
                 ignoreSelf: true,
@@ -71,7 +73,7 @@
                 },
                 onDrop(params) {
                     const componentName = params.sourceEl.getAttribute('data-type');
-                    console.log('xx')
+
                     if (componentName) {
                         self.$store.commit('addElement', {
                             index: params.index,
@@ -134,7 +136,7 @@
                         });
 
                         self.$nextTick(function () {
-                            let newElement = document.querySelector('[data-ref="'+ (params.index-1) +'"]');
+                            let newElement = document.querySelector('[data-ref="' + (params.index - 1) + '"]');
                             dropItem.innerDrag.clear();
                             dropItem.innerDrag.addList(document.querySelectorAll('.sft-form .drag-item'));
                             dropItem.initInnerTargetPosition();
@@ -143,16 +145,30 @@
                     self.$refs.flag.style.display = 'none';
                 }
             });
-            const dragItem2 = new dropDrag.Drag('.sft-form', {
+            dragItem2 = new dropDrag.Drag('.sft-form', {
                 data: 'inner',
                 inner: true
             })
         },
         methods: {
-            toggleActive (event) {
+            addElement(target) {
+                const componentName = target.getAttribute('data-type')
+                this.$store.commit('addElement', {
+                    componentName:componentName,
+                    insert: -1
+                });
+                this.$nextTick(function () {
+                    const colletion = document.querySelectorAll('.sft-form .sft-element');
+                    const dropDom = colletion[colletion.length-1];
+                    console.log(dropDom)
+                    dropItem.innerDrag.add(dropDom);
+                    dropItem.innerDragPosition.add(dropDom.getBoundingClientRect());
+                });
+            },
+            toggleActive(event) {
                 let target = event.target;
                 target = target.classList.contains('sft-element') ? target : target.parentElement;
-                if( target.classList.contains('sft-element') ) {
+                if (target.classList.contains('sft-element')) {
                     const ref = target.getAttribute('data-ref'),
                         name = target.getAttribute('data-type').split(this.$store.state.elementPrefix)[1];
                     this.$store.commit('toggleActiveComponentRef', {ref: Number.parseInt(ref), name: name});

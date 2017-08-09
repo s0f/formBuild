@@ -1,5 +1,5 @@
 <template>
-    <section class="sft-left">
+    <section class="sft-left" v-on:click.capture="widgetClickHandle">
         <section class="sft-left_item shadow">
             <Widget :baseWidgetTitle="baseWidgetTitle" :baseWidgets="baseWidgets"></Widget>
             <Widget :baseWidgetTitle="picWidgetTitle" :baseWidgets="picWidgets"></Widget>
@@ -71,6 +71,16 @@ export default {
     },
     components: {
         Widget,
+    },
+    methods: {
+        widgetClickHandle(event) {
+            let target = event.target.classList.contains('widget-list_item') ? event.target : event.target.parentElement;
+            target = target.classList.contains('widget-list_item') ? target : target.parentElement
+
+            if( target.classList.contains('widget-list_item') ) {
+                this.$emit('widgetClickHandle', target);
+            }
+        }
     }
 }
 </script>
