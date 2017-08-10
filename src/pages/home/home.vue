@@ -178,7 +178,7 @@
     }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
     @import '../../style/common';
 
     .shadow {
@@ -262,5 +262,11 @@
         min-height: 400px;
         user-select: none;
         cursor: pointer;
+    }
+
+    .x-drag-mark{
+        .drag-item{
+            border: 1px solid #ddd;
+        }
     }
 </style>

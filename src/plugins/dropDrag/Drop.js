@@ -160,9 +160,19 @@ class Drop extends dragDropBase {
             result = [],
             first = len ? this.innerDragPosition.getElement(0).top : 0,
             last = len ? this.innerDragPosition.getElement(len - 1).bottom : 0;
-        for (; i < len; i++) {
 
+        for(; i < len; i++) {
             currentPosition = this.innerDragPosition.getElement(i);
+            if(pos.top >= first && pos.top <= last){
+                if(currentPosition.bottom - 20 <= (pos.top + pos.height) && currentPosition.bottom + 20 >= (pos.top + pos.height) ){
+                    index = i;
+                    break;
+                }
+            }
+        }
+       /* for (; i < len; i++) {
+
+        currentPosition = this.innerDragPosition.getElement(i);
             if (pos.top >= first && pos.top <= last) {
 
                 powB = currentPosition.left - pos.left;
@@ -170,7 +180,8 @@ class Drop extends dragDropBase {
                 result.push(Math.sqrt(Math.pow(powA, 2) + Math.pow(powB, 2)));
             }
         }
-        index = util.getMin(result).index;
+        index = util.getMin(result).index;*/
+       console.log(index)
         return index;
     }
 }
