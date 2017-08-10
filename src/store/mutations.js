@@ -37,22 +37,37 @@ elementTypes.forEach((type, index) => {
 
 const mutations = {
     toggleActiveComponentRef(state, payload) {
-        // TODO 如果不判断会有莫名错误=>state undefined.不应该报错
-        if (state) {
-            state.activeComponentName = payload.name;
-            state.activeComponentRef = payload.ref;
-        }
+        state.activeComponentName = payload.name;
+        state.activeComponentRef = payload.ref;
     },
     addElement(state, payload) {
         const type = elementTypes[elementTypes.indexOf(payload.componentName)];
-        let element;
+        let element = state.elementList[payload.splice];
 
-        /*element = Object.assign({},{
-            index: state.elementList.length,
-            element: payload.componentName,
-        }, elementPropertys[payload.componentName]);*/
+        if( !element) {
+            element = JSON.parse(JSON.stringify(Object.assign({},{
+                index: state.elementList.length,
+                element: payload.componentName,
+            }, elementPropertys[payload.componentName])));
+        }
 
-        element = JSON.parse(JSON.stringify(Object.assign({},{
+        if (payload.insert !== -1) {
+            if (payload.splice !== undefined && payload.splice !== -1) {
+                state.elementList.splice(payload.insert + 1, 0, element);
+                // 删除原有元素，原有元素向上拖拽 splice +1
+                if (payload.insert < payload.splice) {
+                    state.elementList.splice(payload.splice + 1, 1);
+                } else {
+                    state.elementList.splice(payload.splice, 1);
+                }
+            } else {
+
+                state.elementList.splice(payload.insert + 1, 0, element);
+            }
+        } else {
+            state.elementList.push(element);
+        }
+        /*element = JSON.parse(JSON.stringify(Object.assign({},{
             index: state.elementList.length,
             element: payload.componentName,
         }, elementPropertys[payload.componentName])));
@@ -72,7 +87,7 @@ const mutations = {
             }
         } else {
             state.elementList.push(element);
-        }
+        }*/
     },
     deleteElement(state, payload) {
         state.elementList.splice(payload.ref, 1);
