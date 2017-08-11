@@ -7,8 +7,8 @@
                 <h2 class="sft-content-title">新的表单</h2>
                 <section class="sft-form" @click="toggleActive">
                     <component v-for="(element ,index) in elementList" :key="index" :is="element.element"
-                               :data-type="element.element" :data-ref="index"
-                               :class="[index== activeRef ? 'clicked' : '', 'drag-item']" v-if="element">
+                               :data-type="element.element" :data-ref="index" :idx="index"
+                               :class="[index== activeRef ? 'clicked' : '', 'drag-item']"  v-if="element">
                     </component>
                     <div class="sft-flag" ref="flag"><strong>放在这里</strong></div>
                 </section>
@@ -33,6 +33,13 @@
     import $ from '../../common/query'
 
     var dragItem,dragItem2,dropItem;
+
+    document.addEventListener('selectstart', (event)=>{
+        event.preventDefault();
+        event.stopPropagation();
+
+        return false;
+    });
 
     export default {
         name: 'Home',

@@ -1,7 +1,8 @@
 <template>
     <SftElement type="radio">
-        <div class="sft-element-title">选择</div>
+        <div class="sft-element-title">{{ $store.state.elementList[idx].base.title }}</div>
         <div class="sft-element-content">
+            <p class="sft-element-desc">{{ $store.state.elementList[idx].base.desc }}</p>
             <ul>
                 <li>
                     <p><i class="icon icon-yuanxingweixuanzhong"></i><span class="sft-radio-text">选项一</span></p>
@@ -17,6 +18,7 @@
     </SftElement>
 </template>
 <script>
+    import store from '../../store';
     import SftElement from './SftElement.vue';
 
     export default {
@@ -24,6 +26,7 @@
         data() {
             return {};
         },
+        props: ['idx'],
         components: {
             SftElement
         }

@@ -15,7 +15,7 @@ const elementProperty = {
     'Einput': {
         base: {
             value: 0,
-            title: '',
+            title: '文本框',
             desc: ''
         },
         style: {

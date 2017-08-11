@@ -21,6 +21,7 @@ Vue.use(Vuex);
  * }]
  */
 let state = {
+    step: 0,
     elementPrefix: 'E',
     elementList: [],
     activeComponentRef: -1,

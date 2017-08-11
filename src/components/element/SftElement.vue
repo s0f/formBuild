@@ -1,5 +1,5 @@
 <template>
-    <div :class="['sft-element', 'sft-element-'+type]" :type="type">
+    <div :class="['sft-element', 'sft-element-'+type]">
         <div class="sft-border"></div>
         <div class="sft-element-body">
             <slot></slot>
@@ -38,7 +38,6 @@ export default {
 <style lang="scss" scoped>
 .sft-element {
     position: relative;
-    padding: 16px 0;
     max-width: 800px;
     width: 100%;
     &:active {
@@ -61,7 +60,7 @@ export default {
 }
 
 .sft-element-body {
-    padding-left: 2%;
+    padding: 10px 0 10px 2%;
 }
 
 .sft-element-title {
@@ -69,8 +68,14 @@ export default {
     line-height: 30px;
 
     text-align: left;
-    font-size: 14px;
+    font-size: 16px;
     color: #ddd;
+}
+
+.sft-element-desc{
+    line-height: 30px;
+    color: #666666;
+    font-size: 14px;
 }
 
 .sft-element-content {

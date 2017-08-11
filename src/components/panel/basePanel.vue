@@ -3,7 +3,7 @@
     <div class="stf-field-item">
         <span class="stf-field-title">标题</span>
         <div class="sft-field-content">
-            <input type="text" v-model="title">
+            <input type="text" v-model="title" :placeholder="$store.state.elementList[$store.state.activeComponentRef].title">
         </div>
     </div>
     <div class="stf-field-item">

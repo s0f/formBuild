@@ -1,37 +1,30 @@
 <template>
-  <SftElement type="input">
-    <div class="sft-element-title">{{ title }}</div>
-    <div class="sft-element-content">
-      <input type="text" disabled class="sft-input" title=""/>
-    </div>
-  </SftElement>
+    <SftElement type="input">
+        <div class="sft-element-title">{{ $store.state.elementList[idx].base.title }}</div>
+        <div class="sft-element-content">
+            <p class="sft-element-desc">{{ $store.state.elementList[idx].base.desc }}</p>
+            <input type="text" disabled class="sft-input" title=""/>
+        </div>
+    </SftElement>
 </template>
 <script>
-import SftElement from './SftElement.vue';
+    import store from '../../store';
+    import SftElement from './SftElement.vue';
 
-export default {
-  name: "EInput",
-  data() {
-    return {
-    };
-  },
-  props: {
-    title: {
-      type: String,
-      default: '文本框'
-    },
-    desc: {
-      type: String,
-      default: ''
+    export default {
+        name: "EInput",
+        store,
+        data() {
+            return {};
+        },
+        props: ['idx'],
+        components: {
+            SftElement
+        }
     }
-  },
-  components: {
-    SftElement
-  }
-}
 </script>
 <style lang="scss">
-  .sft-input{
+    .sft-input {
         width: 80%;
         height: 30px;
         line-height: 30px;
