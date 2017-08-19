@@ -95,6 +95,7 @@
                     }
                 },
                 onDragEnd(params) {
+                    self.$refs.flag.style.display = 'none';
                 },
                 onInnerDrag(params) {
                     params.target.appendChild(self.$refs.flag)
@@ -102,6 +103,7 @@
                 },
                 onInnerDragLeave(params) {
                     self.$refs.flag.style.display = 'none';
+                    console.log('onInnerDragLeave')
                 },
                 onInnerDrop(params) {
                     /*
@@ -167,7 +169,6 @@
                 this.$nextTick(function () {
                     const colletion = document.querySelectorAll('.sft-form .sft-element');
                     const dropDom = colletion[colletion.length-1];
-                    console.log(dropDom)
                     dropItem.innerDrag.add(dropDom);
                     dropItem.innerDragPosition.add(dropDom.getBoundingClientRect());
                 });

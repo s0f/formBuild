@@ -3,6 +3,16 @@ import dragDropBase from './dragDropBase'
 import store from './store'
 import List from './plugins/List'
 
+/*
+    options:
+    innerDrop 目的地内元素可以拖动（上下）
+    对象属性
+    innerDrag 存放目的地内元素
+
+    事件流程： 
+        start -> move -> inner -> leave
+        start -> move -> inner -> leave -> mover -> inner
+*/
 class Drop extends dragDropBase {
     /**
      * @param  {Element} el
@@ -99,12 +109,13 @@ class Drop extends dragDropBase {
             if (this.options.innerDrag && this.innerDrag.size) {
                 // 离开上一个马上进入下一个
                 if (this.currentInnerPosIndex !== -1) {
-                    this.emit('onInnerDragLeave', {
+                    // TODO onInnerDragLeave 从一个元素移动到另一个元素
+              /*       this.emit('onInnerDragLeave', {
                         target: this.innerDrag.getElement(this.currentInnerPosIndex),
                         data: params.data,
                         el: params.el,
                         index: this.currentInnerPosIndex
-                    });
+                    }); */
                     // 忽略自己
                     if (this.options.ignoreSelf && (  (this.currentInnerIndex === index) || (this.currentInnerIndex - 1 === index) )) {
                         return 0;
@@ -149,6 +160,9 @@ class Drop extends dragDropBase {
     onDragEnd(params) {
         this.emit('onDragEnd', params);
     }
+    /* 
+        元素向下拖的时候，元素的底部只有到达目的地上方才算，被拖拽元素顶部离开了目标元素的下方才算离开
+    */
     collision(pos) {
 
         let index = -1,
@@ -164,14 +178,14 @@ class Drop extends dragDropBase {
         for(; i < len; i++) {
             currentPosition = this.innerDragPosition.getElement(i);
             if(pos.top >= first && pos.top <= last){
-                if(currentPosition.bottom - 20 <= (pos.top + pos.height) && currentPosition.bottom + 20 >= (pos.top + pos.height) ){
+                if((pos.top + pos.height) >= currentPosition.bottom - 20 && (pos.top) <= currentPosition.bottom - 20 ){
                     index = i;
                     break;
                 }
             }
         }
        /* for (; i < len; i++) {
-
+        // 勾股定理判断鼠标和目的地的距离
         currentPosition = this.innerDragPosition.getElement(i);
             if (pos.top >= first && pos.top <= last) {
 
