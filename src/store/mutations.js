@@ -94,12 +94,12 @@ const mutations = {
     },
     updateProperty(state, payload) {
         // let newElement = Object.assign({}, state.elementList[state.activeComponentRef]);
-        if (payload.title) {
+        
+        if (payload.title != undefined) {
             state.elementList[state.activeComponentRef].base.title = payload.title;
         } else {
             state.elementList[state.activeComponentRef].base.desc = payload.desc;
         }
-        console.log(state.elementList[state.activeComponentRef])
         // state.elementList[state.activeComponentRef] = newElement
     }
 };
