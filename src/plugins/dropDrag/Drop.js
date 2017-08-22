@@ -109,15 +109,15 @@ class Drop extends dragDropBase {
             if (this.options.innerDrag && this.innerDrag.size) {
                 // 离开上一个马上进入下一个
                 if (this.currentInnerPosIndex !== -1) {
-                    // TODO onInnerDragLeave 从一个元素移动到另一个元素
-              /*       this.emit('onInnerDragLeave', {
-                        target: this.innerDrag.getElement(this.currentInnerPosIndex),
-                        data: params.data,
-                        el: params.el,
-                        index: this.currentInnerPosIndex
-                    }); */
                     // 忽略自己
                     if (this.options.ignoreSelf && (  (this.currentInnerIndex === index) || (this.currentInnerIndex - 1 === index) )) {
+                        this.emit('onInnerDragLeave', {
+                            target: this.innerDrag.getElement(index),
+                            data: params.data,
+                            el: params.el,
+                            index: index
+                        });
+                        this.innerDragIng = false;
                         return 0;
                     } else {
                         this.emit('onInnerDrag', {
@@ -146,6 +146,8 @@ class Drop extends dragDropBase {
         params.index = this.innerDrag.size;
         this.initPosition();
         if (this.innerDragIng) {
+            // 释放了鼠标，拖动中标记为false
+            this.innerDragIng = false;
             this.emit('onInnerDrop', {
                 target: this.innerDrag.getElement(this.currentInnerPosIndex),
                 el: params.el,
