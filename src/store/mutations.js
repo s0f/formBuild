@@ -1,4 +1,4 @@
-const elementTypes = ['Einput', 'Eradio'];
+const elementTypes = ['Einput', 'Eradio', 'Eselect'];
 const elementBaseProperty = {
     // 基础设置
     base: {
@@ -24,6 +24,17 @@ const elementProperty = {
         }
     },
     'Eradio': {
+        base: {
+            title: '选择'
+        },
+        style: {
+            layout: 'transverse',
+        }
+    },
+    'Eselect': {
+        base: {
+            title: '下拉'
+        },
         style: {
             layout: 'transverse',
         }
@@ -31,7 +42,7 @@ const elementProperty = {
 }
 let elementPropertys = {};
 elementTypes.forEach((type, index) => {
-    elementPropertys[type] = Object.assign(elementBaseProperty, elementProperty[type]);
+    elementPropertys[type] = Object.assign({}, elementBaseProperty, elementProperty[type]);
 });
 
 

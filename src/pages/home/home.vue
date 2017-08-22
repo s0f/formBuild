@@ -27,8 +27,9 @@
     import headTo from '../../components/header/header'
     import homeBar from '../../pages/home/homeBar'
     import homeSetting from '../../pages/home/homeSetting'
-    import Einput from '../../components/element/Einput'
-    import Eradio from '../../components/element/Eradio'
+    import Einput from '../../components/element/Input'
+    import Eradio from '../../components/element/Radio'
+    import Eselect from '../../components/element/Select'
     import dropDrag from '../../plugins/dropDrag/main.js'
     import $ from '../../common/query'
 
@@ -53,6 +54,7 @@
             homeSetting,
             Einput,
             Eradio,
+            Eselect
         },
         computed: {
             ...mapState({

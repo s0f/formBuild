@@ -14,7 +14,8 @@
     import store from '../../store/'
     import globalPanel from '../../components/panel/globalPanel.vue'
     import Einput from '../../components/panel/textPanel.vue'
-    import Eradio from '../../components/panel/selectPanel.vue'
+    import Eradio from '../../components/panel/radioPanel.vue'
+    import Eselect from '../../components/panel/selectPanel.vue'
 
     export default {
         name: "homeSetting",
@@ -31,7 +32,8 @@
         components: {
             globalPanel,
             Einput,
-            Eradio
+            Eradio,
+            Eselect
         },
         computed: {
             activeComponent() {
