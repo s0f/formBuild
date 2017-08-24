@@ -41,12 +41,10 @@ export default {
 }
 
 .widget-content {
-    padding: 0 0 20px 0;
+    padding: 0 10px 20px 10px;
 }
 
 .widget-list {
-    margin: 0 27px;
-    border-top: 1px solid #eeeeee;
     border-left: 1px solid #eeeeee;
     font-size: 12px;
     color: #656565;
@@ -56,6 +54,8 @@ export default {
     float: left;
     width: 62px;
     height: 62px;
+    margin-bottom: -1px;
+    border-top: 1px solid #eeeeee;
     border-right: 1px solid #eeeeee;
     border-bottom: 1px solid #eeeeee;
     cursor: pointer;

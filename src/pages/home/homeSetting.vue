@@ -47,7 +47,7 @@
 <style lang="scss">
     .stf-setting {
         position: absolute;
-        right: 0;
+        right: 30px;
 
         width: 300px;
     }
@@ -72,11 +72,7 @@
         line-height: 20px;
         font-size: 14px;
         color: #666;
-    }
-
-    .stf-field-title {
-        font-size: 14px;
-        color: #666;
+        cursor: pointer;
     }
 
     .icon-checkbox {

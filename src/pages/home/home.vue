@@ -1,22 +1,22 @@
 <template>
     <div class="sft-main">
         <headTo></headTo>
-        <section class="clearfix flex sft-contain">
-            <homeBar v-on:widgetClickHandle="addElement"></homeBar>
-            <section class="sft-content shadow">
+        <section class="clearfix flex sft-contain" ref="contain">
+            <homeBar v-on:widgetClickHandle="addElement" ref="buildLeft"></homeBar>
+            <section class="sft-content shadow" ref="buildCenter">
                 <h2 class="sft-content-title">新的表单</h2>
                 <section class="sft-form" @click="toggleActive">
                     <component v-for="(element ,index) in elementList" :key="index" :is="element.element"
                                :data-type="element.element" :data-ref="index" :idx="index"
-                               :class="[index== activeRef ? 'clicked' : '', 'drag-item']"  v-if="element">
+                               :class="[index== activeRef ? 'clicked' : '', 'drag-item']" v-if="element">
                     </component>
                     <div class="sft-flag" ref="flag"><strong>放在这里</strong></div>
                 </section>
                 <footer class="sft-content-footer">
-                    <button class="btn btn-mini btn-primary">提交</button>
+                    <button class="btn btn-mini btn-primary" @click="submitHandle">提交</button>
                 </footer>
             </section>
-            <homeSetting></homeSetting>
+            <homeSetting ref="buildRight"></homeSetting>
         </section>
     </div>
 </template>
@@ -33,9 +33,9 @@
     import dropDrag from '../../plugins/dropDrag/main.js'
     import $ from '../../common/query'
 
-    var dragItem,dragItem2,dropItem;
-
-    document.addEventListener('selectstart', (event)=>{
+    let dragItem, dragItem2, dropItem;
+    let oldWindowWidth = window.innerWidth;
+    document.addEventListener('selectstart', (event) => {
         event.preventDefault();
         event.stopPropagation();
 
@@ -136,6 +136,12 @@
                             dropItem.innerDrag.addList(document.querySelectorAll('.sft-form .drag-item'));
                             dropItem.initInnerTargetPosition();
                         });
+                        if (params.sourceEl.classList.contains('clicked')) {
+                            self.$store.commit('toggleActiveComponentRef', {
+                                name: componentName,
+                                ref: splicePos
+                            });
+                        }
 
                     } else {
                         pos = this.innerDrag.find(params.target);
@@ -159,18 +165,22 @@
             dragItem2 = new dropDrag.Drag('.sft-form', {
                 data: 'inner',
                 inner: true
-            })
+            });
+
+            // 页面自适应
+            this.resize();
+            window.addEventListener('resize', this.resizeHandle);
         },
         methods: {
             addElement(target) {
                 const componentName = target.getAttribute('data-type')
                 this.$store.commit('addElement', {
-                    componentName:componentName,
+                    componentName: componentName,
                     insert: -1
                 });
                 this.$nextTick(function () {
                     const colletion = document.querySelectorAll('.sft-form .sft-element');
-                    const dropDom = colletion[colletion.length-1];
+                    const dropDom = colletion[colletion.length - 1];
                     dropItem.innerDrag.add(dropDom);
                     dropItem.innerDragPosition.add(dropDom.getBoundingClientRect());
                 });
@@ -181,8 +191,50 @@
                 if (target.classList.contains('sft-element')) {
                     const ref = target.getAttribute('data-ref'),
                         name = target.getAttribute('data-type').split(this.$store.state.elementPrefix)[1];
-                    this.$store.commit('toggleActiveComponentRef', {ref: Number.parseInt(ref), name: name});
+
+                    this.$store.commit('toggleActiveComponentRef', {
+                        ref: Number.parseInt(ref),
+                        name: name
+                    });
                 }
+            },
+            submitHandle(event) {
+                var submitBtn = event.target;
+                submitBtn.setAttribute('disabled', true);
+                console.log(JSON.parse(JSON.stringify(this.$store.state.elementList)))
+            },
+            resize() {
+                // TODO 页面自适应
+                let winWidth = document.documentElement.offsetWidth,
+                    winHeight = document.documentElement.offsetHeight;
+                const containMaxWidth = 1588,
+                    containMiddleWidth = 1388;
+                if (winWidth > 1588) {
+                    this.$refs.contain.style.width = containMaxWidth + 'px';
+                    this.$refs.buildLeft.$el.style.left = '70px';
+                    this.$refs.buildCenter.style.left = '430px';
+                    this.$refs.buildCenter.style.right = '360px';
+                }
+                if (winWidth > 1388 && winWidth < 1660) {
+//                    oldWindowWidth = winWidth;
+                    this.$refs.contain.style.width = containMiddleWidth + 'px';
+                    this.$refs.buildCenter.style.left = '370px';
+                    this.$refs.buildCenter.style.right = '360px';
+                    this.$refs.buildLeft.$el.style.left = '40px';
+                }
+                if (winWidth < 1388) {
+                    let oldLeft = Number.parseInt(this.$refs.buildLeft.$el.style.left);
+                    this.$refs.contain.style.width = winWidth + 'px'
+                    if (oldLeft >= 0) {
+                        this.$refs.buildLeft.$el.style.left = oldLeft - (oldWindowWidth - winWidth ) + 'px';
+                    }
+                    this.$refs.buildCenter.style.left = '320px';
+                    this.$refs.buildCenter.style.right = '360px';
+                }
+            },
+            resizeHandle(event) {
+                let self = this;
+                setTimeout(this.resize.bind(this), 200);
             }
         }
     }
@@ -195,7 +247,13 @@
         box-shadow: rgba(0, 0, 0, .2) 0 0 5px 2px;
     }
 
-    .sft-main {
+    .sft-main, .sft-contain {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        transition: all .2s cubic-bezier(.47, 0, .745, .715);
     }
 
     .sft-flag {
@@ -230,16 +288,15 @@
     }
 
     .sft-contain {
-        position: relative;
         width: 1500px;
-        margin: 40px auto 0;
+        margin: 60px auto 0;
     }
 
     .sft-left {
         position: absolute;
         top: 0;
-        left: 0;
-        width: 245px;
+        left: 100px;
+        width: 235px;
     }
 
     .sft-left_item {
@@ -249,8 +306,8 @@
     .sft-content {
         position: absolute;
         top: 0;
-        left: 365px;
-        width: 800px;
+        left: 430px;
+        right: 360px;
     }
 
     .sft-content-title {
@@ -274,9 +331,15 @@
         cursor: pointer;
     }
 
-    .x-drag-mark{
-        .drag-item{
+    .x-drag-mark {
+        .drag-item {
             border: 1px solid #ddd;
+        }
+    }
+
+    @media screen and (min-width: 1660px) {
+        .sft-left {
+            width: 336px;
         }
     }
 </style>

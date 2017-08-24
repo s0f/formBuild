@@ -24,9 +24,11 @@ let state = {
     step: 0,
     elementPrefix: 'E',
     elementList: [],
-    activeComponentRef: -1,
+    activeComponentRef: -1, // 当前操作的元素的索引
     activeComponentName: '',
     activeComponent: null,
+    clickedComponentRef: -1,
+    clickedComponentName: '',
     globalSetting: {
         insertQuestionNumber: false
     }

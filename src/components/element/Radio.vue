@@ -4,14 +4,8 @@
         <div class="sft-element-content">
             <p class="sft-element-desc">{{ $store.state.elementList[idx].base.desc }}</p>
             <ul>
-                <li>
-                    <p><i class="icon icon-yuanxingweixuanzhong"></i><span class="sft-radio-text">选项一</span></p>
-                </li>
-                <li>
-                    <p><i class="icon icon-yuanxingweixuanzhong"></i><span class="sft-radio-text">选项二</span></p>
-                </li>
-                <li>
-                    <p><i class="icon icon-yuanxingweixuanzhong"></i><span class="sft-radio-text">选项三</span></p>
+                <li v-for="item in $store.state.elementList[idx].selects" :id="item.id">
+                    <p><i :class="['icon',  isSingleSelect != 0 ? 'icon-fangxingweixuanzhong':'icon-yuanxingweixuanzhong']"></i><span class="sft-radio-text">{{ item.desc }}</span></p>
                 </li>
             </ul>
         </div>
@@ -29,6 +23,11 @@
         props: ['idx'],
         components: {
             SftElement
+        },
+        computed: {
+            isSingleSelect() {
+                return this.$store.state.elementList[this.idx].base.value;
+            }
         }
     }
 </script>

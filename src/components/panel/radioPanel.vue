@@ -1,6 +1,6 @@
 <template>
     <panel title="选择">
-        <div class="stf-field-item"  slot="header">
+        <div class="stf-field-item" slot="header">
             <span class="stf-field-title">切换组件类型</span>
             <div class="sft-field-content">
                 <select name="" id="" v-model="selectModel">
@@ -11,19 +11,39 @@
         </div>
 
         <div slot="content">
-            <p>选项内容</p>
+            <p class="stf-field-title">选项内容</p>
+            <ul>
+                <li class="sft-select-item"
+                    v-for="(item, index) in $store.state.elementList[$store.state.activeComponentRef].selects" :data-index="index">
+                    <i class="icon icon-dagou"></i><input v-model="item.desc" class="sft-field-input"/>
+                </li>
+            </ul>
         </div>
     </panel>
 </template>
 <script>
-export default {
-  name: "radioPanel",
-  data () {
-    return {
-        selectModel: 0
-    };
-  }
-}
+
+    import store from '../../store';
+
+    export default {
+        name: "radioPanel",
+        store,
+        data() {
+            return {}
+        },
+        computed: {
+            selectModel: {
+                get() {
+                    return this.$store.state.elementList[this.$store.state.activeComponentRef].base.value;
+                },
+                set(value) {
+                    this.$store.commit('updateSelect', {
+                        value: value
+                    })
+                }
+            }
+        }
+    }
 </script>
 <style lang="scss" scoped>
 </style>

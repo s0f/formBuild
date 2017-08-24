@@ -3,13 +3,13 @@
     <div class="stf-field-item">
         <span class="stf-field-title">标题</span>
         <div class="sft-field-content">
-            <input type="text" v-model="title" :placeholder="$store.state.elementList[$store.state.activeComponentRef].title">
+            <input type="text" v-model="title" class="sft-field-input" :placeholder="$store.state.elementList[$store.state.activeComponentRef].title">
         </div>
     </div>
     <div class="stf-field-item">
-        <span class="stf-fiedl-title">描述</span>
-        <div class="sft-fiedl-content">
-            <input type="text" v-model="desc">
+        <span class="stf-field-title">描述</span>
+        <div class="sft-field-content">
+            <input type="text" v-model="desc" class="sft-field-input">
         </div>
     </div>
 </div>

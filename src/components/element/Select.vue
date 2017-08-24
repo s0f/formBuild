@@ -38,6 +38,7 @@
 
         .sft-tip{
             margin-left: 10px;
+            color: #999;
         }
         .icon-arrow-bottom{
             float: right;
