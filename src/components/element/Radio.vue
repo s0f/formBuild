@@ -4,8 +4,11 @@
         <div class="sft-element-content">
             <p class="sft-element-desc">{{ $store.state.elementList[idx].base.desc }}</p>
             <ul>
-                <li v-for="item in $store.state.elementList[idx].selects" :id="item.id">
-                    <p><i :class="['icon',  isSingleSelect != 0 ? 'icon-fangxingweixuanzhong':'icon-yuanxingweixuanzhong']"></i><span class="sft-radio-text">{{ item.desc }}</span></p>
+                <li v-for="item in $store.state.elementList[idx].selects.data" :id="item.id">
+                    <p>
+                        <i :class="['icon',  isSingleSelect-1 ? 'icon-fangxingweixuanzhong':'icon-yuanxingweixuanzhong']"></i>
+                        <span class="sft-radio-text">{{ item.desc }}</span>
+                    </p>
                 </li>
             </ul>
         </div>

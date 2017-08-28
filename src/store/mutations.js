@@ -13,46 +13,78 @@ const elementBaseProperty = {
 };
 const elementProperty = {
     'Einput': {
+        name: '文本框',
+        type: 'input',
+        isChange: true,
         base: {
-            value: 0,
+            value: 1,
+            name: '切换组件类型',
             title: '文本框',
-            desc: ''
+            desc: '',
+            data: [
+                {id:0, value: 1, desc: '单行文本'},
+                {id:0, value: 2, desc: '多行文本'}
+            ]
         },
         style: {
             layout: 'transverse', // transverse or vertical
             width: '20', // 10% - 100%
-        },
-        isTextArea: 0
+        }
     },
     'Eradio': {
+        name: '选择',
+        type: 'radio',
+        isChange: true,
         base: {
-            value: 0,
+            value: 1,
+            name: '切换组件类型',
             title: '选择',
-            desc: ''
+            desc: '',
+            data: [
+                {id:0, value: 1, desc: '单选'},
+                {id:0, value: 2, desc: '多选'}
+            ]
         },
         style: {
             layout: 'transverse',
         },
-        selects: [
-            {id: 0, value: 1, desc: '选项一'},
-            {id: 1, value: 2, desc: '选项二'},
-            {id: 2, value: 3, desc: '选项三'},
-        ]
+        selects: {
+            title: '选项内容',
+            value: 1,
+            count: 3,
+            data: [
+                {id: 0, value: 1, desc: '选项1'},
+                {id: 1, value: 2, desc: '选项2'},
+                {id: 2, value: 3, desc: '选项3'},
+            ]
+        }
     },
     'Eselect': {
+        name: '下拉选择',
+        type: 'select',
+        base: {
+            value: 1,
+            // name: '切换组件类型',
+            title: '下拉',
+            desc: '',
+            /*data: [
+                {id:0, value: 1, desc: '单选'},
+                {id:0, value: 2, desc: '多选'}
+            ]*/
+        },
         style: {
             layout: 'transverse',
         },
-        base: {
-            value: 0,
-            title: '选择框',
-            desc: ''
-        },
-        selects: [
-            {id: 0, value: 1, desc: '选项一'},
-            {id: 1, value: 2, desc: '选项二'},
-            {id: 2, value: 3, desc: '选项三'},
-        ]
+        selects: {
+            title: '切换组件类型',
+            value: 1,
+            count: 3,
+            data: [
+                {id: 0, value: 1, desc: '选项1'},
+                {id: 1, value: 2, desc: '选项2'},
+                {id: 2, value: 3, desc: '选项3'},
+            ]
+        }
     }
 }
 let elementPropertys = {};
@@ -114,6 +146,27 @@ const mutations = {
     },
     updateIsTextArea(state, payload) {
         state.elementList[state.activeComponentRef].isTextArea = payload.value;
+    },
+    updateAttribute(state, payload) {
+        if( payload.type == 'input') {
+            state.elementList[state.activeComponentRef].base.value = payload.value;
+        } else if (payload.type == 'selects') {
+            state.elementList[state.activeComponentRef].selects.value = payload.value;
+        }
+    },
+    selectItemOperate(state, payload) {
+        const selects = state.elementList[state.activeComponentRef].selects,
+            count  = selects.count + 1;
+        if( payload.type == 'add') {
+            selects.count += 1;
+            selects.data.push({
+                id: count,
+                value: count,
+                desc: '选项' + count
+            });
+        } else {
+            selects.data.splice(payload.idx, 1);
+        }
     }
 };
 export default mutations;

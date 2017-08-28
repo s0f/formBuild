@@ -1,17 +1,24 @@
 <template>
     <div class="stf-panel">
-        <div class="stf-panel-title">{{ title }}</div>
+        <div class="stf-panel-title">{{ name }}</div>
         <div :class="['stf-panel-content', fold ? 'stf-panel-content' : '']">
-            <slot name="header"></slot>
+            <!--<slot name="header"></slot>-->
+            <selectField v-if="activeComponent.isChange" type="base"
+                         :title="activeComponent.base.name" :attr="activeComponent.base">
+            </selectField>
             <div class="stf-field-input">
                 <basePanel></basePanel>
             </div>
-            <slot name="content"></slot>
+            <!--<slot name="content"></slot>-->
+            <selectField v-if="activeComponent.selects" type="selects"
+                         :title="activeComponent.selects.title" :attr="activeComponent.selects">
+            </selectField>
         </div>
     </div>
 </template>
 <script>
     import basePanel from './basePanel';
+    import selectField from './selectField';
 
     export default {
         name: "Panel",
@@ -19,9 +26,15 @@
             return {};
         },
         components: {
-            basePanel
+            basePanel,
+            selectField
         },
-        props: ['title', 'fold']
+        props: ['name', 'title', 'fold'],
+        computed: {
+            activeComponent() {
+                return this.$store.getters.activeComponent;
+            }
+        }
     }
 </script>
 <style lang="scss">
@@ -52,16 +65,18 @@
         margin-bottom: 6px;
     }
 
-    .sft-field-input{
+    .sft-field-input {
         padding-left: 6px;
         height: 24px;
         line-height: 24px;
         color: #666;
-        border: 1px solid #dfdfdf;
+        border: 0;
+        border-bottom: 1px solid #dfdfdf;
         font-size: 14px;
+        outline: 0;
     }
 
-    .sft-field-select{
+    .sft-field-select {
         border: 1px solid #ddd;
         background: #fdfdfd;
         height: 26px;

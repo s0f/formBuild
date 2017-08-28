@@ -35,7 +35,7 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .sft-element {
     position: relative;
     max-width: 800px;

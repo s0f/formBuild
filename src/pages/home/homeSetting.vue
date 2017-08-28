@@ -3,9 +3,12 @@
         <div class="stf-setting-wrap">
             <globalPanel></globalPanel>
             <div class="stf-setting-other">
-                <keep-alive>
+                <!--<keep-alive>
                     <componten :is="activeComponent"></componten>
-                </keep-alive>
+                </keep-alive>-->
+
+                <panel v-if="activeComponent" :name="activeComponent.name">
+                </panel>
             </div>
         </div>
     </section>
@@ -37,9 +40,7 @@
         },
         computed: {
             activeComponent() {
-                if (this.$store.state.activeComponentName) {
-                    return this.$store.state.elementPrefix + this.$store.state.activeComponentName
-                }
+                return this.$store.getters.activeComponent;
             }
         }
     }

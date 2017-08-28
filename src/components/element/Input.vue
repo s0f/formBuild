@@ -3,7 +3,7 @@
         <div class="sft-element-title">{{ $store.state.elementList[idx].base.title }}</div>
         <div class="sft-element-content">
             <p class="sft-element-desc">{{ $store.state.elementList[idx].base.desc }}</p>
-            <div class="sft-textarea" v-if="$store.state.elementList[idx].isTextArea != 0"></div>
+            <div class="sft-textarea" v-if="$store.state.elementList[idx].base.value -1 == 1"></div>
             <input type="text" disabled class="sft-input" title="" v-else/>
         </div>
     </SftElement>
