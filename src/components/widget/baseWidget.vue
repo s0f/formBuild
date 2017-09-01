@@ -25,7 +25,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../../style/common";
 
 .widget-main {
     background-color: #fff;

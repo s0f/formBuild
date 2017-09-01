@@ -6,7 +6,7 @@
                     @change="updateAttribute">
                 <option v-for="item in baseAttr.data" :value="item.value">{{item.desc}}</option>
             </select>
-            <div v-if="type == 'selects'">
+            <div v-if="type == 'selects'" class="clearfix">
                 <ul v-on:click="activeHandle" ref="select-wrap" class="sft-select-wrap">
                     <li class="sft-select-item clearfix" :type="type"
                         v-for="(item, index) in baseAttr.data" :data-index="index">
@@ -18,7 +18,7 @@
                         </div>
                     </li>
                 </ul>
-                <button class="sft-btn sft-btn-primary sft-add-select-item" @click="addSelectItemHandle">添加</button>
+                <div class="text-center"><button class="sft-btn sft-btn-primary sft-add-select-item margin-top" @click="addSelectItemHandle">添加</button></div>
             </div>
         </div>
     </div>

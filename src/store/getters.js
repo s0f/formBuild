@@ -8,6 +8,15 @@ const getters = {
         } else {
             return null;
         }
+    },
+    clickedRef: state => {
+        let item = document.querySelector('[data-ref="'+state.clickedComponentRef+'"]');
+        if (item) {
+            return item.getAttribute('data-idx');
+        } else {
+            return 0;
+        }
+
     }
 };
 

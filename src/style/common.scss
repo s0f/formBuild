@@ -1,42 +1,31 @@
 @import "iconfont";
+@import "var";
+@import "distance";
+@import "button";
+@import "text";
 
 .clearfix:after {
-  content:"\200B";
-  display:block;
-  height:0;
-  clear:both;
+    content:"\200B";
+    display:block;
+    height:0;
+    clear:both;
 }
 .clearfix {*zoom:1;}/*IE/7/6*/
 
+.float-l{
+    float: left;
+}
+.float-r{
+    float: right;
+}
 .flex {
-  display: flex;
+    display: flex;
 }
 
 .flex-item {
-  flex: 1;
+    flex: 1;
 }
 
-.btn{
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
 
-.btn:active,
-.btn:hover{
-  background: #777;
-  color: #fff;
-}
 
-.btn-mini{
-  padding: 0 33px;
-  height: 34px;
-  line-height: 34px;
-  outline: 0;
-  cursor: pointer;
-  font-size: 16px;
-}
 
-.btn-primary{
-  background: #5a5a5a;
-  color: #ffffff;
-}

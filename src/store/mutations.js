@@ -1,5 +1,6 @@
 const elementTypes = ['Einput', 'Eradio', 'Eselect'];
 const elementBaseProperty = {
+    uuid: 0,
     // 基础设置
     base: {
         required: false
@@ -22,8 +23,8 @@ const elementProperty = {
             title: '文本框',
             desc: '',
             data: [
-                {id:0, value: 1, desc: '单行文本'},
-                {id:0, value: 2, desc: '多行文本'}
+                { id: 0, value: 1, desc: '单行文本' },
+                { id: 0, value: 2, desc: '多行文本' }
             ]
         },
         style: {
@@ -41,8 +42,8 @@ const elementProperty = {
             title: '选择',
             desc: '',
             data: [
-                {id:0, value: 1, desc: '单选'},
-                {id:0, value: 2, desc: '多选'}
+                { id: 0, value: 1, desc: '单选' },
+                { id: 0, value: 2, desc: '多选' }
             ]
         },
         style: {
@@ -53,9 +54,9 @@ const elementProperty = {
             value: 1,
             count: 3,
             data: [
-                {id: 0, value: 1, desc: '选项1'},
-                {id: 1, value: 2, desc: '选项2'},
-                {id: 2, value: 3, desc: '选项3'},
+                { id: 0, value: 1, desc: '选项1' },
+                { id: 1, value: 2, desc: '选项2' },
+                { id: 2, value: 3, desc: '选项3' },
             ]
         }
     },
@@ -80,9 +81,9 @@ const elementProperty = {
             value: 1,
             count: 3,
             data: [
-                {id: 0, value: 1, desc: '选项1'},
-                {id: 1, value: 2, desc: '选项2'},
-                {id: 2, value: 3, desc: '选项3'},
+                { id: 0, value: 1, desc: '选项1' },
+                { id: 1, value: 2, desc: '选项2' },
+                { id: 2, value: 3, desc: '选项3' },
             ]
         }
     }
@@ -105,11 +106,13 @@ const mutations = {
         const type = elementTypes[elementTypes.indexOf(payload.componentName)];
         let element = state.elementList[payload.splice];
 
-        if( !element) {
-            element = JSON.parse(JSON.stringify(Object.assign({},{
-                index: state.elementList.length,
-                element: payload.componentName,
-            }, elementPropertys[payload.componentName])));
+        if (!element) {
+            element = JSON.parse(JSON.stringify(Object.assign({},
+                elementPropertys[payload.componentName], {
+                    index: state.elementList.length,
+                    element: payload.componentName,
+                    uuid: payload.uuid
+                })));
         }
         if (payload.insert !== -1) {
             if (payload.splice !== undefined && payload.splice !== -1) {
@@ -148,7 +151,7 @@ const mutations = {
         state.elementList[state.activeComponentRef].isTextArea = payload.value;
     },
     updateAttribute(state, payload) {
-        if( payload.type == 'input') {
+        if (payload.type == 'input') {
             state.elementList[state.activeComponentRef].base.value = payload.value;
         } else if (payload.type == 'selects') {
             state.elementList[state.activeComponentRef].selects.value = payload.value;
@@ -156,8 +159,8 @@ const mutations = {
     },
     selectItemOperate(state, payload) {
         const selects = state.elementList[state.activeComponentRef].selects,
-            count  = selects.count + 1;
-        if( payload.type == 'add') {
+            count = selects.count + 1;
+        if (payload.type == 'add') {
             selects.count += 1;
             selects.data.push({
                 id: count,

@@ -7,8 +7,8 @@
                 <h2 class="sft-content-title">新的表单</h2>
                 <section class="sft-form" @click="toggleActive">
                     <component v-for="(element ,index) in elementList" :key="index" :is="element.element"
-                               :data-type="element.element" :data-ref="index" :idx="index"
-                               :class="[index== activeRef ? 'clicked' : '', 'drag-item']" v-if="element">
+                               :data-type="element.element" :data-ref="element.index" :data-idx="index" :idx="index"
+                               :class="[$store.getters.clickedRef == element.index ? 'clicked' : '','drag-item']" v-if="element">
                     </component>
                     <div class="sft-flag" ref="flag"><strong>放在这里</strong></div>
                 </section>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex'
+    import {mapState, mapGetters} from 'vuex'
     import store from '../../store/index'
     import headTo from '../../components/header/header'
     import homeBar from '../../pages/home/homeBar'
@@ -32,6 +32,7 @@
     import Eselect from '../../components/element/Select'
     import dropDrag from '../../plugins/dropDrag/main.js'
     import $ from '../../common/query'
+    import utils from '../../common/utils'
 
     let dragItem, dragItem2, dropItem;
     let oldWindowWidth = window.innerWidth;
@@ -41,7 +42,6 @@
 
         return false;
     });
-
     export default {
         name: 'Home',
         data() {
@@ -58,7 +58,6 @@
         },
         computed: {
             ...mapState({
-                activeRef: state => state.activeComponentRef,
                 elementList: state => state.elementList
             })
         },
@@ -85,12 +84,13 @@
 
                     if (componentName) {
                         self.$store.commit('addElement', {
+                            uuid: utils.uuid(),
                             index: params.index,
                             componentName: componentName,
                             insert: -1
                         });
                         self.$nextTick(function () {
-                            const dropDom = document.querySelector('[data-ref="' + params.index + '"]');
+                            const dropDom = document.querySelector('[data-idx="' + params.index + '"]');
                             dropItem.innerDrag.add(dropDom);
                             dropItem.innerDragPosition.add(dropDom.getBoundingClientRect());
                         });
@@ -118,7 +118,7 @@
                     *    a. 拖动元素DOM插入到目标元素后面
                     *    b.
                     * */
-                    let inner = params.sourceEl.getAttribute('data-ref'),
+                    let inner = params.sourceEl.getAttribute('data-idx'),
                         pos = -1,
                         componentName = '';
                     if (!!inner) {
@@ -126,6 +126,7 @@
                         let splicePos = this.innerDrag.find(params.sourceEl);
                         componentName = params.sourceEl.getAttribute('data-type');
                         self.$store.commit('addElement', {
+                            uuid: utils.uuid(),
                             index: pos,
                             componentName: componentName,
                             insert: pos,
@@ -135,28 +136,26 @@
                             dropItem.innerDrag.clear();
                             dropItem.innerDrag.addList(document.querySelectorAll('.sft-form .drag-item'));
                             dropItem.initInnerTargetPosition();
+                            self.getClickedRefForActiveRef();
                         });
-                        if (params.sourceEl.classList.contains('clicked')) {
-                            self.$store.commit('toggleActiveComponentRef', {
-                                name: componentName,
-                                ref: splicePos
-                            });
-                        }
+                        
 
                     } else {
                         pos = this.innerDrag.find(params.target);
                         componentName = params.sourceEl.getAttribute('data-type');
                         self.$store.commit('addElement', {
+                            uuid: utils.uuid(),
                             index: pos,
                             componentName: componentName,
                             insert: pos
                         });
 
                         self.$nextTick(function () {
-                            let newElement = document.querySelector('[data-ref="' + (params.index - 1) + '"]');
+                            let newElement = document.querySelector('[data-idx="' + (params.index - 1) + '"]');
                             dropItem.innerDrag.clear();
                             dropItem.innerDrag.addList(document.querySelectorAll('.sft-form .drag-item'));
                             dropItem.initInnerTargetPosition();
+                            self.getClickedRefForActiveRef();
                         });
                     }
                     self.$refs.flag.style.display = 'none';
@@ -176,6 +175,7 @@
                 const componentName = target.getAttribute('data-type')
                 this.$store.commit('addElement', {
                     componentName: componentName,
+                    uuid: utils.uuid(),
                     insert: -1
                 });
                 this.$nextTick(function () {
@@ -185,15 +185,24 @@
                     dropItem.innerDragPosition.add(dropDom.getBoundingClientRect());
                 });
             },
+            getClickedRefForActiveRef() {
+                let item = document.querySelector('[data-ref="'+ this.$store.clickedComponentRef+'"]');
+                if (item) {
+                    return item.getAttribute('data-idx');
+                } else {
+                    return -1;
+                }
+            },
             toggleActive(event) {
                 let target = event.target;
                 target = target.classList.contains('sft-element') ? target : target.parentElement;
                 if (target.classList.contains('sft-element')) {
-                    const ref = target.getAttribute('data-ref'),
+                    const index = target.getAttribute('data-idx'),
+                        targetIndex = target.getAttribute('data-ref'),
                         name = target.getAttribute('data-type').split(this.$store.state.elementPrefix)[1];
-
-                    this.$store.commit('toggleActiveComponentRef', {
-                        ref: Number.parseInt(ref),
+                        
+                    this.$store.commit('toggleClickedComponentRef', {
+                        ref: Number.parseInt(targetIndex),
                         name: name
                     });
                 }
@@ -241,7 +250,6 @@
 </script>
 
 <style lang="scss">
-    @import '../../style/common';
 
     .shadow {
         box-shadow: rgba(0, 0, 0, .2) 0 0 5px 2px;

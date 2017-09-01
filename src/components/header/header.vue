@@ -31,8 +31,7 @@
     }
 </script>
 
-<style scoped lang="scss">
-  @import "../../style/common";
+<style lang="scss">
 
   $active: #5a5a5a;
 
