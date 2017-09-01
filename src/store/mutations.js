@@ -170,6 +170,11 @@ const mutations = {
         } else {
             selects.data.splice(payload.idx, 1);
         }
+    },
+    recovery(state, payload) {
+        payload.elementList.forEach(item => {
+            state.elementList.push(item);
+        });
     }
 };
 export default mutations;

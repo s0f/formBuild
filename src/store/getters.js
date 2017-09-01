@@ -14,7 +14,7 @@ const getters = {
         if (item) {
             return item.getAttribute('data-idx');
         } else {
-            return 0;
+            return -1;
         }
 
     }

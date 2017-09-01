@@ -169,6 +169,7 @@
             // 页面自适应
             this.resize();
             window.addEventListener('resize', this.resizeHandle);
+            this.$store.dispatch('recovery');
         },
         methods: {
             addElement(target) {
@@ -200,17 +201,21 @@
                     const index = target.getAttribute('data-idx'),
                         targetIndex = target.getAttribute('data-ref'),
                         name = target.getAttribute('data-type').split(this.$store.state.elementPrefix)[1];
-                        
+
                     this.$store.commit('toggleClickedComponentRef', {
-                        ref: Number.parseInt(targetIndex),
+                        ref: Number.parseInt(index),
+                        name: name
+                    });
+                    this.$store.commit('toggleActiveComponentRef', {
+                        ref: Number.parseInt(index),
                         name: name
                     });
                 }
             },
             submitHandle(event) {
                 var submitBtn = event.target;
-                submitBtn.setAttribute('disabled', true);
-                console.log(JSON.parse(JSON.stringify(this.$store.state.elementList)))
+                // submitBtn.setAttribute('disabled', true);
+                console.log(JSON.stringify(this.$store.state.elementList))
             },
             resize() {
                 // TODO 页面自适应
