@@ -94,13 +94,10 @@ elementTypes.forEach((type, index) => {
 });
 
 const mutations = {
-    toggleClickedComponentRef(state, payload) {
-        state.clickedComponentName = payload.name;
-        state.clickedComponentRef = payload.ref;
-    },
-    toggleActiveComponentRef(state, payload) {
-        state.activeComponentName = payload.name;
-        state.activeComponentRef = payload.ref;
+    toggleActiveComponent(state, payload) {
+        payload.name && (state.activeComponentName = payload.name);
+        payload.uuid && (state.activeComponentUUID = payload.uuid);
+        payload.ref && (state.activeComponentRef = payload.ref);
     },
     addElement(state, payload) {
         const type = elementTypes[elementTypes.indexOf(payload.componentName)];
@@ -119,8 +116,10 @@ const mutations = {
                 state.elementList.splice(payload.insert + 1, 0, element);
                 // 删除原有元素，原有元素向上拖拽 splice +1
                 if (payload.insert < payload.splice) {
+                    state.isUp = true;
                     state.elementList.splice(payload.splice + 1, 1);
                 } else {
+                    state.isUp = false;
                     state.elementList.splice(payload.splice, 1);
                 }
             } else {
@@ -172,9 +171,10 @@ const mutations = {
         }
     },
     recovery(state, payload) {
-        payload.elementList.forEach(item => {
-            state.elementList.push(item);
-        });
+        for (let key in payload.state) {
+            state[key] = payload.state[key];
+        }
+        payload.callback();
     }
 };
 export default mutations;

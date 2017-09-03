@@ -3,15 +3,18 @@
  */
 const getters = {
     activeComponent: state => {
-        if(state.activeComponentRef != -1){
+        // let item = document.querySelector('[uuid="' + state.activeComponentUUID + '"]');
+        if (state.activeComponentRef) {
             return state.elementList[state.activeComponentRef];
         } else {
             return null;
         }
     },
     clickedRef: state => {
-        let item = document.querySelector('[data-ref="'+state.clickedComponentRef+'"]');
+        let item = document.querySelector('[uuid="' + state.activeComponentUUID + '"]');
+        // debugger
         if (item) {
+            console.log('data-idx', item.getAttribute('data-idx'))
             return item.getAttribute('data-idx');
         } else {
             return -1;

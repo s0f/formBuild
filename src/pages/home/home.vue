@@ -8,7 +8,7 @@
                 <section class="sft-form" @click="toggleActive">
                     <component v-for="(element ,index) in elementList" :key="index" :is="element.element"
                                :data-type="element.element" :data-ref="element.index" :data-idx="index" :idx="index"
-                               :class="[$store.getters.clickedRef == element.index ? 'clicked' : '','drag-item']" v-if="element">
+                               :class="[$store.state.activeComponentUUID == element.uuid ? 'clicked' : '','drag-item']" v-if="element" :uuid="element.uuid">
                     </component>
                     <div class="sft-flag" ref="flag"><strong>放在这里</strong></div>
                 </section>
@@ -60,6 +60,17 @@
             ...mapState({
                 elementList: state => state.elementList
             })
+        },
+        created() {
+            let self = this;
+            this.$store.dispatch('recovery', {
+                loadFormDataEd () {
+                    self.$nextTick(function(){
+                        let list = document.querySelectorAll('.sft-element');
+                        dropItem.innerDrag.addList(list);
+                    });
+                }
+            });
         },
         mounted() {
             const self = this;
@@ -169,7 +180,10 @@
             // 页面自适应
             this.resize();
             window.addEventListener('resize', this.resizeHandle);
-            this.$store.dispatch('recovery');
+            this.$http.get('https://easy-mock.com/mock/5961e71e9adc231f357c229e/example/dragSate')
+                .then(res=>{
+                    dropItem.innerDragPosition.addList(res.data.data);
+                });
         },
         methods: {
             addElement(target) {
@@ -187,35 +201,50 @@
                 });
             },
             getClickedRefForActiveRef() {
-                let item = document.querySelector('[data-ref="'+ this.$store.clickedComponentRef+'"]');
+                /* 
+                更新 当前选择元素Ref，指向正确位置
+                 */
+                let item = document.querySelector('[uuid="' + this.$store.state.activeComponentUUID + '"]');
                 if (item) {
-                    return item.getAttribute('data-idx');
+                    this.$store.commit('toggleActiveComponent', { ref: item.getAttribute('data-idx')});
+                    // return state.elementList[Number.parseInt(item.getAttribute('data-idx'))];
                 } else {
-                    return -1;
+                    return null;
                 }
             },
             toggleActive(event) {
+                /* 
+                    点击时元素A，元素为选中状态，记住ID
+                    拖拽其他元素后，列表重新render，A 依然要处于选中状态
+                 */
                 let target = event.target;
                 target = target.classList.contains('sft-element') ? target : target.parentElement;
                 if (target.classList.contains('sft-element')) {
                     const index = target.getAttribute('data-idx'),
                         targetIndex = target.getAttribute('data-ref'),
-                        name = target.getAttribute('data-type').split(this.$store.state.elementPrefix)[1];
-
-                    this.$store.commit('toggleClickedComponentRef', {
-                        ref: Number.parseInt(index),
-                        name: name
+                        name = target.getAttribute('data-type').split(this.$store.state.elementPrefix)[1],
+                        uuid = target.getAttribute('uuid');
+                    
+                    this.$store.commit('toggleActiveComponent', {
+                        name: name,
+                        uuid: uuid,
+                        ref: index
                     });
-                    this.$store.commit('toggleActiveComponentRef', {
-                        ref: Number.parseInt(index),
-                        name: name
-                    });
+                   
                 }
             },
             submitHandle(event) {
                 var submitBtn = event.target;
                 // submitBtn.setAttribute('disabled', true);
-                console.log(JSON.stringify(this.$store.state.elementList))
+                console.log(JSON.stringify(this.$store.state))
+                let dropState = dropItem.innerDragPosition.toString().map((item)=>{
+                    let tempObj = {};
+                    for(let key in item){
+                        tempObj[key] = item[key];
+                    }
+                    return tempObj;
+                });
+                console.log(JSON.stringify(dropState))
             },
             resize() {
                 // TODO 页面自适应

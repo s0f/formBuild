@@ -21,14 +21,14 @@ Vue.use(Vuex);
  * }]
  */
 let state = {
-    step: 0,
+    isUp: false,
+    step: 1,
     elementPrefix: 'E',
     elementList: [],
     activeComponentRef: -1, // 当前操作的元素的索引
     activeComponentName: '',
+    activeComponentUUID: -1,
     activeComponent: null,
-    clickedComponentRef: -1,
-    clickedComponentName: '',
     globalSetting: {
         insertQuestionNumber: false
     }
