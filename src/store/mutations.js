@@ -154,6 +154,14 @@ const mutations = {
             state.elementList[state.activeComponentRef].base.value = payload.value;
         } else if (payload.type == 'selects') {
             state.elementList[state.activeComponentRef].selects.value = payload.value;
+        } else if (payload.type == 'formName') {
+            console.log(payload.value)
+            state[payload.type] = payload.value;
+        } else if (payload.type == 'formDesc') {
+            state[payload.type] = payload.value;
+        } else if (payload.type == 'form') {
+            state.formName = payload.value.formName;
+            state.formDesc = payload.value.formDesc;
         }
     },
     selectItemOperate(state, payload) {
@@ -175,6 +183,9 @@ const mutations = {
             state[key] = payload.state[key];
         }
         payload.callback();
+    },
+    updateStep(state, payload) {
+        state.step = payload.step;
     }
 };
 export default mutations;

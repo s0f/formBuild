@@ -8,6 +8,8 @@ import Panel from './components/panel/panel'
 import store from './store/'
 
 import './style/common.scss'
+import './style/form.scss'
+import '../static/animate.css'
 
 
 import ElementUI from 'element-ui'

@@ -9,7 +9,7 @@ import List from './plugins/List'
     对象属性
     innerDrag 存放目的地内元素
 
-    事件流程： 
+    事件流程：
         start -> move -> inner -> leave
         start -> move -> inner -> leave -> mover -> inner
 */
@@ -162,7 +162,7 @@ class Drop extends dragDropBase {
     onDragEnd(params) {
         this.emit('onDragEnd', params);
     }
-    /* 
+    /*
         元素向下拖的时候，元素的底部只有到达目的地上方才算，被拖拽元素顶部离开了目标元素的下方才算离开
     */
     collision(pos) {

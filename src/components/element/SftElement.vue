@@ -22,7 +22,8 @@ export default {
             type: String,
             default: 'text',
             required: true
-        }
+        },
+        disabled: { type: Boolean, default: false}
     },
     methods: {
         deleteHandle(event) {
@@ -40,25 +41,7 @@ export default {
     position: relative;
     max-width: 800px;
     width: 100%;
-    &:active {
-        background-color: #f0f0f0;
-    }
-    &:hover{
-        .sft-delete{
-            display: block;
-        }
-    }
-    &:hover,
-    &.clicked{
-        .sft-border {
-            border-color: #ddd;
-        }
-    }
-    &.clicked{
-        background-color: #F8F4E8;
-    }
 }
-
 .sft-element-body {
     padding: 10px 0 10px 2%;
 }

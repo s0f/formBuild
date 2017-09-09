@@ -1,14 +1,21 @@
 <template>
   <div id="app">
-    <transition name="router-fade" mode="out-in">
-    <router-view></router-view>
+    <headTo></headTo>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+        <keep-alive>
+            <router-view class="animated"></router-view>
+        </keep-alive>
     </transition>
   </div>
 </template>
 
 <script>
+import headTo from './components/header/header'
 export default {
-  name: 'app'
+  name: 'app',
+  components: {
+      headTo
+  }
 }
 </script>
 
@@ -18,5 +25,11 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+}
+.fade-enter{
+
+}
+.fade-enter-active{
+
 }
 </style>

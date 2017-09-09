@@ -5,19 +5,24 @@
 @import "text";
 
 .clearfix:after {
-    content:"\200B";
-    display:block;
-    height:0;
-    clear:both;
+    content: "\200B";
+    display: block;
+    height: 0;
+    clear: both;
 }
-.clearfix {*zoom:1;}/*IE/7/6*/
 
-.float-l{
+.clearfix {
+    *zoom: 1;
+}
+/*IE/7/6*/
+.float-l {
     float: left;
 }
-.float-r{
+
+.float-r {
     float: right;
 }
+
 .flex {
     display: flex;
 }
@@ -26,35 +31,52 @@
     flex: 1;
 }
 
-.header{
+.bg-gray {
+    background-color: #efefef;
+}
+
+.bg-white {
+    background-color: #fff;
+}
+
+.header {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
     height: 50px;
     background: #151515;
     color: #b5b5b5;
     user-select: none;
     line-height: 50px;
 }
-.header-left{
-}
-.header-center{
+
+.header-left {}
+
+.header-center {
     width: 800px;
     height: 50px;
     margin: 0 auto;
 
     .header-nav {
         overflow: hidden;
+
         li {
-            float: left;
+            display: inline-block;
             padding: 0 20px;
 
             &.active,
             &:active,
-            &:hover{
-                background: #fff;
+            &:hover {
                 cursor: pointer;
-                .header-nav_item{
+
+                .header-nav_item {
                     background: $active;
                     color: #fcfcfc;
                 }
+            }
+
+            &.active {
+                background: #fff;
             }
 
             .header-nav_item {
@@ -72,20 +94,18 @@
             }
         }
     }
-
 }
+
 .header-right {
-    .header-tools{
-        span{
+    .header-tools {
+        span {
             padding: 0 10px;
             cursor: pointer;
 
             &:active,
-            &:hover{
+            &:hover {
                 color: #fff;
             }
         }
     }
 }
-
-

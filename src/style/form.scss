@@ -1,0 +1,128 @@
+.shadow {
+    box-shadow: rgba(0, 0, 0, .2) 0 0 5px 2px;
+}
+
+.sft-main {
+    top: 50px;
+}
+
+.sft-contain,
+.sft-main {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transition: all 0.2s cubic-bezier(.47, 0, .745, .715);
+}
+
+.sft-flag {
+    display: none;
+    position: relative;
+    height: 40px;
+    line-height: 40px;
+    background-color: #f1f1f1;
+    color: #999;
+
+    strong {
+        position: absolute;
+        left: 50%;
+        z-index: 2;
+        margin-left: -40px;
+        background-color: #f1f1f1;
+        display: block;
+        width: 80px;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        z-index: 0;
+        margin-top: -1px;
+        width: 100%;
+        height: 0;
+        border-bottom: 2px dashed #dddddd;
+    }
+}
+
+.sft-contain {
+    top: 50px;
+    width: 1500px;
+    margin: 0 auto;
+}
+
+.sft-left {
+    position: absolute;
+    top: 0;
+    left: 100px;
+    width: 235px;
+}
+
+.sft-left_item {
+    margin-bottom: 40px;
+}
+
+.sft-content {
+    position: absolute;
+    top: 0;
+    left: 430px;
+    right: 360px;
+}
+
+.sft-content-title {
+    height: 46px;
+    background-color: #efefef;
+    line-height: 46px;
+    font-size: 20px;
+    color: #606060;
+}
+
+.sft-content-footer {
+    height: 46px;
+    background: #efefef;
+    line-height: 46px;
+}
+
+.sft-form {
+    padding: 20px 0;
+    min-height: 400px;
+    user-select: none;
+    cursor: pointer;
+
+    &:not(.disabled) {
+        .sft-element {
+            &:active {
+                background-color: #f0f0f0;
+            }
+
+            &:hover {
+                .sft-delete {
+                    display: block;
+                }
+            }
+
+            &.clicked,
+            &:hover {
+                .sft-border {
+                    border-color: #ddd;
+                }
+            }
+
+            &.clicked {
+                background-color: #F8F4E8;
+            }
+        }
+    }
+}
+
+.x-drag-mark {
+    .drag-item {
+        border: 1px solid #ddd;
+    }
+}
+@media screen and (min-width: 1660px) {
+    .sft-left {
+        width: 336px;
+    }
+}

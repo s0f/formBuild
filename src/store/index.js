@@ -25,6 +25,8 @@ let state = {
     step: 1,
     elementPrefix: 'E',
     elementList: [],
+    formName: '新的表单',
+    formDesc: '',
     activeComponentRef: -1, // 当前操作的元素的索引
     activeComponentName: '',
     activeComponentUUID: -1,
