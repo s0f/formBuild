@@ -36,6 +36,7 @@ class Drop extends dragDropBase {
         this.innerDragIng = false;
         this.currentInnerPosIndex = -1; // 当前拖动对象所处的位置
         this.index = -1;
+        this.isEnter = false;
         this.currentInnerIndex = -1; // 当前拖动对象的index
         if (!this.options) {
             return false;
@@ -110,6 +111,7 @@ class Drop extends dragDropBase {
                 // 离开上一个马上进入下一个
                 if (this.currentInnerPosIndex !== -1) {
                     // 忽略自己
+
                     if (this.options.ignoreSelf && (  (this.currentInnerIndex === index) || (this.currentInnerIndex - 1 === index) )) {
                         this.emit('onInnerDragLeave', {
                             target: this.innerDrag.getElement(index),
@@ -117,6 +119,7 @@ class Drop extends dragDropBase {
                             el: params.el,
                             index: index
                         });
+                        this.options.isEnter = false;
                         this.innerDragIng = false;
                         return 0;
                     } else {
@@ -126,6 +129,7 @@ class Drop extends dragDropBase {
                             el: params.el,
                             index: index
                         });
+                        this.options.isEnter = true;
                     }
 
                 }
@@ -134,7 +138,15 @@ class Drop extends dragDropBase {
                 this.currentInnerPosIndex = index;
             }
         } else {
-
+            if( this.options.isEnter ) {
+                this.emit('onInnerDragLeave', {
+                    target: this.innerDrag.getElement(index),
+                    data: params.data,
+                    el: params.el,
+                    index: index
+                });
+                this.options.isEnter = false;
+            }
             this.innerDragIng = false;
             this.emit('onDragMove', params);
         }
@@ -179,12 +191,15 @@ class Drop extends dragDropBase {
 
         for(; i < len; i++) {
             currentPosition = this.innerDragPosition.getElement(i);
-            if(pos.top >= first && pos.top <= last){
+            // if(pos.top >= first && pos.top <= last){
+                // console.log('pos.top+pos.height', pos.top+pos.height)
+                // console.log('currentPosition.bottom', currentPosition.bottom)
+                // console.log('pos.top', pos.top)
                 if((pos.top + pos.height) >= currentPosition.bottom - 20 && (pos.top) <= currentPosition.bottom - 20 ){
                     index = i;
                     break;
                 }
-            }
+            // }
         }
        /* for (; i < len; i++) {
         // 勾股定理判断鼠标和目的地的距离
@@ -197,7 +212,7 @@ class Drop extends dragDropBase {
             }
         }
         index = util.getMin(result).index;*/
-       console.log(index)
+        console.log(index)
         return index;
     }
 }
