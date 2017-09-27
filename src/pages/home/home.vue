@@ -119,7 +119,7 @@ export default {
                         dropItem.innerDragPosition.add(dropDom.getBoundingClientRect());
                     });
                 }
-                params.target.querySelector('.sft-flag').style.display = 'block';
+                params.target.querySelector('.sft-flag').style.display = 'none';
             },
             onDragEnd(params) {
                 self.$refs.flag.style.display = 'none';

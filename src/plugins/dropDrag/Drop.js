@@ -13,6 +13,8 @@ import List from './plugins/List'
         start -> move -> inner -> leave
         start -> move -> inner -> leave -> mover -> inner
 */
+
+// TODO 拖拽元素放下时，快速的点击，会出现bug
 class Drop extends dragDropBase {
     /**
      * @param  {Element} el
@@ -138,7 +140,7 @@ class Drop extends dragDropBase {
                 this.currentInnerPosIndex = index;
             }
         } else {
-            if( this.options.isEnter ) {
+            if( this.options.isEnter && !this.innerDragIng) {
                 this.emit('onInnerDragLeave', {
                     target: this.innerDrag.getElement(index),
                     data: params.data,
@@ -157,9 +159,10 @@ class Drop extends dragDropBase {
     onDrop(params) {
         params.index = this.innerDrag.size;
         this.initPosition();
-        if (this.innerDragIng) {
+        if (this.innerDragIng && this.options.isEnter) {
             // 释放了鼠标，拖动中标记为false
             this.innerDragIng = false;
+            this.isEnter = false;
             this.emit('onInnerDrop', {
                 target: this.innerDrag.getElement(this.currentInnerPosIndex),
                 el: params.el,
@@ -173,6 +176,8 @@ class Drop extends dragDropBase {
     }
     onDragEnd(params) {
         this.emit('onDragEnd', params);
+        this.innerDragIng = false;
+        this.isEnter = false;
     }
     /*
         元素向下拖的时候，元素的底部只有到达目的地上方才算，被拖拽元素顶部离开了目标元素的下方才算离开

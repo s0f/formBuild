@@ -30,7 +30,9 @@ class Drag extends dragDropBase {
                 inner: false
             }
         }
+
         this.isMouseDragging = false;
+        this.minDoubleMouseDownTime = 1000;
         this.init();
     }
 
@@ -61,7 +63,10 @@ class Drag extends dragDropBase {
         if (!target) {
             return false;
         }
-
+        if(new Date().getTime() - this.minDoubleMouseDownTime < 1000){
+            return false;
+        }
+        this.minDoubleMouseDownTime = new Date().getTime();
         this.mouseDownPosition = {
             x: event.pageX,
             y: event.pageY
