@@ -32,7 +32,7 @@ class Drag extends dragDropBase {
         }
 
         this.isMouseDragging = false;
-        this.minDoubleMouseDownTime = 1000;
+        this.minDoubleMouseDownTime = 0;
         this.init();
     }
 
@@ -63,10 +63,17 @@ class Drag extends dragDropBase {
         if (!target) {
             return false;
         }
-        if(new Date().getTime() - this.minDoubleMouseDownTime < 1000){
-            return false;
+        console.log(this.minDoubleMouseDownTime)
+
+        if( this.minDoubleMouseDownTime == 0 ){
+            this.minDoubleMouseDownTime = new Date().getTime();
+        } else {
+            console.log('double', new Date().getTime() - this.minDoubleMouseDownTime < 1000)
+            if(new Date().getTime() - this.minDoubleMouseDownTime < 1000){
+                this.minDoubleMouseDownTime = new Date().getTime();
+                return false;
+            }
         }
-        this.minDoubleMouseDownTime = new Date().getTime();
         this.mouseDownPosition = {
             x: event.pageX,
             y: event.pageY
