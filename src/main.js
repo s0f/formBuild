@@ -13,19 +13,22 @@ import '../static/animate.css'
 
 
 import ElementUI from 'element-ui'
+
 import 'element-ui/lib/theme-default/index.css'
 // 为了能使用 this.$http.get
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
+
 Vue.use(ElementUI);
+
 // 注册全局组件
 Vue.component('Panel', Panel);
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
+    el: '#app',
     store,
-  router,
-  template: '<App/>',
-  components: {App}
+    router,
+    template: '<App/>',
+    components: {App}
 })

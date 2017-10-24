@@ -21,6 +21,7 @@ Vue.use(Vuex);
  * }]
  */
 let state = {
+    isLoading: false, // 正在加载页面
     isUp: false,
     step: 1,
     elementPrefix: 'E',

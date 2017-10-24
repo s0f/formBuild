@@ -117,7 +117,7 @@
             b.initInnerTargetPosition();
         }
         var aa = null;
-        var a = new dropDrag.Drag('.itembox', {
+        var a = new dragDrop.Drag('.itembox', {
             data: 'text',
             onDragStart: function (data) {
                 // console.log(data,'drag start');
@@ -127,27 +127,29 @@
             }
         });
         var one = true;
-        var b = new dropDrag.Drop('.box', {
+        var b = new dragDrop.Drop('.box', {
             innerDrag: true,
             innerDrop: true,
             onDragStart(params) {
-                // console.log('drop1 监听到 drag start事件');
+                 console.log('drop1 监听到 drag start事件');
             },
             onDragEnter(params) {
                 params.el.style.background = '#ddd'
                 console.log('drop1 监听到 drag 进入')
             },
             onDragMove() {
-                // console.log('drop1 监听到 在drop上移动')
+                 console.log('drop1 监听到 在drop上移动')
             },
             onDragLeave(params) {
                 params.el.style.background = '#fff'
-                // console.log('drop1 监听到 drag 离开')
+                 console.log('drop1 监听到 drag 离开')
             },
             onDrop(params) {
+	            console.log('drop1 监听到 drag 释放')
                 dropHandle.call(this, params);
             },
             onDragEnd(params) {
+	            console.log('drop1 监听到 drag 结束')
             },
             onInnerDrag(params) {
                 innerDragHandle.call(this, params);
@@ -160,7 +162,7 @@
                 innerDropHandle.call(this, params);
             }
         });
-        aa = new dropDrag.Drag('.box', {
+   /*     aa = new dragDrop.Drag('.box', {
             data: 'inner',
             inner: true,
             onDragStart: function (data) {
@@ -169,8 +171,8 @@
             onDragEnd: function () {
 
             }
-        });
-        var c = new dropDrag.Drop('.box2', {
+        });*/
+        /*var c = new dragDrop.Drop('.box2', {
             onDragStart(params) {
                 // console.log('drop2 监听到 drag start事件');
             },
@@ -189,14 +191,7 @@
                 params.el.style.background = '#fff'
                 // console.log('drop2 监听到 drag 结束')
             }
-        });
-/*        function a () {
-            console.log('xxx')
-        }
-        document.addEventListener('click',a)
-        document.querySelector('.item').onclick = function(){
-            document.removeEventListener('click', a);
-        }*/
+        });*/
     </script>
 </body>
 

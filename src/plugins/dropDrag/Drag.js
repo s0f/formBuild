@@ -30,7 +30,9 @@ class Drag extends dragDropBase {
                 inner: false
             }
         }
+
         this.isMouseDragging = false;
+        this.minDoubleMouseDownTime = 0;
         this.init();
     }
 
@@ -62,6 +64,14 @@ class Drag extends dragDropBase {
             return false;
         }
 
+        if( this.minDoubleMouseDownTime == 0 ){
+            this.minDoubleMouseDownTime = new Date().getTime();
+        } else {
+            if(new Date().getTime() - this.minDoubleMouseDownTime < 1000){
+                this.minDoubleMouseDownTime = new Date().getTime();
+                return false;
+            }
+        }
         this.mouseDownPosition = {
             x: event.pageX,
             y: event.pageY

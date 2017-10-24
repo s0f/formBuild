@@ -1,5 +1,5 @@
 <template>
-    <div class="sft-main">
+    <div class="sft-main sft-form-build">
         <section class="clearfix flex sft-contain" ref="contain">
             <homeBar v-on:widgetClickHandle="addElement" ref="buildLeft"></homeBar>
             <section class="sft-content shadow" ref="buildCenter">
@@ -31,7 +31,7 @@ import homeSetting from '../../pages/home/homeSetting'
 import Einput from '../../components/element/Input'
 import Eradio from '../../components/element/Radio'
 import Eselect from '../../components/element/Select'
-import dropDrag from '../../plugins/dropDrag/main.js'
+import * as dropDrag from '../../plugins/dropDrag/main.js'
 import $ from '../../common/query'
 import utils from '../../common/utils'
 
@@ -71,12 +71,14 @@ export default {
         this.$store.dispatch('recovery', {
             loadFormDataEd() {
                 self.$nextTick(function() {
-                    let list = document.querySelectorAll('.sft-element');
+                    let list = document.querySelectorAll('.sft-form-build .sft-element');
                     dropItem.innerDrag.addList(list);
+                    console.log(list)
                 });
                 self.$http.get('http://easy-mock.com/mock/5961e71e9adc231f357c229e/example/dragSate')
                     .then(function(res) {
                         dropItem.innerDragPosition.addList(res.data.data);
+                        console.log(dropItem)
                     });
             }
         });
@@ -190,6 +192,7 @@ export default {
             data: 'inner',
             inner: true
         });
+        console.log(document.querySelectorAll('.sft-form'))
 
     },
     methods: {
