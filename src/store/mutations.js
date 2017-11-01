@@ -186,6 +186,9 @@ const mutations = {
     },
     updateStep(state, payload) {
         state.step = payload.step;
+    },
+    loading(state, payload) {
+        state.isLoading = payload.loading;
     }
 };
 export default mutations;

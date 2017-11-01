@@ -1,35 +1,42 @@
 <template>
-  <div id="app">
-    <headTo></headTo>
-    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-        <keep-alive>
-            <router-view class="animated"></router-view>
-        </keep-alive>
-    </transition>
-  </div>
+    <div id="app">
+        <transition enter-active-class="fadeIn" leave-active-class="fadeOut" mode="out-in">
+            <router-view class="animated fast"  v-loading="isLoading"></router-view>
+        </transition>
+    </div>
 </template>
 
 <script>
-import headTo from './components/header/header'
-export default {
-  name: 'app',
-  components: {
-      headTo
-  }
-}
+    import store from './store/index'
+    export default {
+        name: 'app',
+        store,
+        data(){
+            return {
+                loadingInstance: null
+            }
+        },
+        computed: {
+        	isLoading: function () {
+                return this.$store.state.isLoading
+            }
+        }
+    }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-}
-.fade-enter{
+    #app {
+        height: 100%;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+    }
 
-}
-.fade-enter-active{
+    .fade-enter {
 
-}
+    }
+
+    .fade-enter-active {
+
+    }
 </style>

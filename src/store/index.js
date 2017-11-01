@@ -21,6 +21,7 @@ Vue.use(Vuex);
  * }]
  */
 let state = {
+    isLoading: false, // 正在加载页面
     isUp: false,
     step: 1,
     elementPrefix: 'E',
@@ -33,7 +34,8 @@ let state = {
     activeComponent: null,
     globalSetting: {
         insertQuestionNumber: false
-    }
+    },
+    loading: null
 }
 
 export default new Vuex.Store({

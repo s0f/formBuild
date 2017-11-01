@@ -10,7 +10,7 @@
             <el-table-column prop="createTime" label="创建">
             </el-table-column>
             <el-table-column label="操作" width="300">
-                <template scope="scope">
+                <template slot-scope="scope">
                 <el-button type="text" size="small">查看</el-button>
                 <el-button @click="handleClick" type="text" size="small">编辑</el-button>
               </template>

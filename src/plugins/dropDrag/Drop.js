@@ -217,7 +217,6 @@ class Drop extends dragDropBase {
             }
         }
         index = util.getMin(result).index;*/
-        console.log(index)
         return index;
     }
 }

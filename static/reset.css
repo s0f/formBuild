@@ -23,8 +23,14 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
   display: block;
 }
+html{
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+}
 body {
   line-height: 1;
+}
+html, body{
+    height: 100%;
 }
 ol, ul {
   list-style: none;
@@ -42,5 +48,6 @@ table {
   border-spacing: 0;
 }
 
-.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
-.clearfix{*+height:1%;}
+.clearfix:after :after {clear:both;content:'.';display:block;width: 0;height: 0;visibility:hidden;}
+.clearfix{ zoom: 1;}
+

@@ -1,3 +1,4 @@
+@import "var";
 .shadow {
     box-shadow: rgba(0, 0, 0, .2) 0 0 5px 2px;
 }
@@ -56,7 +57,7 @@
     position: absolute;
     top: 0;
     left: 100px;
-    width: 235px;
+    width: 212px;
 }
 
 .sft-left_item {
@@ -72,10 +73,10 @@
 
 .sft-content-title {
     height: 46px;
-    background-color: #efefef;
+    background-color: $default;
     line-height: 46px;
     font-size: 20px;
-    color: #606060;
+    color: $text-water;
 }
 
 .sft-content-footer {
@@ -116,13 +117,40 @@
     }
 }
 
+.stf-panel {
+    margin-bottom: 20px;
+}
+
+.stf-panel-title {
+    padding-left: 10px;
+    height: 35px;
+    line-height: 35px;
+
+    background-color: $default;
+    cursor: pointer;
+
+    color: $text-water;
+}
+
+.stf-panel-content {
+    padding: 5px;
+    border: 1px solid $border-3;
+}
+
 .x-drag-mark {
     .drag-item {
         border: 1px solid #ddd;
     }
 }
-@media screen and (min-width: 1660px) {
-    .sft-left {
-        width: 336px;
+@media screen and (min-width: 1660px){
+    .sft-main{
+        .sft-left {
+            width: 336px;
+        }
+        .stf-setting {
+            width: 400px;
+            right: 20px;
+        }
     }
 }
+
