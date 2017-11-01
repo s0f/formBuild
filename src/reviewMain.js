@@ -1,16 +1,11 @@
+/**
+ * Created by 31602 on 2017/11/1.
+ */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import App from './App'
-import router from './router'
+import Review from './pages/review/review'
 import axios from 'axios'
-import Panel from './components/panel/panel'
-import store from './store/'
-
-import './style/common.scss'
-import './style/form.scss'
-import '../static/animate.css'
-
 
 import ElementUI from 'element-ui'
 
@@ -24,14 +19,9 @@ Vue.config.productionTip = false
 Vue.use(ElementUI);
 
 
-// 注册全局组件
-Vue.component('Panel', Panel);
-
 /* eslint-disable no-new */
 new Vue({
     el: '#app',
-    store,
-    router,
-    template: '<App/>',
-    components: {App}
+    template: '<Review/>',
+    components: {Review}
 })

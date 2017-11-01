@@ -39,7 +39,6 @@ export default {
 <style lang="scss">
 .sft-element {
     position: relative;
-    max-width: 800px;
     width: 100%;
 }
 .sft-element-body {

@@ -48,13 +48,9 @@
 <style lang="scss">
     .stf-setting {
         position: absolute;
-        right: 30px;
+        right: 10px;
 
         width: 300px;
-    }
-
-    .stf-setting-global {
-        border: 1px solid #ddd;
     }
 
     .stf-setting-global,
@@ -83,8 +79,4 @@
         cursor: pointer;
     }
 
-    .stf-panel {
-        margin-bottom: 20px;
-        border: 1px solid #ddd;
-    }
 </style>

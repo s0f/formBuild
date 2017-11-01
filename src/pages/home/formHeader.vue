@@ -23,9 +23,6 @@
                 <section class="sft-form disabled">
                     <component v-for="(element ,index) in elementList" :key="index" :is="element.element" :data-type="element.element" :data-ref="element.index" :data-idx="index" :idx="index" v-if="element" :uuid="element.uuid" disabled="true">
                     </component>
-                    <div class="sft-flag" ref="flag">
-                        <strong>放在这里</strong>
-                    </div>
                 </section>
             </section>
         </section>
@@ -79,7 +76,7 @@ export default {
                 type: 'form',
                 value: this.form
             });
-            this.$router.push({ name: 'formContent' });
+            this.$router.push({ name: 'formEdit' });
             this.$store.commit('updateStep', {
                 step: 2
             });
@@ -103,6 +100,13 @@ export default {
 }
 
 .sft-contain {
-    top: 400px;
+    position: relative;
+    width: inherit;
 }
+    .sft-content{
+        position: relative;
+        left: inherit;
+        width: 820px;
+        margin: 0 auto;
+    }
 </style>

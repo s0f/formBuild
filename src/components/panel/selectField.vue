@@ -2,10 +2,19 @@
     <div class="stf-field-item" slot="header">
         <span class="stf-field-title">{{ title }}</span>
         <div class="sft-field-content">
-            <select v-if="type == 'base'" :type="type" v-model="baseAttr.value" :value="baseAttr.value"
+          <!--  <select v-if="type == 'base'" :type="type" v-model="baseAttr.value" :value="baseAttr.value"
                     @change="updateAttribute">
                 <option v-for="item in baseAttr.data" :value="item.value">{{item.desc}}</option>
-            </select>
+            </select>-->
+            <el-select v-if="type == 'base'" :type="type" v-model="baseAttr.value" size="small"
+                       :value="baseAttr.value" placeholder="请选择" :change="updateAttribute">
+                <el-option
+                    v-for="item in baseAttr.data"
+                    :key="item.value"
+                    :label="item.desc"
+                    :value="item.value">
+                </el-option>
+            </el-select>
             <div v-if="type == 'selects'" class="clearfix">
                 <ul v-on:click="activeHandle" ref="select-wrap" class="sft-select-wrap">
                     <li class="sft-select-item clearfix" :type="type"
@@ -18,7 +27,9 @@
                         </div>
                     </li>
                 </ul>
-                <div class="text-center"><button class="sft-btn sft-btn-primary sft-add-select-item margin-top" @click="addSelectItemHandle">添加</button></div>
+                <div class="text-center">
+                    <el-button type="primary" @click="addSelectItemHandle" size="mini" class="margin-top">添加</el-button>
+                </div>
             </div>
         </div>
     </div>

@@ -1,11 +1,11 @@
 <template>
     <section class="sft-left" v-on:click.capture="widgetClickHandle">
-        <section class="sft-left_item shadow">
+        <section class="sft-left_item shadow" ref="baseBar">
             <Widget :baseWidgetTitle="baseWidgetTitle" :baseWidgets="baseWidgets"></Widget>
             <Widget :baseWidgetTitle="picWidgetTitle" :baseWidgets="picWidgets"></Widget>
             <Widget :baseWidgetTitle="auxiliaryTitle" :baseWidgets="auxiliarys"></Widget>
         </section>
-        <section class="sft-left_item shadow">
+        <section class="sft-left_item shadow" ref="concatBar">
             <Widget :baseWidgetTitle="contactsTitle" :baseWidgets="contacts"></Widget>
             <Widget :baseWidgetTitle="imTitle" :baseWidgets="ims"></Widget>
         </section>
@@ -71,6 +71,8 @@ export default {
     },
     components: {
         Widget,
+    },
+    created(){
     },
     methods: {
         widgetClickHandle(event) {

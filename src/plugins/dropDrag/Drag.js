@@ -64,10 +64,10 @@ class Drag extends dragDropBase {
             return false;
         }
 
-        if( this.minDoubleMouseDownTime == 0 ){
+        if (this.minDoubleMouseDownTime === 0) {
             this.minDoubleMouseDownTime = new Date().getTime();
         } else {
-            if(new Date().getTime() - this.minDoubleMouseDownTime < 1000){
+            if (new Date().getTime() - this.minDoubleMouseDownTime < 1000) {
                 this.minDoubleMouseDownTime = new Date().getTime();
                 return false;
             }
@@ -83,14 +83,12 @@ class Drag extends dragDropBase {
         document.addEventListener('mouseup', this._endHandler, false);
         this.wrap.addEventListener('mousemove', this._moveHandler, false);
         this.wrap.addEventListener('mouseup', this._endHandler, false);
+        console.log('tt', event.pageX, event.pageY)
 
     }
 
     moveHandler(event) {
-        if (this.isMouseDragging) return false;
         let target = util.parents(event.target, '.drag-item');
-
-        this.isMouseDragging = true;
 
         store.onDragStart(this.options.data, target);
 
@@ -102,8 +100,9 @@ class Drag extends dragDropBase {
         document.body.appendChild(markNode);
         markNode.appendChild(this.cloneNode);
         this.markNode = markNode;
-        this.markNode.onmousemove = this.markNodeMouseMove.bind(this)
-        this.markNode.onmouseup = this.markNodeMouseUp.bind(this)
+        this._markNodeMouseMove = this.markNodeMouseMove.bind(this);
+        window.onmousemove = this.markNodeMouseMove.bind(this);
+        window.onmouseup = this.markNodeMouseUp.bind(this);
 
         tempOffset = this.getOffset(target);
         if (this.options.inner) {
@@ -132,10 +131,6 @@ class Drag extends dragDropBase {
 
         this.emit('onDragStart', params);
 
-        // 延迟100ms显示移动中的元素，避免元素最开始拖动时的快速闪到鼠标位置
-        setTimeout(() => {
-            this.cloneNode.style.display = 'block';
-        }, 100);
     }
 
     endHandler() {
@@ -146,7 +141,7 @@ class Drag extends dragDropBase {
 
     markNodeMouseMove(event) {
 
-        var currentX = event.pageX,
+        let currentX = event.pageX,
             currentY = event.pageY,
             distanceX = this.startX - this.sourceX,//currentX - this.startX,
             distanceY = this.startY - this.sourceY,//currentY - this.startY,
@@ -154,7 +149,14 @@ class Drag extends dragDropBase {
                 X: Number.parseInt((currentX - distanceX /*+ this.sourceX*/).toFixed()),
                 Y: Number.parseInt((currentY - distanceY /*+ this.sourceY*/).toFixed()),
             };
+        if (currentX === this.startX && currentY === this.startY) {
+            return false;
+        }
 
+        if (!this.isMouseDragging) {
+            this.cloneNode.style.display = 'block';
+            this.isMouseDragging = true;
+        }
         this.setTargetPosition(targetPos);
         store.onDragMove({
             left: targetPos.X,
@@ -165,8 +167,8 @@ class Drag extends dragDropBase {
     }
 
     markNodeMouseUp() {
-        this.markNode.onmousemove = null;
-        this.markNode.onmouseup = null;
+        window.onmousemove = null;
+        window.onmouseup = null;
         if (this.options.inner) {
             store.onDragEnd(this.options.data, true);
         } else {
@@ -192,7 +194,7 @@ class Drag extends dragDropBase {
             offset.top = 0;
             offset.left = 0;
         }
-        if (Node == document.body) {//当该节点为body节点时，结束递归
+        if (Node === document.body) {//当该节点为body节点时，结束递归
             return offset;
         }
         offset.top += Node.offsetTop;

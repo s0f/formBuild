@@ -34,7 +34,8 @@ let state = {
     activeComponent: null,
     globalSetting: {
         insertQuestionNumber: false
-    }
+    },
+    loading: null
 }
 
 export default new Vuex.Store({

@@ -16,11 +16,11 @@ export default {
         headerDefault
     },
     methods: {
-        
+
     }
 }
 </script>
-<style lang="css">
+<style lang="scss" scoped>
     .header-tools a {
         color: #999;
     }
