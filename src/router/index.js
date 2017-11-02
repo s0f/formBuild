@@ -12,7 +12,6 @@ const release = r => require.ensure([], () => r(require('../pages/release/releas
 Vue.use(Router)
 
 let router = new Router({
-    mode: 'history',
     routes: [
         {
             path: '/',
