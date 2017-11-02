@@ -19,6 +19,7 @@ let router = new Router({
             name: 'index',
             component: home,
             alias: '/index',
+            redirect: '/formHeader',
             children: [
                 {
                     path: 'formHeader',
