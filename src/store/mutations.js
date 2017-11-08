@@ -1,90 +1,226 @@
-const elementTypes = ['Einput', 'Eradio', 'Eselect'];
+const elementTypes = ['Etext', 'Eradio', 'Eselect', 'EmultiSelect', 'EdateTime_date'];
 const elementBaseProperty = {
     uuid: 0,
     // 基础设置
     base: {
-        required: false
-    },
-    // 填写设置
-    limit: {
-        repeat: true
+        required: false,
+        // 填写设置
+        limit: {
+            repeat: true
+        },
     },
     // 外观样式
     style: {}
 };
+/*
+ *  设置种类汇总
+ * */
+const elementAttributes = {
+    'changeTextLineCont': {
+        name: '切换组件类型',
+        data: [
+            {id: 0, value: 1, desc: '单行文本'},
+            {id: 0, value: 2, desc: '多行文本'}
+        ]
+    },
+    'changeSelectType': {
+        name: '切换组件类型',
+        data: [
+            {id: 0, value: 1, desc: '单选'},
+            {id: 0, value: 2, desc: '多选'}
+        ]
+    },
+    'changeTimeType': {
+        name: '数据类型',
+        data: [
+            {id: 0, value: 1, desc: '日期+时间'},
+            {id: 1, value: 2, desc: '日期'},
+            {id: 2, value: 3, desc: '时间'}
+        ]
+    }
+};
+
 const elementProperty = {
-    'Einput': {
-        name: '文本框',
-        type: 'input',
-        isChange: true,
+    'Etext': {
         base: {
-            value: 1,
-            name: '切换组件类型',
             title: '文本框',
+            limit: false,
+            name: '文本框', // 元素的名称
             desc: '',
-            data: [
-                { id: 0, value: 1, desc: '单行文本' },
-                { id: 0, value: 2, desc: '多行文本' }
-            ]
+            type: 'input', // 元素的类型
+            element: 'text', // 元素的子类型
         },
         style: {
             layout: 'transverse', // transverse or vertical
             width: '20', // 10% - 100%
+        },
+        property: {
+            changeType: {
+                name: '切换组件类型',
+                type: 'select',
+                value: 1,
+                data: [
+                    {id: 0, value: 1, desc: '单行文本'},
+                    {id: 1, value: 2, desc: '多行文本'}
+                ]
+            }
         }
     },
     'Eradio': {
-        name: '选择',
-        type: 'radio',
-        isChange: true,
         base: {
-            value: 1,
-            name: '切换组件类型',
             title: '选择',
+            name: '选择',
+            type: 'radio',
+            element: '',
             desc: '',
-            data: [
-                { id: 0, value: 1, desc: '单选' },
-                { id: 0, value: 2, desc: '多选' }
-            ]
         },
         style: {
             layout: 'transverse',
         },
-        selects: {
-            title: '选项内容',
-            value: 1,
-            count: 3,
-            data: [
-                { id: 0, value: 1, desc: '选项1' },
-                { id: 1, value: 2, desc: '选项2' },
-                { id: 2, value: 3, desc: '选项3' },
-            ]
+        property: {
+            selectContent: {
+                name: '选项内容',
+                type: 'multi-line-text',
+                value: 1,
+                count: 3,
+                data: [
+                    {id: 0, value: 1, desc: '选项1'},
+                    {id: 1, value: 2, desc: '选项2'},
+                    {id: 2, value: 3, desc: '选项3'},
+                ]
+            }
+        }
+
+    },
+
+    'EdateTime_date': {
+        base: {
+            name: '日期',
+            title: '日期时间',
+            type: 'input',
+            element: 'datetime_date',
+            desc: '',
+        },
+        property: {
+            checkValues: [],
+            types: {
+                'dateTime': ['YYYYMMdd', 'MMdd', 'dd'],
+                'date': ['YYYYMMdd', 'YYYYMM', 'MMdd', 'YYYY', 'MM', 'dd']
+            },
+            dateTypeNumber: 'dateTime',
+            isCustomDefaultTime: false,
+            defaultItems: {
+                'dateTime': [1, 2, 3],
+                'date': [1, 5, 6, 7, 4],
+                'time': [1, 2, 3]
+            },
+            changeTimeType: {
+                name: '数据类型',
+                data: [
+                    {id: 0, value: 'dateTime', desc: '日期+时间'},
+                    {id: 1, value: 'date', desc: '日期'},
+                    {id: 2, value: 'time', desc: '时间'}
+                ],
+                value: 'dateTime'
+            },
+            changeDateFormat: {
+                name: '接受的日期格式',
+                value: 'YYYYMMdd',
+                data: [{desc: '年-月-日', value: 'YYYYMMdd'}, {desc: '年-月', value: 'YYYYMM'}, {desc: '月-日', value: 'MMdd'},
+                    {desc: '仅年', value: 'YYYY'}, {desc: '仅月', value: 'MM'}, {desc: '仅日', value: 'dd'},]
+            },
+            defaultShowTime: {
+                name: '默认显示日期时间',
+                value: 1,
+                data: [{desc: '留空', value: 1}, {desc: '填表当前时间', value: 2}, {desc: '指定时间', value: 3},
+                    {desc: '填表当天', value: 5}, {desc: '填表前一天', value: 6}, {desc: '填表后一天', value: 7}, {
+                        desc: '指定日期',
+                        value: 4
+                    }]
+            },
+            accurateTimeData: {
+                name: '时间精确到',
+                value: 3,
+                data: [{desc: '时', value: 1}, {desc: '分', value: 2}, {desc: '秒', value: 3}]
+            },
         }
     },
+
     'Eselect': {
-        name: '下拉选择',
-        type: 'select',
         base: {
-            value: 1,
-            // name: '切换组件类型',
+            name: '下拉选择',
             title: '下拉',
+            type: 'select',
+            element: '',
+            value: 1,
             desc: '',
-            /*data: [
-                {id:0, value: 1, desc: '单选'},
-                {id:0, value: 2, desc: '多选'}
-            ]*/
         },
         style: {
             layout: 'transverse',
         },
-        selects: {
-            title: '切换组件类型',
-            value: 1,
-            count: 3,
-            data: [
-                { id: 0, value: 1, desc: '选项1' },
-                { id: 1, value: 2, desc: '选项2' },
-                { id: 2, value: 3, desc: '选项3' },
-            ]
+        property: {
+            selects: {
+                title: '切换组件类型',
+                type: 'multiLineText',
+                value: 1,
+                count: 3,
+                data: [
+                    {id: 0, value: 1, desc: '选项1'},
+                    {id: 1, value: 2, desc: '选项2'},
+                    {id: 2, value: 3, desc: '选项3'},
+                ]
+            }
+        }
+    },
+    'EmultiSelect': {
+        base: {
+            name: '多级下拉',
+            title: '多级下拉',
+            type: 'multiSelect',
+            element: '',
+        },
+        property: {
+            tabs: {
+                title: '',
+                type: 'tab',
+                value: '1',
+                count: 2,
+                data: [
+                    {
+                        desc: '一级',
+                        value: '1'
+                    },
+                    {
+                        desc: '二级',
+                        value: '2'
+                    }
+                ]
+            },
+            oneLevel: {
+                title: '默认提示文字',
+                type: 'text',
+                value: '请选择'
+            },
+            twoLevel: {
+                title: '默认提示文字',
+                type: 'text',
+                value: '请选择'
+            },
+            threeLevel: {
+                title: '默认提示文字',
+                type: 'text',
+                value: '请选择'
+            },
+            oneSelects: {
+                title: '切换组件类型',
+                type: 'multiLineText',
+                value: '',
+                count: 3,
+                twoOne: '',
+                threeOne: '',
+                threeTwo: '',
+                data: []
+            }
         }
     }
 }
@@ -92,7 +228,6 @@ let elementPropertys = {};
 elementTypes.forEach((type, index) => {
     elementPropertys[type] = Object.assign({}, elementBaseProperty, elementProperty[type]);
 });
-
 const mutations = {
     toggleActiveComponent(state, payload) {
         payload.name && (state.activeComponentName = payload.name);
@@ -102,14 +237,14 @@ const mutations = {
     addElement(state, payload) {
         const type = elementTypes[elementTypes.indexOf(payload.componentName)];
         let element = state.elementList[payload.splice];
-
+        let elementProperty = payload.element ? state.elementPrefix + payload.element : payload.componentName;
         if (!element) {
             element = JSON.parse(JSON.stringify(Object.assign({},
-                elementPropertys[payload.componentName], {
+                elementPropertys[elementProperty], {
                     index: state.elementList.length,
-                    element: payload.componentName,
                     uuid: payload.uuid
                 })));
+            element.base.element = payload.element;
         }
         if (payload.insert !== -1) {
             if (payload.splice !== undefined && payload.splice !== -1) {
@@ -136,7 +271,7 @@ const mutations = {
     updateProperty(state, payload) {
         // let newElement = Object.assign({}, state.elementList[state.activeComponentRef]);
 
-        if (payload.title != undefined) {
+        if (payload.title !== undefined) {
             state.elementList[state.activeComponentRef].base.title = payload.title;
         } else {
             state.elementList[state.activeComponentRef].base.desc = payload.desc;
@@ -149,34 +284,99 @@ const mutations = {
     updateIsTextArea(state, payload) {
         state.elementList[state.activeComponentRef].isTextArea = payload.value;
     },
+    updateBase(state, payload){
+        state.elementList[state.activeComponentRef].base[payload.updateKey] = payload.value;
+    },
     updateAttribute(state, payload) {
-        if (payload.type == 'input') {
-            state.elementList[state.activeComponentRef].base.value = payload.value;
-        } else if (payload.type == 'selects') {
-            state.elementList[state.activeComponentRef].selects.value = payload.value;
-        } else if (payload.type == 'formName') {
-            console.log(payload.value)
-            state[payload.type] = payload.value;
-        } else if (payload.type == 'formDesc') {
-            state[payload.type] = payload.value;
-        } else if (payload.type == 'form') {
-            state.formName = payload.value.formName;
-            state.formDesc = payload.value.formDesc;
+        let property = 'value';
+        if (payload.property) {
+            property = payload.property;
         }
+        state.elementList[state.activeComponentRef].property[payload.type][property] = payload.value;
+        /* if (payload.type === 'input') {
+         state.elementList[state.activeComponentRef].base.value = payload.value;
+         } else if (payload.type === 'selects') {
+         state.elementList[state.activeComponentRef].selects.value = payload.value;
+         } else if (payload.type === 'formName') {
+         console.log(payload.value)
+         state[payload.type] = payload.value;
+         } else if (payload.type === 'formDesc') {
+         state[payload.type] = payload.value;
+         } else if (payload.type === 'form') {
+         state.formName = payload.value.formName;
+         state.formDesc = payload.value.formDesc;
+         } else if (payload.type === 'dateTime_date') {
+         // state.activeComponent.data
+         }*/
+    },
+    updateDeepAttribute(state, payload) {
+        state.elementList[state.activeComponentRef].property[payload.type].data[payload.index].value = payload.value;
     },
     selectItemOperate(state, payload) {
-        const selects = state.elementList[state.activeComponentRef].selects,
+        const selects = state.elementList[state.activeComponentRef].property[payload.updateKey || 'selects'],
             count = selects.count + 1;
-        if (payload.type == 'add') {
+        if (payload.type === 'add') {
             selects.count += 1;
             selects.data.push({
                 id: count,
                 value: count,
-                desc: '选项' + count
+                desc: '选项' + count,
+                data: []
             });
         } else {
             selects.data.splice(payload.idx, 1);
         }
+    },
+    selectArrayItemOperate(state, payload) {
+        let selects = state.elementList[state.activeComponentRef].property[payload.updateKey],
+            parentId = 0;
+        function deep(arr){
+            let result = null;
+            for (let i = 0, len = arr.length; i < len; i++) {
+                if (arr[i].value === payload.value ) {
+                    result = arr[i];
+                    parentId = arr[i].value * 10;
+                    break;
+                } else {
+                    if( arr[i].data.length ){
+                        for( let j = 0, len2=arr[i].data.length; j<len2; j++){
+                            if(arr[i].data[j].value=== payload.value){
+                                // TODO ID生成有问题，暂时不影响，待完善
+                                parentId = arr[i].value*100 + (arr[i].data[j].value+j);
+                                result = arr[i].data[j];
+                                break;
+                            }
+                        }
+                    }
+
+                }
+            }
+         return result;
+        }
+        let count,
+            item = deep(selects.data);
+
+
+        if (payload.type === 'add') {
+            count = item.data.length + 1;
+            console.log('parentId:', parentId, count)
+            item.data.push({
+                id: parentId+count,
+                value: parentId+count,
+                desc: '选项' + count,
+                data: []
+            });
+        } else {
+            item.data.splice(payload.idx, 1);
+        }
+    },
+    addItem(state, payload) {
+        state.elementList[state.activeComponentRef].property.tabs.data.push(payload.value);
+    },
+    removeItem(state, payload){
+        let item = state.elementList[state.activeComponentRef].property.tabs;
+        item.data = payload.value;
+        item.count = payload.value.length;
     },
     recovery(state, payload) {
         for (let key in payload.state) {

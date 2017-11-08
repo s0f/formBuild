@@ -5,9 +5,10 @@
             <section class="sft-content shadow" ref="buildCenter">
                 <h2 class="sft-content-title">{{formName}}</h2>
                 <section class="sft-form" @click="toggleActive">
-                    <component v-for="(element ,index) in elementList" :key="index" :is="element.element"
-                               :data-type="element.element" :data-ref="element.index" :data-idx="index" :idx="index"
-                               :class="[$store.state.activeComponentUUID == element.uuid ? 'clicked' : '','drag-item']"
+                    <component v-for="(element ,index) in elementList" :key="index" :is="'E'+element.base.type"
+                               :data-type="$store.state.elementPrefix+element.base.type" :data-ref="element.index"
+                               :data="element" :data-index="index" :data-element="element.base.element"
+                               :class="[$store.state.activeComponentUUID === element.uuid ? 'clicked' : '','drag-item']"
                                v-if="element" :uuid="element.uuid">
                     </component>
                     <div class="sft-flag" ref="flag">
@@ -34,6 +35,7 @@
     import Einput from '../../components/element/Input'
     import Eradio from '../../components/element/Radio'
     import Eselect from '../../components/element/Select'
+    import EmultiSelect from '../../components/element/multiSelect'
     import * as dropDrag from '../../plugins/dropDrag/main.js'
     import $ from '../../common/query'
     import utils from '../../common/utils'
@@ -57,7 +59,8 @@
             homeSetting,
             Einput,
             Eradio,
-            Eselect
+            Eselect,
+            EmultiSelect
         },
         computed: {
             ...mapState({
@@ -72,22 +75,22 @@
                 step: 2
             });
 
-            this.$store.dispatch('recovery', {
-                loadFormDataEd() {
-                    self.$nextTick(function () {
-                        let list = document.querySelectorAll('.sft-form-build .sft-element');
-                        dropItem.innerDrag.addList(list);
-                        console.log(list)
-                    });
-                    self.$http.get('http://easy-mock.com/mock/5961e71e9adc231f357c229e/example/dragSate')
-                        .then(function (res) {
-                            dropItem.innerDragPosition.addList(res.data.data);
-                            setTimeout(function () {
-//                                self.$loading().close()
-                            }, 200)
-                        });
-                }
-            });
+            /*this.$store.dispatch('recovery', {
+             loadFormDataEd() {
+             self.$nextTick(function () {
+             let list = document.querySelectorAll('.sft-form-build .sft-element');
+             dropItem.innerDrag.addList(list);
+             console.log(list)
+             });
+             self.$http.get('http://easy-mock.com/mock/5961e71e9adc231f357c229e/example/dragSate')
+             .then(function (res) {
+             dropItem.innerDragPosition.addList(res.data.data);
+             setTimeout(function () {
+             //                                self.$loading().close()
+             }, 200)
+             });
+             }
+             });*/
 
         },
         mounted() {
@@ -114,22 +117,24 @@
                     self.$refs.flag.style.display = 'none';
                 },
                 onDrop(params) {
-                    const componentName = params.sourceEl.getAttribute('data-type');
+                    const componentName = params.sourceEl.getAttribute('data-type'),
+                        element = params.sourceEl.getAttribute('element');
 
                     if (componentName) {
                         self.$store.commit('addElement', {
                             uuid: utils.uuid(),
                             index: params.index,
+                            element: element || '',
                             componentName: componentName,
                             insert: -1
                         });
                         self.$nextTick(function () {
-                            const dropDom = document.querySelector('[data-idx="' + params.index + '"]');
+                            const dropDom = document.querySelector('[data-index="' + params.index + '"]');
                             dropItem.innerDrag.add(dropDom);
                             dropItem.innerDragPosition.add(dropDom.getBoundingClientRect());
                         });
                     }
-                    params.target.querySelector('.sft-flag').style.display = 'block';
+                    params.el.querySelector('.sft-flag').style.display = 'block';
                 },
                 onDragEnd(params) {
                     self.$refs.flag.style.display = 'none';
@@ -153,17 +158,20 @@
                      *    a. 拖动元素DOM插入到目标元素后面
                      *    b.
                      * */
-                    let inner = params.sourceEl.getAttribute('data-idx'),
+                    let inner = params.sourceEl.getAttribute('data-index'),
                         pos = -1,
-                        componentName = '';
+                        componentName = '',
+                        element = '';
                     if (!!inner) {
                         pos = this.innerDrag.find(params.target);
                         let splicePos = this.innerDrag.find(params.sourceEl);
                         componentName = params.sourceEl.getAttribute('data-type');
+                            element = params.sourceEl.getAttribute('element');
                         self.$store.commit('addElement', {
                             uuid: utils.uuid(),
                             index: pos,
                             componentName: componentName,
+                            element: element || '',
                             insert: pos,
                             splice: splicePos
                         });
@@ -178,15 +186,17 @@
                     } else {
                         pos = this.innerDrag.find(params.target);
                         componentName = params.sourceEl.getAttribute('data-type');
+                        element = params.sourceEl.getAttribute('element');
                         self.$store.commit('addElement', {
                             uuid: utils.uuid(),
                             index: pos,
+                            element: element || '',
                             componentName: componentName,
                             insert: pos
                         });
 
                         self.$nextTick(function () {
-                            let newElement = document.querySelector('[data-idx="' + (params.index - 1) + '"]');
+                            let newElement = document.querySelector('[data-index="' + (params.index - 1) + '"]');
                             dropItem.innerDrag.clear();
                             dropItem.innerDrag.addList(document.querySelectorAll('.sft-form .drag-item'));
                             dropItem.initInnerTargetPosition();
@@ -203,10 +213,10 @@
 
         },
         methods: {
-            addElement(target) {
-                const componentName = target.getAttribute('data-type')
+            addElement(payload) {
                 this.$store.commit('addElement', {
-                    componentName: componentName,
+                    componentName: this.$store.state.elementPrefix + payload.data[0],
+                    element: payload.data[1] || '',
                     uuid: utils.uuid(),
                     insert: -1
                 });
@@ -224,9 +234,8 @@
                 let item = document.querySelector('[uuid="' + this.$store.state.activeComponentUUID + '"]');
                 if (item) {
                     this.$store.commit('toggleActiveComponent', {
-                        ref: item.getAttribute('data-idx')
+                        ref: item.getAttribute('data-index')
                     });
-                    // return state.elementList[Number.parseInt(item.getAttribute('data-idx'))];
                 } else {
                     return null;
                 }
@@ -236,10 +245,9 @@
                  点击时元素A，元素为选中状态，记住ID
                  拖拽其他元素后，列表重新render，A 依然要处于选中状态
                  */
-                let target = event.target;
-                target = target.classList.contains('sft-element') ? target : target.parentElement;
+                let target = utils.parents(event.target, '.sft-element');
                 if (target.classList.contains('sft-element')) {
-                    const index = target.getAttribute('data-idx'),
+                    const index = target.getAttribute('data-index'),
                         targetIndex = target.getAttribute('data-ref'),
                         name = target.getAttribute('data-type').split(this.$store.state.elementPrefix)[1],
                         uuid = target.getAttribute('uuid');
@@ -263,7 +271,8 @@
                     }
                     return tempObj;
                 });
-                console.log(JSON.stringify(dropState))
+                window.localStorage.setItem('formData', JSON.stringify(this.$store.state));
+                location.href = location.origin + '/review.html';
             },
             resize() {
                 // TODO 页面自适应
@@ -271,11 +280,10 @@
                     winHeight = window.innerHeight,
                     leftBarHeight = this.$refs.buildLeft.$el.offsetHeight;
                 const containMaxWidth = winWidth - 20;
-                console.log(winWidth)
-                if( winWidth > 1920 ){
+                if (winWidth > 1920) {
                     this.$refs.contain.style.width = '1880px';
                 }
-                if (winWidth >= 1660 && winWidth <= 1920 ) {
+                if (winWidth >= 1660 && winWidth <= 1920) {
                     this.$refs.contain.style.width = containMaxWidth + 'px';
                     this.$refs.buildLeft.$el.style.left = '50px';
                     this.$refs.buildCenter.style.left = '440px';
@@ -299,7 +307,7 @@
                     this.$refs.buildCenter.style.right = '360px';
                 }
 
-                if( leftBarHeight > winHeight){
+                if (leftBarHeight > winHeight) {
                     this.$refs.buildLeft.$el.querySelectorAll('.sft-left_item')[1].style.display = 'none';
                 }
 

@@ -1,36 +1,21 @@
 <template>
     <div class="stf-field-item" slot="header">
-        <span class="stf-field-title">{{ title }}</span>
-        <div class="sft-field-content">
-          <!--  <select v-if="type == 'base'" :type="type" v-model="baseAttr.value" :value="baseAttr.value"
-                    @change="updateAttribute">
-                <option v-for="item in baseAttr.data" :value="item.value">{{item.desc}}</option>
-            </select>-->
-            <el-select v-if="type == 'base'" :type="type" v-model="baseAttr.value" size="small"
-                       :value="baseAttr.value" placeholder="请选择" :change="updateAttribute">
+        <span class="stf-field-title">{{ _property.name }}</span>
+        <div :class="['sft-field-content', size?'float-r w50': '']">
+            <!--  <select v-if="type == 'base'" :type="type" v-model="baseAttr.value" :value="baseAttr.value"
+                      @change="updateAttribute">
+                  <option v-for="item in baseAttr.data" :value="item.value">{{item.desc}}</option>
+              </select>-->
+            <el-select :type="updateKey" v-model="value" size="small"  @change="updateAttribute">
                 <el-option
-                    v-for="item in baseAttr.data"
+                    v-for="item in typeMap"
                     :key="item.value"
                     :label="item.desc"
-                    :value="item.value">
+                    :value="item.value"
+                    value-key="value">
                 </el-option>
             </el-select>
-            <div v-if="type == 'selects'" class="clearfix">
-                <ul v-on:click="activeHandle" ref="select-wrap" class="sft-select-wrap">
-                    <li class="sft-select-item clearfix" :type="type"
-                        v-for="(item, index) in baseAttr.data" :data-index="index">
-                        <i class="icon icon-dagou"></i>
-                        <div class="sft-select-item-input">
-                            <input v-model="item.desc" class="sft-field-input sft-select-input" @input="updateAttribute"/>
-                            <div class="icon sft-delete" @click="deleteHandle"></div>
-                            <div class="sft-select-item-border"></div>
-                        </div>
-                    </li>
-                </ul>
-                <div class="text-center">
-                    <el-button type="primary" @click="addSelectItemHandle" size="mini" class="margin-top">添加</el-button>
-                </div>
-            </div>
+
         </div>
     </div>
 </template>
@@ -41,20 +26,57 @@
     export default {
         name: 'selectField',
         data() {
-            return {}
-        },
-        props: ['attr', 'title', 'type'],
-        store,
-        computed: {
-            typeList() {
-
-            },
-            baseAttr() {
-                let attr = Object.assign(this.attr);
-                return attr;
+            return {
+                tvalue: '',
+                modelAttr: ''
             }
         },
-        mounted() {
+        props: ['property', 'updateKey', 'model', 'show', 'size', 'seize'],
+        store,
+        computed: {
+            value: {
+                get() {
+                	if(this.model){
+                        return this.property[this.model];
+                    } else{
+                		return this.property.value;
+                    }
+                },
+                set(value) {
+                    const params = {
+                        type: this.updateKey,
+                        value: value
+                    };
+//                    this.tvalue = value
+                    this.$emit('changeType', params);
+//                    this.$store.commit('updateAttribute', params);
+                }
+            },
+            typeMap() {
+                let result = [];
+                if (!this.show) {
+                    return this._property.data;
+                }
+
+                for (let i = 0, len = this._property.data.length; i < len; i++) {
+                    for (let j = 0, len2 = this.show.length; j < len2; j++) {
+                        if (this._property.data[i].value === this.show[j]) {
+                            result.push(this._property.data[i]);
+                        }
+                    }
+                }
+                return result;
+            },
+            _property() {
+                return JSON.parse(JSON.stringify(Object.assign({},this.property)));
+            }
+        },
+        created(){
+            this.value = this.property.value;
+//            this._property = JSON.parse(JSON.stringify(Object.assign({},this.property)));
+        },
+        mounted()
+        {
             let self = this;
             document.addEventListener('click', function (event) {
                 if (!event.target.classList.contains('sft-select-input')) {
@@ -65,18 +87,27 @@
                 }
 
             });
+            this.$on('reset', function (value) {
+                this.value = value;
+                this.$store.commit('updateAttribute', {
+                	type: this.updateKey,
+                    value: this.property.value
+                })
+            });
         },
         methods: {
-            updateAttribute(event) {
-                const val = event.target.value;
-                console.log(this.type)
-                this.$store.commit('updateAttribute', {
-                    type: this.type,
-                    value: val
-                });
-            },
-            addSelectItemHandle() {
-                this.$store.commit('selectItemOperate', {type: 'add'});
+            updateAttribute(value) {
+                const params = {
+                    type: this.updateKey,
+                    value: value
+                };
+                this.tvalue = params.value;
+                if( this.seize === '' ){
+                    this.$emit('changeType', params);
+                } else {
+                    this.$store.commit('updateAttribute', params);
+                }
+
             },
             activeHandle(event) {
                 let target = event.target.parentElement.parentElement;
@@ -84,92 +115,15 @@
                 lis.forEach((value, index, listObj) => {
                     value.classList.remove('active');
                 });
-                if (target.nodeName == 'LI') {
+                if (target.nodeName === 'LI') {
                     target.classList.add('active');
                 }
-            },
-            deleteHandle(event) {
-                let parent = event.target.parentElement.parentElement;
-                this.$store.commit('selectItemOperate', {type: 'reduce', idx: parent.getAttribute('data-index')});
             }
+
         }
     }
 </script>
 
 <style lang="scss">
-    .sft-btn {
-        padding: 2px 14px;
-        height: 24px;
-        line-height: 24px;
-        border: 0;
-        cursor: pointer;
-        border-radius: 4px;
-        outline: 0;
-    }
 
-    .sft-btn-primary {
-        background: #30b900;
-        color: #ffffff;
-
-        &:hover {
-            background: #299e00;
-            box-shadow: 0 0 3px 0 #dedede;
-        }
-    }
-
-    .sft-select-item {
-        position: relative;
-        margin-bottom: 4px;
-
-        .icon-dagou {
-            float: left;
-            margin-right: 6px;
-            color: #ddd;
-            cursor: pointer;
-        }
-
-        .sft-delete {
-            right:-16px;
-        }
-
-        &:hover {
-            .sft-delete
-            {
-                display: block;
-            }
-        }
-        &:hover,
-        &:hover input{
-            background-color: #f1f1f1;
-        }
-
-        &.active {
-            input {
-                border-bottom-color: #999999;
-            }
-            .sft-select-item-border{
-                display: block;
-            }
-        }
-        .sft-select-item-input {
-            position: relative;
-            margin-left: 22px;
-            margin-right: 14px;
-        }
-        .sft-select-item-border {
-            display: none;
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            left: 0;
-            height: 2px;
-            border-left: 1px solid #999999;
-            border-right: 1px solid #999999;
-        }
-
-        .sft-field-input {
-            width: 100%;
-            box-sizing: border-box;
-        }
-    }
 </style>

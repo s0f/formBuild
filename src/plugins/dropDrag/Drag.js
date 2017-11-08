@@ -150,6 +150,8 @@ class Drag extends dragDropBase {
                 Y: Number.parseInt((currentY - distanceY /*+ this.sourceY*/).toFixed()),
             };
         if (currentX === this.startX && currentY === this.startY) {
+            // util.parents(event.target, '.sft-form').click();
+            // event.target.click();
             return false;
         }
 

@@ -3,12 +3,14 @@
         <h3 class="widget-title">{{baseWidgetTitle}}</h3>
         <div class="widget-content">
             <div class="widget-list clearfix">
-                <div class="widget-list_item drag-item" v-for="item in baseWidgets" :data-type="'E'+item[0]">
+                <div class="widget-list_item drag-item" v-for="(item, index) in baseWidgets" :data-type="'E'+item[0]"
+                     :element="item[1]" :data-idx="index" v-if="item[4]">
                     <span class="icon-box">
-                        <i class="icon" v-html="item[2]"></i>
+                        <i class="icon" v-html="item[3]"></i>
                     </span>
-                    <p class="widget-list_txt">{{item[1]}}</p>
+                    <p class="widget-list_txt">{{item[2]}}</p>
                 </div>
+                <div class="widget-list_item not-dev" v-else>开发中...</div>
             </div>
         </div>
     </div>
@@ -78,4 +80,7 @@ export default {
     display: block;
     padding-top: 12px;
 }
+    .not-dev{
+        line-height: 62px;
+    }
 </style>

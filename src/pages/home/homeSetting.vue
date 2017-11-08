@@ -3,11 +3,7 @@
         <div class="stf-setting-wrap">
             <globalPanel></globalPanel>
             <div class="stf-setting-other">
-                <!--<keep-alive>
-                    <componten :is="activeComponent"></componten>
-                </keep-alive>-->
-
-                <panel v-if="activeComponent" :name="activeComponent.name">
+                <panel v-if="activeComponent" :name="activeComponent.base.name">
                 </panel>
             </div>
         </div>
@@ -16,9 +12,6 @@
 <script>
     import store from '../../store/'
     import globalPanel from '../../components/panel/globalPanel.vue'
-    import Einput from '../../components/panel/textPanel.vue'
-    import Eradio from '../../components/panel/radioPanel.vue'
-    import Eselect from '../../components/panel/selectPanel.vue'
 
     export default {
         name: "homeSetting",
@@ -33,10 +26,7 @@
             };
         },
         components: {
-            globalPanel,
-            Einput,
-            Eradio,
-            Eselect
+            globalPanel
         },
         computed: {
             activeComponent() {

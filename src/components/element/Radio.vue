@@ -1,10 +1,10 @@
 <template>
     <SftElement type="radio">
-        <div class="sft-element-title">{{ $store.state.elementList[idx].base.title }}</div>
+        <div class="sft-element-title">{{ data.base.title }}</div>
         <div class="sft-element-content">
-            <p class="sft-element-desc">{{ $store.state.elementList[idx].base.desc }}</p>
+            <p class="sft-element-desc">{{ data.base.desc }}</p>
             <ul>
-                <li v-for="item in $store.state.elementList[idx].selects.data" :id="item.id">
+                <li v-for="item in data.property.selectContent.data" :id="item.id">
                     <p>
                         <i :class="['icon',  isSingleSelect-1 ? 'icon-fangxingweixuanzhong':'icon-yuanxingweixuanzhong']"></i>
                         <span class="sft-radio-text">{{ item.desc }}</span>
@@ -23,13 +23,13 @@
         data() {
             return {};
         },
-        props: ['idx'],
+        props: ['data'],
         components: {
             SftElement
         },
         computed: {
             isSingleSelect() {
-                return this.$store.state.elementList[this.idx].base.value;
+                return this.data.base.value;
             }
         }
     }

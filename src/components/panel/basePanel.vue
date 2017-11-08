@@ -3,13 +3,13 @@
     <div class="stf-field-item">
         <span class="stf-field-title">标题</span>
         <div class="sft-field-content">
-            <input type="text" v-model="title" class="sft-field-input" :placeholder="$store.state.elementList[$store.state.activeComponentRef].name">
+            <input type="text" title="标题" v-model="title" class="sft-field-input" :placeholder="$store.state.elementList[$store.state.activeComponentRef].base.title" />
         </div>
     </div>
     <div class="stf-field-item">
         <span class="stf-field-title">描述</span>
         <div class="sft-field-content">
-            <input type="text" v-model="desc" class="sft-field-input">
+            <input type="text" title="描述" v-model="desc" class="sft-field-input" />
         </div>
     </div>
 </div>
@@ -25,8 +25,8 @@
         computed: {
             title: {
                 get() {
-                    if(this.$store.state.activeComponentRef != -1){
-                        return this.$store.state.elementList[this.$store.state.activeComponentRef].name;
+                    if(this.$store.state.activeComponentRef !== -1){
+                        return this.$store.state.elementList[this.$store.state.activeComponentRef].base.title;
                     } else {
                         return '';
                     }
@@ -37,7 +37,7 @@
             },
             desc: {
                 get() {
-                    if(this.$store.state.activeComponentRef != -1){
+                    if(this.$store.state.activeComponentRef !== -1){
                         return this.$store.state.elementList[this.$store.state.activeComponentRef].base.desc;
                     } else {
                         return '';

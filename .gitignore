@@ -9,3 +9,4 @@ yarn-error.log
 .history
 .formBuild/build
 *.diff
+document/

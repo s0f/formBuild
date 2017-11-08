@@ -6,7 +6,6 @@ import router from './router'
 import axios from 'axios'
 import Panel from './components/panel/panel'
 import store from './store/'
-
 import './style/common.scss'
 import './style/form.scss'
 import '../static/animate.css'
