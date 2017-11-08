@@ -309,6 +309,10 @@ const mutations = {
          // state.activeComponent.data
          }*/
     },
+    updateForm(state, payload){
+        state.formName = payload.formName;
+        state.formDesc = payload.formDesc;
+    },
     updateDeepAttribute(state, payload) {
         state.elementList[state.activeComponentRef].property[payload.type].data[payload.index].value = payload.value;
     },

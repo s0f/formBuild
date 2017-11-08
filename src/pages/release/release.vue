@@ -36,7 +36,7 @@
         data () {
             return {
             	publish: true,
-                link: window.location.origin + '/review.html'
+                link: window.location.origin + window.location.origin  + 'review.html'
             }
         },
         filters: {

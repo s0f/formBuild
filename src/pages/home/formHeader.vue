@@ -59,9 +59,9 @@ export default {
         this.$store.commit('updateStep', {
             step: 1
         });
-        this.$store.dispatch('recovery', {
+       /* this.$store.dispatch('recovery', {
             loadFormDataEd() { }
-        });
+        });*/
         this.form.formName = this.$store.state.formName;
         this.form.formDesc = this.$store.state.formDesc;
     },
@@ -72,9 +72,9 @@ export default {
     },
     methods: {
         updateAttribute(attributeName) {
-            this.$store.commit('updateAttribute', {
-                type: 'form',
-                value: this.form
+            this.$store.commit('updateForm', {
+                formName: this.form.formName,
+                formDesc: this.form.formDesc
             });
             this.$router.push({ name: 'formEdit' });
             this.$store.commit('updateStep', {
