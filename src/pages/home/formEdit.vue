@@ -272,7 +272,7 @@
                     return tempObj;
                 });
                 window.localStorage.setItem('formData', JSON.stringify(this.$store.state));
-                location.href = location.origin + '/review.html';
+                location.href = location.origin + location.pathname + '/review.html';
             },
             resize() {
                 // TODO 页面自适应
