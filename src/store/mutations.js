@@ -1,4 +1,4 @@
-const elementTypes = ['Etext', 'Eradio', 'Eselect', 'EmultiSelect', 'EdateTime_date'];
+const elementTypes = ['Etext', 'Eradio', 'Eselect', 'EmultiSelect', 'EdateTime_date', 'Enumber'];
 const elementBaseProperty = {
     uuid: 0,
     // 基础设置
@@ -66,6 +66,23 @@ const elementProperty = {
             }
         }
     },
+    'Enumber': {
+        base: {
+            title: '数字',
+            limit: false,
+            name: '数字', // 元素的名称
+            desc: '',
+            type: 'input', // 元素的类型
+            element: 'number', // 元素的子类型
+        },
+        style: {
+            layout: 'transverse', // transverse or vertical
+            width: '20', // 10% - 100%
+        },
+        property: {
+            lastFix: ''
+        }
+    },
     'Eradio': {
         base: {
             title: '选择',
@@ -78,6 +95,15 @@ const elementProperty = {
             layout: 'transverse',
         },
         property: {
+            changeType: {
+                name: '切换组件类型',
+                type: 'select',
+                value: 1,
+                data: [
+                    {id: 0, value: 1, desc: '单选'},
+                    {id: 1, value: 2, desc: '多选'}
+                ]
+            },
             selectContent: {
                 name: '选项内容',
                 type: 'multi-line-text',
@@ -108,6 +134,7 @@ const elementProperty = {
                 'date': ['YYYYMMdd', 'YYYYMM', 'MMdd', 'YYYY', 'MM', 'dd']
             },
             dateTypeNumber: 'dateTime',
+            customDefaultTime: '', // 默认时间
             isCustomDefaultTime: false,
             defaultItems: {
                 'dateTime': [1, 2, 3],
@@ -292,22 +319,11 @@ const mutations = {
         if (payload.property) {
             property = payload.property;
         }
-        state.elementList[state.activeComponentRef].property[payload.type][property] = payload.value;
-        /* if (payload.type === 'input') {
-         state.elementList[state.activeComponentRef].base.value = payload.value;
-         } else if (payload.type === 'selects') {
-         state.elementList[state.activeComponentRef].selects.value = payload.value;
-         } else if (payload.type === 'formName') {
-         console.log(payload.value)
-         state[payload.type] = payload.value;
-         } else if (payload.type === 'formDesc') {
-         state[payload.type] = payload.value;
-         } else if (payload.type === 'form') {
-         state.formName = payload.value.formName;
-         state.formDesc = payload.value.formDesc;
-         } else if (payload.type === 'dateTime_date') {
-         // state.activeComponent.data
-         }*/
+        if(payload.easy){
+            state.elementList[state.activeComponentRef].property[payload.type] = payload.value;
+        } else {
+            state.elementList[state.activeComponentRef].property[payload.type][property] = payload.value;
+        }
     },
     updateForm(state, payload){
         state.formName = payload.formName;

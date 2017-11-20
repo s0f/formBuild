@@ -1,12 +1,8 @@
 <template>
-    <SftElement type="select">
-        <div class="sft-element-title">{{ data.base.title }}</div>
-        <div class="sft-element-content">
-            <p class="sft-element-desc">{{ data.base.desc }}</p>
-            <div class="sft-select">
-                <span class="sft-tip">请选择</span>
-                <span class="icon icon-arrow-bottom"></span>
-            </div>
+    <SftElement type="select" :title="data.base.title" :desc="data.base.desc">
+        <div class="sft-select">
+            <span class="sft-tip">请选择</span>
+            <span class="icon icon-arrow-bottom"></span>
         </div>
     </SftElement>
 </template>

@@ -20,25 +20,6 @@
 
         <selectField v-if="property.dateTypeNumber!==2"  :property="property['accurateTimeData']" updateKey="accurateTimeData"
                      size="small"></selectField>
-
-        <!--      <selectField v-if="active.base.dateTypes" type="base" @change="changeHandle"
-                           :title="active.base.dateTypesName" :attr="active.base">
-              </selectField>
-              <Field v-if="dateTypeNumber<3">
-                  <checkboxField v-if="active.base.dateTypes" :attr="active.base.dateTypes" :show="showItems"></checkboxField>
-              </Field>
-              <selectField v-else type="base"
-                           title="时间精确到" :attr="timeData">
-              </selectField>
-              <selectField title="默认显示日期时间" type="base" :attr="defaultShowTime" :show="defaultShow" @change="defaultTimeHandle" size="small" ref="defaultTime"></selectField>
-              <el-date-picker
-                  v-if="isCustomDefaultTime"
-                  v-model="customDefaultTime"
-                  align="right"
-                  type="date"
-                  size="small"
-                  placeholder="选择日期">
-              </el-date-picker>-->
     </div>
 </template>
 
@@ -51,12 +32,18 @@
     export default {
         name: 'dateTimeDate',
         data () {
-            return {
-                customDefaultTime: ''
-            }
+            return {}
         },
         props: ['activeComponent'],
         computed: {
+            customDefaultTime: {
+            	get() {
+            		return this.property.customDefaultTime;
+                },
+                set(value) {
+            		this.property.customDefaultTime = value;
+                }
+            },
             property() {
             	return this.activeComponent.property;
             },

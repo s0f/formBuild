@@ -22,6 +22,7 @@
 
 <script>
     import Field from './Field';
+    import selectField from './selectField';
 
     export default {
         name: 'MultiLineText',
@@ -31,7 +32,8 @@
         // seize 由父元素处理添加事件
         props: ['property', 'title', 'updateKey', 'btnName', 'seize'],
         components: {
-            Field
+            Field,
+            selectField
         },
         methods: {
             deleteHandle(event) {
@@ -99,7 +101,7 @@
 
         .icon-dagou {
             float: left;
-            margin-right: 6px;
+            margin: 6px 0 0 6px;
             color: #ddd;
             cursor: pointer;
         }
@@ -109,13 +111,16 @@
         }
 
         &:hover {
+            background-color: #f1f1f1;
+            input{
+                background-color: #f1f1f1;
+            }
             .sft-delete {
                 display: block;
             }
-        }
-        &:hover,
-        &:hover input {
-            background-color: #f1f1f1;
+            .icon-dagou{
+                color: #c3c6cc;
+            }
         }
 
         &.active {
@@ -124,6 +129,9 @@
             }
             .sft-select-item-border {
                 display: block;
+            }
+            .icon-dagou{
+                color: #999999;
             }
         }
         .sft-select-item-input {

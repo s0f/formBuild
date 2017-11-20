@@ -11,21 +11,8 @@
             <dateTimeDate v-if="activeComponent.base.element === 'dateTime_date'" :activeComponent="activeComponent"></dateTimeDate>
             <selectPanel v-if="activeComponent.base.type === 'select'"></selectPanel>
             <multiSelect v-if="activeComponent.base.type === 'multiSelect'"></multiSelect>
-            <MultiLineText v-if="activeComponent.base.type === 'radio'" updateKey="selectContent"
-                           :property="activeComponent.property.selectContent" :title="activeComponent.property.selectContent.name"></MultiLineText>
-        <!--    <selectField v-if="activeComponent.isChange" type="base"
-                         :title="activeComponent.base.name" :attr="activeComponent.base">
-            </selectField>
-            <div class="stf-field-input">
-                <basePanel></basePanel>
-            </div>
-            &lt;!&ndash;<slot name="content"></slot>&ndash;&gt;
-            <selectField v-if="activeComponent.selects" type="selects"
-                         :title="activeComponent.selects.title" :attr="activeComponent.selects">
-            </selectField>
-
-            &lt;!&ndash; 日期时间 &ndash;&gt;
-            <dateTimeDate v-if="activeComponent.element === 'dateTime_date'" :activeComponent="activeComponent"></dateTimeDate>-->
+            <radioPanel v-if="activeComponent.base.type === 'radio'"></radioPanel>
+            <NumberPanel v-if="activeComponent.base.element === 'number'"></NumberPanel>
         </div>
     </div>
 </template>
@@ -37,7 +24,8 @@
     import dateTimeDate from './dateTimeDate';
     import selectPanel from './selectPanel';
     import multiSelect from './multiSelect';
-    import MultiLineText from './MultiLineText';
+    import radioPanel from './radioPanel';
+    import NumberPanel from './NumberPanel';
 
     export default {
         name: "Panel",
@@ -52,7 +40,8 @@
             dateTimeDate,
             selectPanel,
             multiSelect,
-            MultiLineText
+            radioPanel,
+            NumberPanel
         },
         props: ['name', 'fold'],
         computed: {
@@ -84,6 +73,10 @@
         border-bottom: 1px solid $border-4;
         font-size: 14px;
         outline: 0;
+
+        &.active{
+            border-bottom-color: #999;
+        }
     }
 
     .sft-field-select {

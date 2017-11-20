@@ -26,7 +26,7 @@
                     ['multiSelect', '', '多行下拉', '&#xe6dc;&#xe6dc;', true],
                     ['input', 'dateTime_date', '日期', '&#xe604;', true],
                     ['table', '', '表格', '&#xe661;'],
-                    ['number', '', '数字', '&#xe60b;'],
+                    ['input', 'number', '数字', '&#xe60b;', true],
                     ['score', '', '评分', '&#xe623;'],
                     ['sort', '', '排序', '&#xe654;'],
                     ['currency', '', '货币', '&#xe6af;'],

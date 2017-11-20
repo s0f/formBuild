@@ -107,11 +107,13 @@
                 innerDrop: true,
                 ignoreSelf: true,
                 onDragStart(params) {
+                    setTimeout(function(){
+                        document.querySelector('.x-drag-mark .sft-element').style.width = $.css(document.querySelector('.sft-content'), 'width');
+                    }, 0);
                 },
                 onDragEnter(params) {
                 },
                 onDragMove() {
-                    console.log('x')
                 },
                 onDragLeave(params) {
                     self.$refs.flag.style.display = 'none';

@@ -2,7 +2,11 @@
     <div :class="['sft-element', 'sft-element-'+type]">
         <div class="sft-border"></div>
         <div class="sft-element-body">
-            <slot></slot>
+            <div class="sft-element-title">{{ title }}</div>
+            <div class="sft-element-content">
+                <p class="sft-element-desc">{{ desc }}</p>
+                <slot></slot>
+            </div>
         </div>
         <div class="icon sft-delete" @click="deleteHandle"></div>
     </div>
@@ -23,6 +27,16 @@ export default {
             default: 'text',
             required: true
         },
+        title: {
+        	type: String,
+            default: 'text',
+            required: true
+        },
+        desc: {
+        	type: String,
+            default: '',
+            required: true
+        },
         disabled: { type: Boolean, default: false}
     },
     methods: {
@@ -31,7 +45,7 @@ export default {
             event.stopPropagation();
             let target = event.target,
                 parent = target.parentElement;
-            this.$store.commit('deleteElement', {type: this.type, ref: Number.parseInt(parent.getAttribute('data-idx'))});
+            this.$store.commit('deleteElement', {type: this.type, ref: Number.parseInt(parent.getAttribute('data-ref'))});
         }
     }
 }

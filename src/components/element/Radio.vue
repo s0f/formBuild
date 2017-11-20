@@ -1,17 +1,13 @@
 <template>
-    <SftElement type="radio">
-        <div class="sft-element-title">{{ data.base.title }}</div>
-        <div class="sft-element-content">
-            <p class="sft-element-desc">{{ data.base.desc }}</p>
-            <ul>
-                <li v-for="item in data.property.selectContent.data" :id="item.id">
-                    <p>
-                        <i :class="['icon',  isSingleSelect-1 ? 'icon-fangxingweixuanzhong':'icon-yuanxingweixuanzhong']"></i>
-                        <span class="sft-radio-text">{{ item.desc }}</span>
-                    </p>
-                </li>
-            </ul>
-        </div>
+    <SftElement type="radio" :title="data.base.title" :desc="data.base.desc">
+        <ul>
+            <li v-for="item in data.property.selectContent.data" :id="item.id">
+                <p>
+                    <i :class="['icon',  data.property.changeType.value-1 ? 'icon-fangxingweixuanzhong':'icon-yuanxingweixuanzhong']"></i>
+                    <span class="sft-radio-text">{{ item.desc }}</span>
+                </p>
+            </li>
+        </ul>
     </SftElement>
 </template>
 <script>
