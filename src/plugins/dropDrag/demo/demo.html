@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        .box,
+        .box2 {
+            position: absolute;
+            left: 500px;
+            top: 20px;
+            width: 200px;
+            min-height: 300px;
+            border: 1px solid #ddd;
+            user-select: none;
+        }
+
+        .box2 {
+            left: 700px
+        }
+
+        .itembox {
+            width: 200px;
+            height: 500px;
+            border: 1px solid #ddd;
+        }
+
+        .item {
+            width: 150px;
+            height: 50px;
+            margin: 20px auto;
+            line-height: 25px;
+            background: #f2f2f2;
+            cursor: pointer;
+        }
+
+        .x-drag-mark .item,
+        .x-drag-mark .text {
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: inherit;
+        }
+
+        .text {
+            width: 200px;
+            height: 50px;
+            background: #f1f1f1;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .hr {
+            border: 1px solid #ddd;
+            height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="itembox">
+        <div class="drag-item item"></div>
+        <div class="drag-item item"></div>
+    </div>
+    <div class="box">
+    </div>
+    <div class="box2">
+
+    </div>
+    <script src="../../dist/dragDrop.js"></script>
+    <script>
+        function dropHandle(params) {
+            var type = params.data,
+                span = document.createElement('div');
+            span.innerHTML = type;
+            span.className = 'drag-item text'
+            span.setAttribute('data-index', params.index);
+            params.el.appendChild(span);
+            this.innerDrag.add(span);
+            this.innerDragPosition.add(span.getBoundingClientRect());
+        }
+        function innerDragHandle(params) {
+            var box = document.querySelectorAll('.box .text');
+            for (var i = 0, len = box.length; i < len; i++) {
+                box[i].style = '';
+            }
+            params.target && (params.target.style = "border-bottom: 1px solid lightblue");
+        }
+        function innerDropHandle(params) {
+            var type = params.data,
+                span = document.createElement('div'),
+                isInsert = params.data == 'inner' ? true : false;
+
+            span.innerHTML = type + params.index;
+            span.setAttribute('data-index', params.index);
+            span.className = 'drag-item text';
+            if (!isInsert && params.target === null) {
+                params.el.appendChild(span);
+            } else {
+                params.el.insertBefore(span, params.target.nextElementSibling);
+            }
+            
+            var box = document.querySelectorAll('.box .text');
+            for (var i = 0, len = box.length; i < len; i++) {
+                box[i].style = '';
+            }
+            var siblingIndex = params.target.getAttribute('data-index');
+            this.innerDrag.insert(span, params.target);
+
+            if (isInsert) {
+                console.log(params);
+                this.innerDrag.remove(params.target);
+                params.target.remove();
+            }
+            
+            b.initInnerTargetPosition();
+        }
+        var aa = null;
+        var a = new dragDrop.Drag('.itembox', {
+            data: 'text',
+            onDragStart: function (data) {
+                // console.log(data,'drag start');
+            },
+            onDragEnd: function () {
+                console.log('到达目的地啦！')
+            }
+        });
+        var one = true;
+        var b = new dragDrop.Drop('.box', {
+            innerDrag: true,
+            innerDrop: true,
+            onDragStart(params) {
+                 console.log('drop1 监听到 drag start事件');
+            },
+            onDragEnter(params) {
+                params.el.style.background = '#ddd'
+                console.log('drop1 监听到 drag 进入')
+            },
+            onDragMove() {
+                 console.log('drop1 监听到 在drop上移动')
+            },
+            onDragLeave(params) {
+                params.el.style.background = '#fff'
+                 console.log('drop1 监听到 drag 离开')
+            },
+            onDrop(params) {
+	            console.log('drop1 监听到 drag 释放')
+                dropHandle.call(this, params);
+            },
+            onDragEnd(params) {
+	            console.log('drop1 监听到 drag 结束')
+            },
+            onInnerDrag(params) {
+                innerDragHandle.call(this, params);
+            },
+            onInnerDragLeave(params) {
+                params.target && (params.target.style = "border-bottom: none;");
+                // document.querySelector('.hr').remove();
+            },
+            onInnerDrop(params) {
+                innerDropHandle.call(this, params);
+            }
+        });
+   /*     aa = new dragDrop.Drag('.box', {
+            data: 'inner',
+            inner: true,
+            onDragStart: function (data) {
+                console.log(data,'drag start');
+            },
+            onDragEnd: function () {
+
+            }
+        });*/
+        /*var c = new dragDrop.Drop('.box2', {
+            onDragStart(params) {
+                // console.log('drop2 监听到 drag start事件');
+            },
+            onDragEnter(params) {
+                params.el.style.background = '#ddd'
+                // console.log('drop2 监听到 drag 进入')
+            },
+            onDragLeave(params) {
+                params.el.style.background = '#fff'
+                // console.log('drop2 监听到 drag 离开')
+            },
+            onDrop() {
+                // console.log('drop2 监听到 drag 放下')
+            },
+            onDragEnd(params) {
+                params.el.style.background = '#fff'
+                // console.log('drop2 监听到 drag 结束')
+            }
+        });*/
+    </script>
+</body>
+
+</html>

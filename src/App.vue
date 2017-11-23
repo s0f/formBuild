@@ -1,22 +1,42 @@
 <template>
-  <div id="app">
-    <transition name="router-fade" mode="out-in">
-    <router-view></router-view>
-    </transition>
-  </div>
+    <div id="app">
+        <transition enter-active-class="fadeIn" leave-active-class="fadeOut" mode="out-in">
+            <router-view class="animated fast"  v-loading="isLoading"></router-view>
+        </transition>
+    </div>
 </template>
 
 <script>
-export default {
-  name: 'app'
-}
+    import store from './store/index'
+    export default {
+        name: 'app',
+        store,
+        data(){
+            return {
+                loadingInstance: null
+            }
+        },
+        computed: {
+        	isLoading: function () {
+                return this.$store.state.isLoading
+            }
+        }
+    }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-}
+    #app {
+        height: 100%;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+    }
+
+    .fade-enter {
+
+    }
+
+    .fade-enter-active {
+
+    }
 </style>
