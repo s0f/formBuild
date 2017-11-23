@@ -11,7 +11,7 @@ let utils = {
 
         return s.join("");
     },
-    parents (el, selector) {
+    parents(el, selector) {
         let matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;
 
         while (el) {
@@ -22,7 +22,7 @@ let utils = {
         }
         return el;
     },
-    unique (array){
+    unique(array) {
         let r = [];
         for (let i = 0, l = array.length; i < l; i++) {
             for (let j = i + 1; j < l; j++)
@@ -30,6 +30,20 @@ let utils = {
             r.push(array[i]);
         }
         return r;
+    },
+    fire(el, type, eventOption) {
+        let eventTypeMap = {};
+        eventTypeMap.click = eventTypeMap.mousemove = eventTypeMap.mousedown = eventTypeMap.mouseup = 'MouseEvents';
+
+        let eventObj = document.createEvent(eventTypeMap[type] || 'Events'),
+            bubbles = true;
+        if (eventOption) {
+            for (let name in eventOption) {
+                name === 'bubbles' ? bubbles = !!eventOption[name] : (eventObj[name] = eventOption[name]);
+            }
+        }
+        eventObj.initEvent(type, bubbles, true);
+        el.dispatchEvent(eventObj);
     }
 }
 

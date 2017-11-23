@@ -5,11 +5,9 @@
             <section class="sft-content shadow" ref="buildCenter">
                 <h2 class="sft-content-title">{{formName}}</h2>
                 <section class="sft-form" @click="toggleActive">
-                    <component v-for="(element ,index) in elementList" :key="index" :is="'E'+element.base.type"
-                               :data-type="$store.state.elementPrefix+element.base.type" :data-ref="element.index"
-                               :data="element" :data-index="index" :data-element="element.base.element"
-                               :class="[$store.state.activeComponentUUID === element.uuid ? 'clicked' : '','drag-item']"
-                               v-if="element" :uuid="element.uuid">
+                    <component v-for="(element ,index) in elementList" :key="index" :is="'E'+element.base.type" :data-type="$store.state.elementPrefix+element.base.type"
+                        :data-ref="element.index" :data="element" :data-index="index" :data-element="element.base.element" :class="[$store.state.activeComponentUUID === element.uuid ? 'clicked' : '','drag-item']"
+                        v-if="element" :uuid="element.uuid">
                     </component>
                     <div class="sft-flag" ref="flag">
                         <strong>放在这里</strong>
@@ -70,7 +68,7 @@
         },
         created() {
             let self = this;
-//            this.$loading();
+            //            this.$loading();
             this.$store.commit('updateStep', {
                 step: 2
             });
@@ -107,14 +105,13 @@
                 innerDrop: true,
                 ignoreSelf: true,
                 onDragStart(params) {
-                    setTimeout(function(){
-                        document.querySelector('.x-drag-mark .sft-element').style.width = $.css(document.querySelector('.sft-content'), 'width');
+                    setTimeout(function () {
+                        document.querySelector('.x-drag-mark .sft-element').style.width = $.css(
+                            document.querySelector('.sft-content'), 'width');
                     }, 0);
                 },
-                onDragEnter(params) {
-                },
-                onDragMove() {
-                },
+                onDragEnter(params) {},
+                onDragMove() {},
                 onDragLeave(params) {
                     self.$refs.flag.style.display = 'none';
                 },
@@ -131,7 +128,8 @@
                             insert: -1
                         });
                         self.$nextTick(function () {
-                            const dropDom = document.querySelector('[data-index="' + params.index + '"]');
+                            const dropDom = document.querySelector('[data-index="' + params.index +
+                                '"]');
                             dropItem.innerDrag.add(dropDom);
                             dropItem.innerDragPosition.add(dropDom.getBoundingClientRect());
                         });
@@ -168,7 +166,7 @@
                         pos = this.innerDrag.find(params.target);
                         let splicePos = this.innerDrag.find(params.sourceEl);
                         componentName = params.sourceEl.getAttribute('data-type');
-                            element = params.sourceEl.getAttribute('element');
+                        element = params.sourceEl.getAttribute('element');
                         self.$store.commit('addElement', {
                             uuid: utils.uuid(),
                             index: pos,
@@ -198,7 +196,8 @@
                         });
 
                         self.$nextTick(function () {
-                            let newElement = document.querySelector('[data-index="' + (params.index - 1) + '"]');
+                            let newElement = document.querySelector('[data-index="' + (params.index - 1) +
+                                '"]');
                             dropItem.innerDrag.clear();
                             dropItem.innerDrag.addList(document.querySelectorAll('.sft-form .drag-item'));
                             dropItem.initInnerTargetPosition();
@@ -227,6 +226,16 @@
                     const dropDom = colletion[colletion.length - 1];
                     dropItem.innerDrag.add(dropDom);
                     dropItem.innerDragPosition.add(dropDom.getBoundingClientRect());
+                    // 如果没有激活的元素，激活添加的元素
+                    if (this.$store.state.activeComponentUUID === -1) {
+
+                        /* let eventObj = document.createEvent('MouseEvents');
+                        eventObj.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false,
+                            false,
+                            false, 0, null);
+                        dropDom.dispatchEvent(eventObj); */
+                        utils.fire(dropDom, 'click');
+                    }
                 });
             },
             getClickedRefForActiveRef() {
@@ -248,7 +257,11 @@
                  拖拽其他元素后，列表重新render，A 依然要处于选中状态
                  */
                 let target = utils.parents(event.target, '.sft-element');
+<<<<<<< Updated upstream
                 if (target.classList.contains('sft-element')) {
+=======
+                if (target && target.classList.contains('sft-element')) {
+>>>>>>> Stashed changes
                     const index = target.getAttribute('data-index'),
                         targetIndex = target.getAttribute('data-ref'),
                         name = target.getAttribute('data-type').split(this.$store.state.elementPrefix)[1],
@@ -322,10 +335,12 @@
             }
         }
     }
+
 </script>
 
 <style lang="scss" scoped>
     .sft-contain {
         background-color: #fff;
     }
+
 </style>
