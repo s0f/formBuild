@@ -45,7 +45,7 @@ export default {
             event.stopPropagation();
             let target = event.target,
                 parent = target.parentElement;
-            this.$store.commit('deleteElement', {type: this.type, ref: Number.parseInt(parent.getAttribute('data-ref'))});
+            this.$store.commit('deleteElement', {type: this.type, ref: Number.parseInt(parent.getAttribute('data-index'))});
         }
     }
 }

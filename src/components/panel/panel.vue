@@ -13,6 +13,7 @@
             <multiSelect v-if="activeComponent.base.type === 'multiSelect'"></multiSelect>
             <radioPanel v-if="activeComponent.base.type === 'radio'"></radioPanel>
             <NumberPanel v-if="activeComponent.base.element === 'number'"></NumberPanel>
+            <scorePanel v-if="activeComponent.base.element === 'score'"></scorePanel>
         </div>
     </div>
 </template>
@@ -26,6 +27,7 @@
     import multiSelect from './multiSelect';
     import radioPanel from './radioPanel';
     import NumberPanel from './NumberPanel';
+    import scorePanel from './scorePanel';
 
     export default {
         name: "Panel",
@@ -41,7 +43,8 @@
             selectPanel,
             multiSelect,
             radioPanel,
-            NumberPanel
+            NumberPanel,
+            scorePanel
         },
         props: ['name', 'fold'],
         computed: {

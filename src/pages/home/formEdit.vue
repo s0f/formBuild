@@ -257,11 +257,7 @@
                  拖拽其他元素后，列表重新render，A 依然要处于选中状态
                  */
                 let target = utils.parents(event.target, '.sft-element');
-<<<<<<< Updated upstream
-                if (target.classList.contains('sft-element')) {
-=======
                 if (target && target.classList.contains('sft-element')) {
->>>>>>> Stashed changes
                     const index = target.getAttribute('data-index'),
                         targetIndex = target.getAttribute('data-ref'),
                         name = target.getAttribute('data-type').split(this.$store.state.elementPrefix)[1],

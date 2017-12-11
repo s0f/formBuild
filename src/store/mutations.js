@@ -1,4 +1,4 @@
-const elementTypes = ['Etext', 'Eradio', 'Eselect', 'EmultiSelect', 'EdateTime_date', 'Enumber'];
+const elementTypes = ['Etext', 'Eradio', 'Eselect', 'EmultiSelect', 'EdateTime_date', 'Enumber', 'Escore'];
 const elementBaseProperty = {
     uuid: 0,
     // 基础设置
@@ -118,7 +118,36 @@ const elementProperty = {
         }
 
     },
-
+    'Escore': {
+        base: {
+            title: '评分',
+            limit: false,
+            name: '评分', // 元素的名称
+            desc: '',
+            type: 'input', // 元素的类型
+            element: 'score', // 元素的子类型
+        },
+        style: {
+            layout: 'transverse', // transverse or vertical
+            width: '20', // 10% - 100%
+        },
+        property: {
+            icon: 'start',
+            maxValue: 5,
+            minValue: 0,
+            defaultValue: 2,
+            limit: 20,
+            changeType: {
+                name: '切换组件类型',
+                type: 'select',
+                value: 1,
+                data: [
+                    {id: 0, value: 1, desc: '单行文本'},
+                    {id: 1, value: 2, desc: '多行文本'}
+                ]
+            }
+        }
+    },
     'EdateTime_date': {
         base: {
             name: '日期',

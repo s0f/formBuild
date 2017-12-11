@@ -35,6 +35,7 @@ let state = {
     globalSetting: {
         insertQuestionNumber: false
     },
+    scoreList: ['start', 'love', 'parise', 'flower', 'progress', 'number'],
     loading: null
 }
 
