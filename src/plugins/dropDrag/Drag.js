@@ -83,15 +83,11 @@ class Drag extends dragDropBase {
         document.addEventListener('mouseup', this._endHandler, false);
         this.wrap.addEventListener('mousemove', this._moveHandler, false);
         this.wrap.addEventListener('mouseup', this._endHandler, false);
-        console.log('tt', event.pageX, event.pageY)
 
     }
 
     moveHandler(event) {
         let target = util.parents(event.target, '.drag-item');
-
-        store.onDragStart(this.options.data, target);
-
         let markNode = util.createMarkNode(),
             offset = null,
             tempOffset,
@@ -104,19 +100,13 @@ class Drag extends dragDropBase {
         window.onmousemove = this.markNodeMouseMove.bind(this);
         window.onmouseup = this.markNodeMouseUp.bind(this);
 
-        tempOffset = this.getOffset(target);
-        if (this.options.inner) {
-            offset = {
-                left: target.offsetLeft,
-                top: target.offsetTop
-            }
-        } else {
-            offset = tempOffset;
-        }
-        // this.startX = this.options.inner ? offset.left : event.pageX;
-        // this.startY = this.options.inner ? offset.top : event.pageY;
-        this.startX = event.pageX;
-        this.startY = event.pageY;
+        store.onDragStart(this.options.data, target);
+        // TODO 遇到滚动条无法排序，元素拖动时位置错误，改用getBoundingClientRect,并需要在滚动时，调用initInnerTargetPosition 刷新位置
+        tempOffset = target.getBoundingClientRect();
+        // tempOffset = this.getOffset(target);
+        offset = tempOffset;
+        this.startX = event.pageX//event.pageX;
+        this.startY = event.pageY//event.pageY;
         this.sourceX = tempOffset.left;
         this.sourceY = tempOffset.top;
         this.setTargetPosition({
@@ -147,8 +137,9 @@ class Drag extends dragDropBase {
             distanceY = this.startY - this.sourceY,//currentY - this.startY,
             targetPos = {
                 X: Number.parseInt((currentX - distanceX /*+ this.sourceX*/).toFixed()),
-                Y: Number.parseInt((currentY - distanceY /*+ this.sourceY*/).toFixed()),
+                Y: Number.parseInt((currentY - distanceY /* + this.sourceY */).toFixed()),
             };
+        // console.log(this.startY ,this.sourceY)
         if (currentX === this.startX && currentY === this.startY) {
             // util.parents(event.target, '.sft-form').click();
             // event.target.click();

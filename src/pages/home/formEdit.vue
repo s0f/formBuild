@@ -2,20 +2,25 @@
     <div class="sft-main sft-form-build">
         <section class="clearfix flex sft-contain" ref="contain">
             <homeBar v-on:widgetClickHandle="addElement" ref="buildLeft"></homeBar>
-            <section class="sft-content shadow" ref="buildCenter">
-                <h2 class="sft-content-title">{{formName}}</h2>
-                <section class="sft-form" @click="toggleActive">
-                    <component v-for="(element ,index) in elementList" :key="index" :is="'E'+element.base.type" :data-type="$store.state.elementPrefix+element.base.type"
-                        :data-ref="element.index" :data="element" :data-index="index" :data-element="element.base.element" :class="[$store.state.activeComponentUUID === element.uuid ? 'clicked' : '','drag-item']"
-                        v-if="element" :uuid="element.uuid">
-                    </component>
-                    <div class="sft-flag" ref="flag">
-                        <strong>放在这里</strong>
+            <section class="sft-content" ref="buildCenter">
+                <div class="sft-form-wrap">
+                    <h2 class="sft-content-title">{{formName}}</h2>
+                    <div class="sft-content-body">
+                        <section class="sft-form" @click="toggleActive" ref="buildForm">
+                            <component v-for="(element ,index) in elementList" :key="index" :is="'E'+element.base.type" :data-type="$store.state.elementPrefix+element.base.type"
+                                :data-ref="element.index" :data="element" :data-index="index" :data-element="element.base.element" :class="[$store.state.activeComponentUUID === element.uuid ? 'clicked' : '','drag-item']"
+                                v-if="element" :uuid="element.uuid">
+                            </component>
+                            <div class="sft-flag" ref="flag">
+                                <strong>放在这里</strong>
+                            </div>
+                        </section>
+                        <footer class="sft-content-footer">
+                            <el-button type="primary" @click="submitHandle">提交</el-button>
+                        </footer>
+                        <div class="sft-author">由SSF提供技术支持</div>
                     </div>
-                </section>
-                <footer class="sft-content-footer">
-                    <el-button type="primary" @click="submitHandle">提交</el-button>
-                </footer>
+                </div>
             </section>
             <homeSetting ref="buildRight"></homeSetting>
         </section>
@@ -34,10 +39,15 @@
     import Eradio from '../../components/element/Radio'
     import Eselect from '../../components/element/Select'
     import EmultiSelect from '../../components/element/multiSelect'
+    import Etable from '../../components/element/Table'
+    import Esort from '../../components/element/Sort'
+    import Ecommodity from '../../components/element/Commodity'
+    import Ecity from '../../components/element/City'
     import * as dropDrag from '../../plugins/dropDrag/main.js'
     import $ from '../../common/query'
     import utils from '../../common/utils'
-
+    import PerfectScrollbar  from 'perfect-scrollbar'
+    import 'perfect-scrollbar/css/perfect-scrollbar.css'
     let dragItem, dragItem2, dropItem;
     let oldWindowWidth = window.innerWidth;
     document.addEventListener('selectstart', (event) => {
@@ -58,7 +68,11 @@
             Einput,
             Eradio,
             Eselect,
-            EmultiSelect
+            EmultiSelect,
+            Etable,
+            Esort,
+            Ecommodity,
+            Ecity,
         },
         computed: {
             ...mapState({
@@ -67,12 +81,15 @@
             })
         },
         created() {
-            let self = this;
+            let self = this,
+                scrollbar;
             //            this.$loading();
             this.$store.commit('updateStep', {
                 step: 2
             });
-
+             self.$nextTick(function () {
+                scrollbar = new PerfectScrollbar(this.$refs.buildCenter);
+             });
             /*this.$store.dispatch('recovery', {
              loadFormDataEd() {
              self.$nextTick(function () {
@@ -94,7 +111,9 @@
         mounted() {
             const self = this;
             // 页面自适应
-            this.resize();
+            setTimeout(function(){
+                self.resize();
+            }, 1000)
             window.addEventListener('resize', this.resizeHandle);
 
             dragItem = new dropDrag.Drag('.sft-left', {
@@ -106,7 +125,7 @@
                 ignoreSelf: true,
                 onDragStart(params) {
                     setTimeout(function () {
-                        document.querySelector('.x-drag-mark .sft-element').style.width = $.css(
+                        document.querySelector('.x-drag-mark .drag-item').style.width = $.css(
                             document.querySelector('.sft-content'), 'width');
                     }, 0);
                 },
@@ -212,9 +231,13 @@
                 inner: true
             });
 
+            this.$refs.buildCenter.addEventListener('ps-scroll-y', ()=> {
+                dropItem.initInnerTargetPosition();
+            });
         },
         methods: {
             addElement(payload) {
+                console.log('xx add e')
                 this.$store.commit('addElement', {
                     componentName: this.$store.state.elementPrefix + payload.data[0],
                     element: payload.data[1] || '',
@@ -256,7 +279,7 @@
                  点击时元素A，元素为选中状态，记住ID
                  拖拽其他元素后，列表重新render，A 依然要处于选中状态
                  */
-                let target = utils.parents(event.target, '.sft-element');
+                let target = $.parents(event.target, '.sft-element');
                 if (target && target.classList.contains('sft-element')) {
                     const index = target.getAttribute('data-index'),
                         targetIndex = target.getAttribute('data-ref'),
@@ -273,8 +296,6 @@
             },
             submitHandle(event) {
                 var submitBtn = event.target;
-                // submitBtn.setAttribute('disabled', true);
-                console.log(JSON.stringify(this.$store.state))
                 let dropState = dropItem.innerDragPosition.toString().map((item) => {
                     let tempObj = {};
                     for (let key in item) {
@@ -309,7 +330,7 @@
                 }
                 if (winWidth < 1388) {
                     let oldLeft = Number.parseInt(this.$refs.buildLeft.$el.style.left || 0);
-                    console.log('oldLeft', oldLeft)
+                   
                     this.$refs.contain.style.width = winWidth + 'px';
                     if (oldLeft >= 0) {
                         this.$refs.buildLeft.$el.style.left = '20px';
@@ -321,7 +342,13 @@
                 if (leftBarHeight > winHeight) {
                     this.$refs.buildLeft.$el.querySelectorAll('.sft-left_item')[1].style.display = 'none';
                 }
-
+               
+                setTimeout(()=>{
+                     this.$refs.buildForm.style.minHeight = (this.$refs.buildCenter.clientHeight
+                     - document.querySelector('.sft-content-title').clientHeight-
+                      document.querySelector('.sft-content-footer').clientHeight - 
+                      document.querySelector('.sft-author').clientHeight  ) + 'px'; 
+                },200)
 
             },
             resizeHandle(event) {
@@ -335,8 +362,4 @@
 </script>
 
 <style lang="scss" scoped>
-    .sft-contain {
-        background-color: #fff;
-    }
-
 </style>

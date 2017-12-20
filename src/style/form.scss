@@ -67,8 +67,16 @@
 .sft-content {
     position: absolute;
     top: 0;
+    bottom: 0;
     left: 430px;
     right: 360px;
+    padding: 0 20px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+.sft-content-body{
+    position: relative;
+    // padding-bottom: 100px;
 }
 
 .sft-content-title {
@@ -80,14 +88,28 @@
 }
 
 .sft-content-footer {
-    height: 46px;
-    background: #efefef;
+    // position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 64px;
+    height: 56px;
+    background: #fff;
     line-height: 46px;
 }
-
+.sft-author{
+    // position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+} 
+.sft-form-wrap{
+    position: relative;
+    height: 100%;
+}
 .sft-form {
-    padding: 0 0 20px 0;
     min-height: 400px;
+    background: #fff;
     user-select: none;
     cursor: pointer;
 
@@ -117,11 +139,11 @@
     }
 }
 
-.stf-panel {
+.sft-panel {
     margin-bottom: 20px;
 }
 
-.stf-panel-title {
+.sft-panel-title {
     padding-left: 10px;
     height: 35px;
     line-height: 35px;
@@ -132,9 +154,115 @@
     color: $text-water;
 }
 
-.stf-panel-content {
-    padding: 5px;
-    border: 1px solid $border-3;
+.sft-input {
+    width: 100%;
+    height: 30px;
+
+    background-color: #f9f9f9;
+    border: 1px solid #dfdfdf;
+    border-radius: 4px;
+}
+
+.sft-textarea {
+    width: 80%;
+    height: 90px;
+    background-color: #f9f9f9;
+    border: 1px solid #dfdfdf;
+    border-radius: 4px;
+}
+
+
+.sft-select {
+    width: 80%;
+    height: 30px;
+    line-height: 30px;
+
+    background-color: #f9f9f9;
+    border: 1px solid #dfdfdf;
+    border-radius: 4px;
+
+    .sft-tip{
+        margin-left: 10px;
+        color: #999;
+    }
+    .icon-arrow-bottom{
+        float: right;
+        margin-right: 10px;
+    }
+}
+
+/* 多行输入 */
+.sft-select-item {
+    position: relative;
+    margin-bottom: 4px;
+
+    .icon-dagou {
+        float: left;
+        margin: 6px 0 0 6px;
+        color: #ddd;
+        cursor: pointer;
+    }
+
+    .sft-delete {
+        right: -16px;
+    }
+
+    &:hover {
+        background-color: #f1f1f1;
+        input{
+            background-color: #f1f1f1;
+        }
+        .sft-delete {
+            display: block;
+        }
+        .icon-dagou{
+            color: #c3c6cc;
+        }
+    }
+
+    &.active {
+        input {
+            border-bottom-color: #999999;
+        }
+        .sft-select-item-border {
+            display: block;
+        }
+        .icon-dagou{
+            color: #999999;
+        }
+    }
+    .sft-select-item-input {
+        position: relative;
+        margin-left: 22px;
+        margin-right: 14px;
+    }
+    .sft-select-item-border {
+        display: none;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        height: 2px;
+        border-left: 1px solid #999999;
+        border-right: 1px solid #999999;
+    }
+
+    .sft-field-input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .sft-select-drag {
+        cursor: move;
+        float: left;
+        width: 15px;
+        height: 15px;
+        background: url('../assets/sprite.png') 4px -165px no-repeat;
+
+        &+.icon-dagou+.sft-select-item-input {
+            margin-left: 40px;
+        }
+    }
 }
 
 .x-drag-mark {
@@ -147,7 +275,7 @@
         .sft-left {
             width: 336px;
         }
-        .stf-setting {
+        .sft-setting {
             width: 400px;
             right: 20px;
         }

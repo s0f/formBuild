@@ -1,289 +1,4 @@
-const elementTypes = ['Etext', 'Eradio', 'Eselect', 'EmultiSelect', 'EdateTime_date', 'Enumber', 'Escore'];
-const elementBaseProperty = {
-    uuid: 0,
-    // 基础设置
-    base: {
-        required: false,
-        // 填写设置
-        limit: {
-            repeat: true
-        },
-    },
-    // 外观样式
-    style: {}
-};
-/*
- *  设置种类汇总
- * */
-const elementAttributes = {
-    'changeTextLineCont': {
-        name: '切换组件类型',
-        data: [
-            {id: 0, value: 1, desc: '单行文本'},
-            {id: 0, value: 2, desc: '多行文本'}
-        ]
-    },
-    'changeSelectType': {
-        name: '切换组件类型',
-        data: [
-            {id: 0, value: 1, desc: '单选'},
-            {id: 0, value: 2, desc: '多选'}
-        ]
-    },
-    'changeTimeType': {
-        name: '数据类型',
-        data: [
-            {id: 0, value: 1, desc: '日期+时间'},
-            {id: 1, value: 2, desc: '日期'},
-            {id: 2, value: 3, desc: '时间'}
-        ]
-    }
-};
 
-const elementProperty = {
-    'Etext': {
-        base: {
-            title: '文本框',
-            limit: false,
-            name: '文本框', // 元素的名称
-            desc: '',
-            type: 'input', // 元素的类型
-            element: 'text', // 元素的子类型
-        },
-        style: {
-            layout: 'transverse', // transverse or vertical
-            width: '20', // 10% - 100%
-        },
-        property: {
-            changeType: {
-                name: '切换组件类型',
-                type: 'select',
-                value: 1,
-                data: [
-                    {id: 0, value: 1, desc: '单行文本'},
-                    {id: 1, value: 2, desc: '多行文本'}
-                ]
-            }
-        }
-    },
-    'Enumber': {
-        base: {
-            title: '数字',
-            limit: false,
-            name: '数字', // 元素的名称
-            desc: '',
-            type: 'input', // 元素的类型
-            element: 'number', // 元素的子类型
-        },
-        style: {
-            layout: 'transverse', // transverse or vertical
-            width: '20', // 10% - 100%
-        },
-        property: {
-            lastFix: ''
-        }
-    },
-    'Eradio': {
-        base: {
-            title: '选择',
-            name: '选择',
-            type: 'radio',
-            element: '',
-            desc: '',
-        },
-        style: {
-            layout: 'transverse',
-        },
-        property: {
-            changeType: {
-                name: '切换组件类型',
-                type: 'select',
-                value: 1,
-                data: [
-                    {id: 0, value: 1, desc: '单选'},
-                    {id: 1, value: 2, desc: '多选'}
-                ]
-            },
-            selectContent: {
-                name: '选项内容',
-                type: 'multi-line-text',
-                value: 1,
-                count: 3,
-                data: [
-                    {id: 0, value: 1, desc: '选项1'},
-                    {id: 1, value: 2, desc: '选项2'},
-                    {id: 2, value: 3, desc: '选项3'},
-                ]
-            }
-        }
-
-    },
-    'Escore': {
-        base: {
-            title: '评分',
-            limit: false,
-            name: '评分', // 元素的名称
-            desc: '',
-            type: 'input', // 元素的类型
-            element: 'score', // 元素的子类型
-        },
-        style: {
-            layout: 'transverse', // transverse or vertical
-            width: '20', // 10% - 100%
-        },
-        property: {
-            icon: 'start',
-            maxValue: 5,
-            minValue: 0,
-            defaultValue: 2,
-            limit: 20,
-            changeType: {
-                name: '切换组件类型',
-                type: 'select',
-                value: 1,
-                data: [
-                    {id: 0, value: 1, desc: '单行文本'},
-                    {id: 1, value: 2, desc: '多行文本'}
-                ]
-            }
-        }
-    },
-    'EdateTime_date': {
-        base: {
-            name: '日期',
-            title: '日期时间',
-            type: 'input',
-            element: 'datetime_date',
-            desc: '',
-        },
-        property: {
-            checkValues: [],
-            types: {
-                'dateTime': ['YYYYMMdd', 'MMdd', 'dd'],
-                'date': ['YYYYMMdd', 'YYYYMM', 'MMdd', 'YYYY', 'MM', 'dd']
-            },
-            dateTypeNumber: 'dateTime',
-            customDefaultTime: '', // 默认时间
-            isCustomDefaultTime: false,
-            defaultItems: {
-                'dateTime': [1, 2, 3],
-                'date': [1, 5, 6, 7, 4],
-                'time': [1, 2, 3]
-            },
-            changeTimeType: {
-                name: '数据类型',
-                data: [
-                    {id: 0, value: 'dateTime', desc: '日期+时间'},
-                    {id: 1, value: 'date', desc: '日期'},
-                    {id: 2, value: 'time', desc: '时间'}
-                ],
-                value: 'dateTime'
-            },
-            changeDateFormat: {
-                name: '接受的日期格式',
-                value: 'YYYYMMdd',
-                data: [{desc: '年-月-日', value: 'YYYYMMdd'}, {desc: '年-月', value: 'YYYYMM'}, {desc: '月-日', value: 'MMdd'},
-                    {desc: '仅年', value: 'YYYY'}, {desc: '仅月', value: 'MM'}, {desc: '仅日', value: 'dd'},]
-            },
-            defaultShowTime: {
-                name: '默认显示日期时间',
-                value: 1,
-                data: [{desc: '留空', value: 1}, {desc: '填表当前时间', value: 2}, {desc: '指定时间', value: 3},
-                    {desc: '填表当天', value: 5}, {desc: '填表前一天', value: 6}, {desc: '填表后一天', value: 7}, {
-                        desc: '指定日期',
-                        value: 4
-                    }]
-            },
-            accurateTimeData: {
-                name: '时间精确到',
-                value: 3,
-                data: [{desc: '时', value: 1}, {desc: '分', value: 2}, {desc: '秒', value: 3}]
-            },
-        }
-    },
-
-    'Eselect': {
-        base: {
-            name: '下拉选择',
-            title: '下拉',
-            type: 'select',
-            element: '',
-            value: 1,
-            desc: '',
-        },
-        style: {
-            layout: 'transverse',
-        },
-        property: {
-            selects: {
-                title: '切换组件类型',
-                type: 'multiLineText',
-                value: 1,
-                count: 3,
-                data: [
-                    {id: 0, value: 1, desc: '选项1'},
-                    {id: 1, value: 2, desc: '选项2'},
-                    {id: 2, value: 3, desc: '选项3'},
-                ]
-            }
-        }
-    },
-    'EmultiSelect': {
-        base: {
-            name: '多级下拉',
-            title: '多级下拉',
-            type: 'multiSelect',
-            element: '',
-        },
-        property: {
-            tabs: {
-                title: '',
-                type: 'tab',
-                value: '1',
-                count: 2,
-                data: [
-                    {
-                        desc: '一级',
-                        value: '1'
-                    },
-                    {
-                        desc: '二级',
-                        value: '2'
-                    }
-                ]
-            },
-            oneLevel: {
-                title: '默认提示文字',
-                type: 'text',
-                value: '请选择'
-            },
-            twoLevel: {
-                title: '默认提示文字',
-                type: 'text',
-                value: '请选择'
-            },
-            threeLevel: {
-                title: '默认提示文字',
-                type: 'text',
-                value: '请选择'
-            },
-            oneSelects: {
-                title: '切换组件类型',
-                type: 'multiLineText',
-                value: '',
-                count: 3,
-                twoOne: '',
-                threeOne: '',
-                threeTwo: '',
-                data: []
-            }
-        }
-    }
-}
-let elementPropertys = {};
-elementTypes.forEach((type, index) => {
-    elementPropertys[type] = Object.assign({}, elementBaseProperty, elementProperty[type]);
-});
 const mutations = {
     toggleActiveComponent(state, payload) {
         payload.name && (state.activeComponentName = payload.name);
@@ -291,12 +6,12 @@ const mutations = {
         payload.ref && (state.activeComponentRef = payload.ref);
     },
     addElement(state, payload) {
-        const type = elementTypes[elementTypes.indexOf(payload.componentName)];
+        const type = state.editor[payload.componentName];
         let element = state.elementList[payload.splice];
         let elementProperty = payload.element ? state.elementPrefix + payload.element : payload.componentName;
         if (!element) {
             element = JSON.parse(JSON.stringify(Object.assign({},
-                elementPropertys[elementProperty], {
+                state.editor[elementProperty], {
                     index: state.elementList.length,
                     uuid: payload.uuid
                 })));
@@ -370,7 +85,7 @@ const mutations = {
                 id: count,
                 value: count,
                 desc: '选项' + count,
-                data: []
+                data: payload.data || []
             });
         } else {
             selects.data.splice(payload.idx, 1);
@@ -438,6 +153,29 @@ const mutations = {
     },
     loading(state, payload) {
         state.isLoading = payload.loading;
+    },
+    updateTableColumn(state, payload) {
+        state.elementList[state.activeComponentRef].property[payload.updateKey].data.forEach(item => {
+            item.data.push(payload.data);
+        });
+    },
+    getAllCountry(state, payload) {
+        state.country = payload.data;
+    },
+    editCommodity(state, payload) {
+        let commodityList = state.elementList[state.activeComponentRef].property.list;
+        commodityList[payload.index][payload.updateKey] = payload.value;
+    },
+    addCommodity(state, payload) {
+        state.elementList[state.activeComponentRef].property.list.push(
+            {
+                name: '商品名',
+                desc: '',
+                money: '0.00',
+                total: 0,
+                img: 'https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=843493999,2467842738&fm=173&s=3685F90450F2579E9C8C84D6030000B9&w=218&h=146&img.JPG',
+                editor: false
+            });
     }
 };
 export default mutations;

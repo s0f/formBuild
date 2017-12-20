@@ -1,6 +1,6 @@
 <template>
-    <div :class="['stf-field-item', type ? 'sft-field-inline' : '']">
-        <span class="stf-field-title">{{ title }}</span>
+    <div :class="['sft-field-item', typeClass]">
+        <span class="sft-field-title">{{ title }}</span>
         <div class="sft-field-content">
             <slot></slot>
         </div>
@@ -13,23 +13,48 @@
 		data () {
 			return {}
 		},
-        props: ['title', 'type']
+        props: ['title', 'type'],
+        computed: {
+            typeClass() {
+                if( this.type === 'inline' ) {
+                    return 'sft-field-inline';
+                } else if ( this.type === 'horizontal' ) {
+                    return 'sft-field-hor';
+                } else {
+                    return '';
+                }
+            }
+        }
 	}
 </script>
 
 <style lang="scss" scoped>
+    .sft-field-item {
+        padding: 0 6px 10px;
+        background-color: #fff;
+    }
+    
     .sft-field-inline{
         display: inline-flex;
         justify-content: left;
         width: 48%;
         box-sizing: border-box;
-        .stf-field-title{
+        .sft-field-title{
             flex: 2;
         }
         .sft-field-content{
             position: relative;
             display: inline-block;
             flex: 3;
+        }
+    }
+
+    .sft-field-hor {
+        display: flex;
+
+        .sft-field-title,
+        .sft-field-content {
+            flex: 1;
         }
     }
 </style>

@@ -3,8 +3,9 @@
         <div class="clearfix">
             <ul v-on:click="activeHandle" ref="select-wrap" class="sft-select-wrap">
                 <li class="sft-select-item clearfix"
-                    v-for="(item, index) in property.data" :data-index="index">
-                    <i class="icon icon-dagou"></i>
+                    v-for="(item, index) in data" :data-index="index">
+                    <i class="sft-select-drag"></i>
+                    <i class="icon icon-dagou" v-if="select!=undefined"></i>
                     <div class="sft-select-item-input">
                         <input v-model="item.desc" class="sft-field-input sft-select-input"
                                @input="updateAttribute"/>
@@ -30,10 +31,15 @@
             return {}
         },
         // seize 由父元素处理添加事件
-        props: ['property', 'title', 'updateKey', 'btnName', 'seize'],
+        props: ['property', 'title', 'updateKey', 'btnName', 'seize', 'select'],
         components: {
             Field,
             selectField
+        },
+        computed: {
+            data() {
+                return this.property.data || this.property[this.updateKey].data;
+            }
         },
         methods: {
             deleteHandle(event) {
@@ -58,7 +64,7 @@
                     value: value
                 };
                 this.$emit('change', params);
-                this.$store.commit('updateAttribute', params);
+                // this.$store.commit('updateAttribute', params);
             },
             activeHandle(event) {
                 let target = event.target.parentElement.parentElement;
@@ -95,64 +101,4 @@
         }
     }
 
-    .sft-select-item {
-        position: relative;
-        margin-bottom: 4px;
-
-        .icon-dagou {
-            float: left;
-            margin: 6px 0 0 6px;
-            color: #ddd;
-            cursor: pointer;
-        }
-
-        .sft-delete {
-            right: -16px;
-        }
-
-        &:hover {
-            background-color: #f1f1f1;
-            input{
-                background-color: #f1f1f1;
-            }
-            .sft-delete {
-                display: block;
-            }
-            .icon-dagou{
-                color: #c3c6cc;
-            }
-        }
-
-        &.active {
-            input {
-                border-bottom-color: #999999;
-            }
-            .sft-select-item-border {
-                display: block;
-            }
-            .icon-dagou{
-                color: #999999;
-            }
-        }
-        .sft-select-item-input {
-            position: relative;
-            margin-left: 22px;
-            margin-right: 14px;
-        }
-        .sft-select-item-border {
-            display: none;
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            left: 0;
-            height: 2px;
-            border-left: 1px solid #999999;
-            border-right: 1px solid #999999;
-        }
-
-        .sft-field-input {
-            width: 100%;
-            box-sizing: border-box;
-        }
-    }
 </style>

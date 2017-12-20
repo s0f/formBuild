@@ -1,12 +1,14 @@
 <template>
     <div>
-        <selectField @changeType="changeHandle"
-                     :title="property['changeTimeType'].name" :property="property['changeTimeType']" updateKey="changeTimeType">
+        <selectField @changeType="changeHandle" :title="property['changeTimeType'].name" 
+            :property="property['changeTimeType']"  updateKey="changeTimeType">
         </selectField>
-        <selectField v-if="property.dateTypeNumber==='dateTime' || property.dateTypeNumber === 'date'" :property="property['changeDateFormat']"  size="small" updateKey="changeDateFormat" :show="showItems" title="接受的日期格式" @change="changeDateFormat"></selectField>
+        <selectField v-if="property.dateTypeNumber==='dateTime' || property.dateTypeNumber === 'date'" 
+            :property="property['changeDateFormat']"  size="horizontal" updateKey="changeDateFormat" 
+            :show="showItems" title="接受的日期格式" @change="changeDateFormat"></selectField>
 
-        <selectField :property="property['defaultShowTime']" updateKey="defaultShowTime" size="small" :show="defaultShow" @changeType="defaultTimeHandle"
-                     ref="defaultTime"></selectField>
+        <selectField :property="property['defaultShowTime']" updateKey="defaultShowTime" size="horizontal" 
+            :show="defaultShow" @changeType="defaultTimeHandle"  ref="defaultTime"></selectField>
         <Field>
             <el-date-picker
                 v-if="property.isCustomDefaultTime"
@@ -18,8 +20,8 @@
             </el-date-picker>
         </Field>
 
-        <selectField v-if="property.dateTypeNumber!==2"  :property="property['accurateTimeData']" updateKey="accurateTimeData"
-                     size="small"></selectField>
+        <selectField v-if="property.dateTypeNumber!==2"  :property="property['accurateTimeData']" 
+            updateKey="accurateTimeData"    size="horizontal"></selectField>
     </div>
 </template>
 

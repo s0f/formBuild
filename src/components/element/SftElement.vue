@@ -56,7 +56,7 @@ export default {
     width: 100%;
 }
 .sft-element-body {
-    padding: 10px 0 10px 2%;
+    padding: 10px;
 }
 
 .sft-element-title {

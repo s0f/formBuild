@@ -11,17 +11,6 @@ let utils = {
 
         return s.join("");
     },
-    parents(el, selector) {
-        let matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;
-
-        while (el) {
-            if (matchesSelector.call(el, selector)) {
-                break;
-            }
-            el = el.parentElement;
-        }
-        return el;
-    },
     unique(array) {
         let r = [];
         for (let i = 0, l = array.length; i < l; i++) {

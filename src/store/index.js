@@ -7,6 +7,10 @@ import Vuex from 'vuex';
 import actions from './actions';
 import getters from './getters';
 import mutations from './mutations';
+import member from './modules/member';
+import editor from './modules/editor';
+import common from './common';
+
 Vue.use(Vuex);
 
 /**
@@ -24,7 +28,7 @@ let state = {
     isLoading: false, // 正在加载页面
     isUp: false,
     step: 1,
-    elementPrefix: 'E',
+    elementPrefix: common.elementPrefix,
     elementList: [],
     formName: '新的表单',
     formDesc: '',
@@ -43,5 +47,9 @@ export default new Vuex.Store({
     state,
     actions,
     getters,
-    mutations
+    mutations,
+    modules: {
+        member,
+        editor
+    }
 });

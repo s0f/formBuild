@@ -1,21 +1,16 @@
 <template>
 <div id="basePanel">
-    <div class="stf-field-item">
-        <span class="stf-field-title">标题</span>
-        <div class="sft-field-content">
-            <input type="text" title="标题" v-model="title" class="sft-field-input" :placeholder="$store.state.elementList[$store.state.activeComponentRef].base.title" @blur="blurHandle" @focus="focusHandle" />
-        </div>
-    </div>
-    <div class="stf-field-item">
-        <span class="stf-field-title">描述</span>
-        <div class="sft-field-content">
-            <input type="text" title="描述" v-model="desc" class="sft-field-input"  @blur="blurHandle" @focus="focusHandle"/>
-        </div>
-    </div>
+    <Field title="标题">
+        <input type="text" title="标题" v-model="title" class="sft-field-input" :placeholder="$store.state.elementList[$store.state.activeComponentRef].base.title" @blur="blurHandle" @focus="focusHandle" />
+    </Field>
+    <Field title="描述">
+        <input type="text" title="描述" v-model="desc" class="sft-field-input"  @blur="blurHandle" @focus="focusHandle"/>
+    </Field>
 </div>
 </template>
 <script>
     import store from '../../store';
+    import Field from './Field';
 
     export default {
         name: "basePanel",
@@ -47,6 +42,9 @@
                     this.$store.commit('updateProperty', {desc: value});
                 }
             }
+        },
+        components: {
+            Field
         },
         methods: {
 

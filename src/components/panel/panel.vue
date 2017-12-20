@@ -1,12 +1,9 @@
 <template>
-    <div class="stf-panel">
-        <div class="stf-panel-title">{{ name }}</div>
-        <div :class="['stf-panel-content', fold ? 'stf-panel-content' : '']">
+    <div class="sft-panel">
+        <div class="sft-panel-title">{{ name }}</div>
+        <div :class="['sft-panel-content', 'sft-panel-wrap', fold ? 'sft-panel-content' : '']" ref="panelContent">
             <!--<slot name="header"></slot>-->
-
-            <div class="stf-field-input">
-                <basePanel></basePanel>
-            </div>
+            <basePanel></basePanel>
             <textPanel v-if="activeComponent.base.element === 'text'"></textPanel>
             <dateTimeDate v-if="activeComponent.base.element === 'dateTime_date'" :activeComponent="activeComponent"></dateTimeDate>
             <selectPanel v-if="activeComponent.base.type === 'select'"></selectPanel>
@@ -14,6 +11,11 @@
             <radioPanel v-if="activeComponent.base.type === 'radio'"></radioPanel>
             <NumberPanel v-if="activeComponent.base.element === 'number'"></NumberPanel>
             <scorePanel v-if="activeComponent.base.element === 'score'"></scorePanel>
+            <tablePanel v-if="activeComponent.base.type === 'table'"></tablePanel>
+            <sortPanel v-if="activeComponent.base.type === 'sort'"></sortPanel>
+            <currencyPanel v-if="activeComponent.base.element === 'currency'"></currencyPanel>
+            <commodityPanel v-if="activeComponent.base.type === 'commodity'"></commodityPanel>
+            <cityPanel v-if="activeComponent.base.type === 'city'"></cityPanel>
         </div>
     </div>
 </template>
@@ -28,7 +30,15 @@
     import radioPanel from './radioPanel';
     import NumberPanel from './NumberPanel';
     import scorePanel from './scorePanel';
+    import tablePanel from './tablePanel';
+    import sortPanel from './sortPanel';
+    import currencyPanel from './currencyPanel';
+    import commodityPanel from './commodityPanel';
+    import cityPanel from './cityPanel';
 
+    import PerfectScrollbar  from 'perfect-scrollbar'
+    import 'perfect-scrollbar/css/perfect-scrollbar.css'
+    
     export default {
         name: "Panel",
         data() {
@@ -44,27 +54,47 @@
             multiSelect,
             radioPanel,
             NumberPanel,
-            scorePanel
+            scorePanel,
+            tablePanel,
+            sortPanel,
+            currencyPanel,
+            commodityPanel,
+            cityPanel,
         },
         props: ['name', 'fold'],
         computed: {
             activeComponent() {
                 return this.$store.getters.activeComponent;
             },
+        },
+        created() {
+        },
+        mounted() {
+            let scrollbar = null;
+            this.$nextTick(function () {
+                scrollbar = new PerfectScrollbar(this.$refs.panelContent);
+            });
+            // let globalSettingHeight = this.$refs.globalSetting.$el.offsetHeight;
+            // this.$refs.panelContent.style.top = globalSettingHeight + 20 + 'px';
+        },
+        methods: {
         }
     }
 </script>
 <style lang="scss">
     @import '../../style/var';
 
-    .stf-field-title {
+    .sft-field-title {
         font-size: 14px;
         color: #666;
         line-height: 30px;
     }
 
-    .stf-field-item {
-        margin-bottom: 6px;
+    .sft-panel-wrap {
+        position: absolute;
+        top: 35px;
+        bottom: 0;
+        width: 100%;
     }
 
     .sft-field-input {

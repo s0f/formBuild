@@ -1,27 +1,33 @@
 <template>
-    <div class="stf-field-item" slot="header">
-        <span class="stf-field-title">{{ _property.name }}</span>
-        <div :class="['sft-field-content', size?'float-r w50': '']">
-            <!--  <select v-if="type == 'base'" :type="type" v-model="baseAttr.value" :value="baseAttr.value"
-                      @change="updateAttribute">
-                  <option v-for="item in baseAttr.data" :value="item.value">{{item.desc}}</option>
-              </select>-->
-            <el-select :type="updateKey" v-model="value" size="small"  @change="updateAttribute">
-                <el-option
-                    v-for="item in typeMap"
-                    :key="item.value"
-                    :label="item.desc"
-                    :value="item.value"
-                    value-key="value">
-                </el-option>
-            </el-select>
-
-        </div>
-    </div>
+    <Field slot="header" :title="_property.name" :type="size">
+        <!--  <select v-if="type == 'base'" :type="type" v-model="baseAttr.value" :value="baseAttr.value"
+                    @change="updateAttribute">
+                <option v-for="item in baseAttr.data" :value="item.value">{{item.desc}}</option>
+            </select>-->
+        <el-select :type="updateKey" v-model="value" size="small"  @change="updateAttribute" v-if="easy == undefined">
+            <el-option
+                v-for="item in typeMap"
+                :key="item.value"
+                :label="item.desc"
+                :value="item.value"
+                value-key="value">
+            </el-option>
+        </el-select>
+        <el-select :type="updateKey" v-model="value" size="small"  @change="updateAttribute" v-else>
+            <el-option
+                v-for="(item, index) in listData"
+                :key="index"
+                :label="item"
+                :value="item"
+                :value-key="item">{{item}}
+            </el-option>
+        </el-select>
+    </Field>
 </template>
 
 <script>
     import store from '../../store';
+    import Field from './Field';
 
     export default {
         name: 'selectField',
@@ -31,9 +37,12 @@
                 modelAttr: ''
             }
         },
-        props: ['property', 'updateKey', 'model', 'show', 'size', 'seize'],
+        props: ['property', 'data', 'updateKey', 'model', 'show', 'size', 'seize', 'easy'],
         store,
         computed: {
+            listData() {
+                return this.data || this.property.data;
+            },
             value: {
                 get() {
                 	if(this.model){
@@ -94,6 +103,9 @@
                     value: this.property.value
                 })
             });
+        },
+        components: {
+            Field
         },
         methods: {
             updateAttribute(value) {

@@ -27,6 +27,7 @@
 <style>
     #app {
         height: 100%;
+        background-color: #f1f1f1;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-align: center;

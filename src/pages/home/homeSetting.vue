@@ -1,9 +1,9 @@
 <template>
-    <section class="stf-setting">
-        <div class="stf-setting-wrap">
-            <globalPanel></globalPanel>
-            <div class="stf-setting-other">
-                <panel v-if="activeComponent" :name="activeComponent.base.name">
+    <section class="sft-setting">
+        <div class="sft-setting-wrap">
+            <globalPanel ref="globalSetting"></globalPanel>
+            <div class="sft-setting-other" ref="other" v-if="activeComponent">
+                <panel :name="activeComponent.base.name">
                 </panel>
             </div>
         </div>
@@ -11,6 +11,7 @@
 </template>
 <script>
     import store from '../../store/'
+    import $ from '../../common/query'
     import globalPanel from '../../components/panel/globalPanel.vue'
 
     export default {
@@ -32,29 +33,38 @@
             activeComponent() {
                 return this.$store.getters.activeComponent;
             }
-        }
+        },
+        created() {
+        },
+        
     }
 </script>
 <style lang="scss">
-    .stf-setting {
+    .sft-setting {
         position: absolute;
+        top: 0;
+        bottom: 0;
         right: 10px;
-
-        width: 300px;
+        width: 320px;
     }
 
-    .stf-setting-global,
-    .stf-setting-other {
+    .sft-setting-global,
+    .sft-setting-other {
+        position: relative;
         margin-bottom: 10px;
-
-        background-color: #fff;
-
         overflow: hidden;
         text-align: left;
     }
 
-    .stf-field-checkbox-wrap {
-        padding: 5px 10px;
+    .sft-setting-other {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        top: 100px;
+    }
+
+    .sft-field-checkbox-wrap {
+        padding: 10px 0;
         height: 20px;
         line-height: 20px;
         font-size: 14px;

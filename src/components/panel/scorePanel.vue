@@ -22,7 +22,6 @@
     import $ from '../../common/query.js';
     import Field from "./Field";
     import tooltip from "../element/tooltip";
-    console.log(tooltip)
     export default {
         name: 'scorePanel',
         data() {
@@ -84,7 +83,7 @@
                     this.$store.commit('updateAttribute', {
                         easy: true,
                         type: 'minValue',
-                        value: Number.parseInt(tempValue)
+                        value: Number.parseInt(tempValue || 0)
                     });
                 }
             },
@@ -97,10 +96,14 @@
         },
         methods: {
             toggleIcon(event) {
+                let iconType =  this.scoreList[$.index(this.$refs.scoreWrap.children, event.currentTarget)];
                 this.$store.commit('updateAttribute', {
                     easy: true,
                     type: 'icon',
-                    value: this.scoreList[$.index(this.$refs.scoreWrap, event.currentTarget)]
+                    value: iconType
+                });
+                this.$emit('changeIcon', {
+                    value: iconType
                 });
             }
         }
@@ -108,6 +111,9 @@
 
 </script>
 <style lang="scss" scoped>
+    .score-panel{
+        background: #fff;
+    }
     ul{
         display: flex;
         justify-content: left;

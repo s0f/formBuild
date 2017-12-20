@@ -1,6 +1,6 @@
 <template>
-    <div class="stf-field-item">
-        <span class="stf-field-title">{{ title }}</span>
+    <div class="sft-field-item">
+        <span class="sft-field-title">{{ title }}</span>
         <div class="sft-field-content">
             <el-checkbox-group v-model="checkValues">
                 <el-checkbox v-for="(item, index) in typeMap" :label="item.value" :key="index"  @change="changeHandle">{{ item.desc }}</el-checkbox>

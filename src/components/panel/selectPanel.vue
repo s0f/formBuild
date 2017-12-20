@@ -1,5 +1,5 @@
 <template>
-    <multiLineText :property="active.property.selects" title="选项内容"></multiLineText>
+    <multiLineText :property="active.property.selects" title="选项内容" select></multiLineText>
 </template>
 
 <script>

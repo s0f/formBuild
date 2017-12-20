@@ -1,23 +1,28 @@
 <template>
-    <div class="stf-setting-global">
-        <div class="stf-panel-title">标题</div>
-        <div class="stf-panel-content">
-            <div class="stf-field-item">
-                <div class="stf-field-checkbox">
-                    <div class="stf-field-checkbox-wrap">
+    <div class="sft-setting-global">
+        <div class="sft-panel-title">标题</div>
+        <div class="sft-panel-content">
+            <Field>
+                <div class="sft-field-checkbox">
+                    <div class="sft-field-checkbox-wrap">
                         <i class="icon icon-fangxingweixuanzhong"></i> 插入题号
                     </div>
                 </div>
-            </div>
+            </Field>
         </div>
     </div>
 </template>
 <script>
+    import Field from './Field';
+
     export default {
         name: "globalPanel",
         data() {
             return {};
-        }
+        },
+        components: {
+            Field
+        },
     }
 </script>
 <style lang="scss" scoped>

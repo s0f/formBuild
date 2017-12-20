@@ -1,5 +1,5 @@
 <template>
-    <div class="widget-main">
+    <div class="widget-main" @click="widgetClickHandle">
         <h3 class="widget-title">{{baseWidgetTitle}}</h3>
         <div class="widget-content">
             <div class="widget-list clearfix">
@@ -22,7 +22,20 @@ export default {
     data() {
         return {}
     },
-    props: ['baseWidgetTitle', 'baseWidgets']
+    props: ['baseWidgetTitle', 'baseWidgets'],
+    methods: {
+        widgetClickHandle(event) {
+            let target = event.target.classList.contains('widget-list_item') ? event.target : event.target.parentElement;
+            target = target.classList.contains('widget-list_item') ? target : target.parentElement;
+
+            if (target.classList.contains('widget-list_item') && !target.classList.contains('not-dev')) {
+                this.$emit('widgetClickHandle', {
+                    target: target,
+                    data: this.baseWidgets[target.getAttribute('data-idx')]
+                });
+            }
+        }
+    }
 }
 </script>
 

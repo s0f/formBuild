@@ -1,6 +1,6 @@
 <template>
     <span class="">
-        <i class="icon" v-if="type === 'dateTime_date'">&#xe604;</i>
+        <i class="icon" v-html="icon"></i>
     </span>
 </template>
 
@@ -11,7 +11,7 @@
 			return {}
 		},
         props: {
-			type: String
+			icon: String
         }
 	}
 </script>
