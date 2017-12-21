@@ -88,7 +88,9 @@
                 step: 2
             });
              self.$nextTick(function () {
-                scrollbar = new PerfectScrollbar(this.$refs.buildCenter);
+                scrollbar = new PerfectScrollbar(this.$refs.buildCenter, {
+                    whellSpeed: 2
+                });
              });
             /*this.$store.dispatch('recovery', {
              loadFormDataEd() {

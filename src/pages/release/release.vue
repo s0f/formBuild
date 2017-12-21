@@ -5,11 +5,11 @@
                 <div class="in" v-if="publish">
                     <h2>新的表单</h2>
                     <div class="url-wrap">
-                        <el-input placeholder="请输入内容" :value="link | replaceHttpPrefix">
+                        <el-input placeholder="请输入内容" :value="link | replaceHttpPrefix" id="releaseUrl">
                             <template slot="prepend">http://</template>
                             <template slot="append">
                                 <div class="tools">
-                                    <span class="copy">复制</span>
+                                    <span class="copy" ref="copyBtn" data-clipboard-target="#releaseUrl">复制</span>
                                     <a class="open" :href="link" target="_blank">打开</a>
                                 </div>
                             </template>
@@ -31,12 +31,14 @@
 </template>
 
 <script>
+    import clipboard from 'clipboard';
+
     export default {
         name: 'release',
         data () {
             return {
             	publish: true,
-                link: window.location.origin + window.location.origin  + 'review.html'
+                link: window.location.origin + '/' + 'review.html'
             }
         },
         filters: {
@@ -48,6 +50,23 @@
 
             this.$store.commit('updateStep', {
                 step: 5
+            });
+        },
+        mounted () {
+            let clipboardd = new clipboard('.copy');
+            let self = this;
+            clipboardd.on('success', function(e) {
+                 self.$message({
+                    message: '复制成功！',
+                    type: 'success'
+                });
+                e.clearSelection();
+            });
+
+            console.log(clipboardd)
+            clipboardd.on('error', function(e) {
+                console.error('Action:', e.action);
+                console.error('Trigger:', e.trigger);
             });
         },
         methods: {

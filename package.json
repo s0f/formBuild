@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^0.17.0",
+    "clipboard": "^1.7.1",
     "element-ui": "^2.0.1",
     "perfect-scrollbar": "^1.3.0",
     "vue": "^2.5.2",
