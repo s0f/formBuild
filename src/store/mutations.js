@@ -19,11 +19,17 @@ const mutations = {
         }
         if (payload.insert !== -1) {
             if (payload.splice !== undefined && payload.splice !== -1) {
-                state.elementList.splice(payload.insert + 1, 0, element);
+                // 在指定位置插入元素
+                if( payload.isFirst ){
+                    state.elementList.splice(payload.insert, 0, element);
+                } else {
+                    state.elementList.splice(payload.insert + 1, 0, element);
+                }
                 // 删除原有元素，原有元素向上拖拽 splice +1
                 if (payload.insert < payload.splice) {
                     state.isUp = true;
-                    state.elementList.splice(payload.splice + 1, 1);
+                    state.elementList.splice(payload.splice+1, 1);
+
                 } else {
                     state.isUp = false;
                     state.elementList.splice(payload.splice, 1);

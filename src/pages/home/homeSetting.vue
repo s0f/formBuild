@@ -35,7 +35,18 @@
             }
         },
         created() {
+            document.addEventListener('click', this.resetInputActive);
         },
+        methods: {
+            resetInputActive (event) {
+                if (!event.target.classList.contains('sft-select-input')) {
+                    let lis = document.querySelectorAll('.sft-select-wrap li');
+                    lis.forEach((value) => {
+                        value.classList.remove('active');
+                    });
+                }
+            },
+        }
         
     }
 </script>

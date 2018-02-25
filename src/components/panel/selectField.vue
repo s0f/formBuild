@@ -84,18 +84,8 @@
             this.value = this.property.value;
 //            this._property = JSON.parse(JSON.stringify(Object.assign({},this.property)));
         },
-        mounted()
-        {
+        mounted() {
             let self = this;
-            document.addEventListener('click', function (event) {
-                if (!event.target.classList.contains('sft-select-input')) {
-                    let lis = document.querySelectorAll('.sft-select-wrap li');
-                    lis.forEach((value) => {
-                        value.classList.remove('active');
-                    });
-                }
-
-            });
             this.$on('reset', function (value) {
                 this.value = value;
                 this.$store.commit('updateAttribute', {

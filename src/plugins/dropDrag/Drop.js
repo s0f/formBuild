@@ -40,6 +40,7 @@ class Drop extends dragDropBase {
         this.index = -1;
         this.isEnter = false;
         this.currentInnerIndex = -1; // 当前拖动对象的index
+        this.isDragFirst = false;
         if (!this.options) {
             return false;
         }
@@ -106,52 +107,64 @@ class Drop extends dragDropBase {
         this.emit('onDragEnter', params);
     }
     onDragMove(params) {
-        let index = this.collision(params.pos);
-        if (index !== -1) {
+        let index = this.collision(params.index);
+        let moveFn = util.throttle(function(){
+            if (index >= 0) {
 
-            if (this.options.innerDrag && this.innerDrag.size) {
-                // 离开上一个马上进入下一个
-                if (this.currentInnerPosIndex !== -1) {
-                    // 忽略自己
+                if (this.options.innerDrag && this.innerDrag.size) {
+                    // 离开上一个马上进入下一个
+                    if (this.currentInnerPosIndex !== -1) {
+                        // 不能在自己后面或前面插入（上一个元素后面插入
+                        if (this.options.ignoreSelf && (  (this.currentInnerIndex === index) || (this.currentInnerIndex - 1 === index) )) {
+                            /*this.emit('onInnerDragLeave', {
+                                target: this.innerDrag.getElement(index),
+                                data: params.data,
+                                el: params.el,
+                                index: index
+                            });*/
+                            this.options.isEnter = false;
+                            this.innerDragIng = false;
+                            return 0;
+                        } else {
+                            this.emit('onInnerDrag', {
+                                target: this.innerDrag.getElement(index),
+                                data: params.data,
+                                el: params.el,
+                                index: index
+                            });
+                            this.emit('onInnerDragLeave', {
+                                target: this.innerDrag.getElement(index+1),
+                                data: params.data,
+                                el: params.el,
+                                index: index+1
+                            });
+                            this.options.isEnter = true;
+                        }
 
-                    if (this.options.ignoreSelf && (  (this.currentInnerIndex === index) || (this.currentInnerIndex - 1 === index) )) {
-                        this.emit('onInnerDragLeave', {
-                            target: this.innerDrag.getElement(index),
-                            data: params.data,
-                            el: params.el,
-                            index: index
-                        });
-                        this.options.isEnter = false;
-                        this.innerDragIng = false;
-                        return 0;
-                    } else {
-                        this.emit('onInnerDrag', {
-                            target: this.innerDrag.getElement(index),
-                            data: params.data,
-                            el: params.el,
-                            index: index
-                        });
-                        this.options.isEnter = true;
                     }
 
+                    this.innerDragIng = true;
+                    this.currentInnerPosIndex = index;
                 }
-
-                this.innerDragIng = true;
-                this.currentInnerPosIndex = index;
+            } else {
+                if( this.options.isEnter /*&& !this.innerDragIng*/) {
+                    this.emit('onInnerDragLeave', {
+                        target: this.innerDrag.getElement(this.currentInnerPosIndex),
+                        data: params.data,
+                        el: params.el,
+                        index: index,
+                        previous: this.currentInnerPosIndex
+                    });
+                    this.isDragFirst = true;
+                    // this.options.isEnter = false;
+                } else {
+                    this.isDragFirst = false;
+                }
+                this.innerDragIng = false;
+                this.emit('onDragMove', params);
             }
-        } else {
-            if( this.options.isEnter && !this.innerDragIng) {
-                this.emit('onInnerDragLeave', {
-                    target: this.innerDrag.getElement(index),
-                    data: params.data,
-                    el: params.el,
-                    index: index
-                });
-                this.options.isEnter = false;
-            }
-            this.innerDragIng = false;
-            this.emit('onDragMove', params);
-        }
+        },null, this, 50);
+        moveFn();
     }
     onDragLeave(params) {
         this.emit('onDragLeave', params);
@@ -159,7 +172,7 @@ class Drop extends dragDropBase {
     onDrop(params) {
         params.index = this.innerDrag.size;
         this.initPosition();
-        if (this.innerDragIng && this.options.isEnter) {
+        if (/*this.innerDragIng &&*/ this.options.isEnter) {
             // 释放了鼠标，拖动中标记为false
             this.innerDragIng = false;
             this.isEnter = false;
@@ -168,7 +181,8 @@ class Drop extends dragDropBase {
                 el: params.el,
                 data: params.data,
                 index: this.innerDrag.size,
-                sourceEl: params.sourceEl
+                sourceEl: params.sourceEl,
+                isDragFirst: this.isDragFirst
             });
         } else if(!params.inner){ // 在目标区域不会生产新的元素
             this.emit('onDrop', params);
@@ -178,6 +192,8 @@ class Drop extends dragDropBase {
         this.emit('onDragEnd', params);
         this.innerDragIng = false;
         this.isEnter = false;
+        this.isDragFirst = false;
+        this.initPosition();
     }
     /*
         元素向下拖的时候，元素的底部只有到达目的地上方才算，被拖拽元素顶部离开了目标元素的下方才算离开

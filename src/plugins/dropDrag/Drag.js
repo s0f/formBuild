@@ -32,7 +32,7 @@ class Drag extends dragDropBase {
         }
 
         this.isMouseDragging = false;
-        this.minDoubleMouseDownTime = 0;
+        this.startTime = 0;
         this.init();
     }
 
@@ -58,28 +58,13 @@ class Drag extends dragDropBase {
 
     // 开始拖动时
     startHandler(event) {
-        let target = util.parents(event.target, '.drag-item');
-
-        if (!target) {
-            return false;
-        }
-
-        if (this.minDoubleMouseDownTime === 0) {
-            this.minDoubleMouseDownTime = new Date().getTime();
-        } else {
-            if (new Date().getTime() - this.minDoubleMouseDownTime < 1000) {
-                this.minDoubleMouseDownTime = new Date().getTime();
-                return false;
-            }
-        }
+        this.startTime = new Date().getTime();
+        
         this.mouseDownPosition = {
             x: event.pageX,
             y: event.pageY
         };
-        this.cloneNode = target.cloneNode(true);
-        this.cloneNode.setAttribute('style', 'position: fixed;display: none;margin: inherit;list-style: none;');
-        this.cloneNode.style.left = event.pageX + 'px;';
-        this.cloneNode.style.top = event.pageY + 'px;';
+
         document.addEventListener('mouseup', this._endHandler, false);
         this.wrap.addEventListener('mousemove', this._moveHandler, false);
         this.wrap.addEventListener('mouseup', this._endHandler, false);
@@ -87,7 +72,20 @@ class Drag extends dragDropBase {
     }
 
     moveHandler(event) {
+   
+        // 鼠标单纯点击一次不是要进行拖动
+    
+        let durationTime = new Date().getTime();
+        if (durationTime - this.startTime < 50) {
+            return false;
+        }
         let target = util.parents(event.target, '.drag-item');
+        this.cloneNode = target.cloneNode(true);
+        this.cloneNode.setAttribute('style', 'position: fixed;display: none;margin: inherit;list-style: none;');
+        this.cloneNode.style.left = event.pageX + 'px;';
+        this.cloneNode.style.top = event.pageY + 'px;';
+
+        // let target = util.parents(event.target, '.drag-item');
         let markNode = util.createMarkNode(),
             offset = null,
             tempOffset,

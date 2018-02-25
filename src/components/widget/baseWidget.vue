@@ -25,6 +25,7 @@ export default {
     props: ['baseWidgetTitle', 'baseWidgets'],
     methods: {
         widgetClickHandle(event) {
+            console.log('widgetClickHandle')
             let target = event.target.classList.contains('widget-list_item') ? event.target : event.target.parentElement;
             target = target.classList.contains('widget-list_item') ? target : target.parentElement;
 

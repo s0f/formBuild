@@ -34,11 +34,29 @@ const utils = {
     off(el, event, fn, capture) {
         el.removeEventListener(event, fn, capture || false);
     },
-    throttle(method, params, context, time) {
+    debounce(method, params, context, time) {
+
         clearTimeout(method.tId);
         method.tId = setTimeout(function () {
             method.call(context, params);
         }, time || 30);
+    },
+    throttle(method, params, context, time) {
+        var timeout = null,
+            startTime = new Date();
+        return function(){
+            var currentTime = new Date();
+            if( timeout !== null ) {
+                clearTimeout(method);
+            }
+
+            if( currentTime - startTime >= time ) {
+                method.call(context||this, params);
+                startTime = currentTime;
+            } else {
+                timeout = setTimeout(method.bind(context, params), time || 30);
+            }
+        }
     },
     createMarkNode() {
         let markDom = null;

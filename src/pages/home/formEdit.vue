@@ -6,13 +6,15 @@
                 <div class="sft-form-wrap">
                     <h2 class="sft-content-title">{{formName}}</h2>
                     <div class="sft-content-body">
-                        <section class="sft-form" @click="toggleActive" ref="buildForm">
-                            <component v-for="(element ,index) in elementList" :key="index" :is="'E'+element.base.type" :data-type="$store.state.elementPrefix+element.base.type"
-                                :data-ref="element.index" :data="element" :data-index="index" :data-element="element.base.element" :class="[$store.state.activeComponentUUID === element.uuid ? 'clicked' : '','drag-item']"
-                                v-if="element" :uuid="element.uuid">
-                            </component>
-                            <div class="sft-flag" ref="flag">
-                                <strong>放在这里</strong>
+                        <section class="sft-form" ref="buildForm">
+                            <div class="sft-form-body" @click="toggleActive">
+                                <div class="sft-flag" ref="flag">
+                                    <strong>放在这里</strong>
+                                </div>
+                                <component v-for="(element ,index) in elementList" :key="index" :is="'E'+element.base.type" :data-type="$store.state.elementPrefix+element.base.type"
+                                    :data-ref="element.index" :data="element" :data-index="index" :data-element="element.base.element" :class="[$store.state.activeComponentUUID === element.uuid ? 'clicked' : '','drag-item']"
+                                    v-if="element" :uuid="element.uuid">
+                                </component>
                             </div>
                         </section>
                         <footer class="sft-content-footer">
@@ -121,7 +123,7 @@
             dragItem = new dropDrag.Drag('.sft-left', {
                 data: '',
             });
-            dropItem = new dropDrag.Drop('.sft-form', {
+            dropItem = new dropDrag.Drop('.sft-form-body', {
                 innerDrag: true,
                 innerDrop: true,
                 ignoreSelf: true,
@@ -161,12 +163,19 @@
                     self.$refs.flag.style.display = 'none';
                 },
                 onInnerDrag(params) {
-                    params.target.appendChild(self.$refs.flag)
+                    // console.log('onInnerDrag', params.index)
+                    params.target.appendChild(self.$refs.flag);
                     params.target.querySelector('.sft-flag').style.display = 'block';
                 },
                 onInnerDragLeave(params) {
-                    self.$refs.flag.style.display = 'none';
-                    console.log('onInnerDragLeave')
+                    // console.log('onInnerDragLeave', params.index)
+                    if( params.previous == 0){
+                        params.target.insertBefore(self.$refs.flag, params.target.children[0]);
+                        self.$refs.flag.style.display = 'block';
+                    } else {
+
+                        // self.$refs.flag.style.display = 'none';
+                    }
                 },
                 onInnerDrop(params) {
                     /*
@@ -183,19 +192,34 @@
                         pos = -1,
                         componentName = '',
                         element = '';
+                        console.log('onInnerDrop')
                     if (!!inner) {
                         pos = this.innerDrag.find(params.target);
                         let splicePos = this.innerDrag.find(params.sourceEl);
                         componentName = params.sourceEl.getAttribute('data-type');
                         element = params.sourceEl.getAttribute('element');
-                        self.$store.commit('addElement', {
-                            uuid: utils.uuid(),
-                            index: pos,
-                            componentName: componentName,
-                            element: element || '',
-                            insert: pos,
-                            splice: splicePos
-                        });
+                        console.log('isDragFirst',params.isDragFirst)
+                        if( params.isDragFirst ){
+                            self.$store.commit('addElement', {
+                                uuid: utils.uuid(),
+                                index: pos,
+                                componentName: componentName,
+                                element: element || '',
+                                insert: pos,
+                                isFirst: params.isDragFirst,
+                                splice: splicePos
+                            });
+
+                        } else {
+                            self.$store.commit('addElement', {
+                                uuid: utils.uuid(),
+                                index: pos,
+                                componentName: componentName,
+                                element: element || '',
+                                insert: pos,
+                                splice: splicePos
+                            });
+                        }
                         self.$nextTick(function () {
                             dropItem.innerDrag.clear();
                             dropItem.innerDrag.addList(document.querySelectorAll('.sft-form .drag-item'));
@@ -228,7 +252,7 @@
                     self.$refs.flag.style.display = 'none';
                 }
             });
-            dragItem2 = new dropDrag.Drag('.sft-form', {
+            dragItem2 = new dropDrag.Drag('.sft-form-body', {
                 data: 'inner',
                 inner: true
             });
@@ -239,7 +263,6 @@
         },
         methods: {
             addElement(payload) {
-                console.log('xx add e')
                 this.$store.commit('addElement', {
                     componentName: this.$store.state.elementPrefix + payload.data[0],
                     element: payload.data[1] || '',
@@ -251,6 +274,7 @@
                     const dropDom = colletion[colletion.length - 1];
                     dropItem.innerDrag.add(dropDom);
                     dropItem.innerDragPosition.add(dropDom.getBoundingClientRect());
+                    dropItem.initPosition();
                     // 如果没有激活的元素，激活添加的元素
                     if (this.$store.state.activeComponentUUID === -1) {
 
@@ -260,6 +284,7 @@
                             false, 0, null);
                         dropDom.dispatchEvent(eventObj); */
                         utils.fire(dropDom, 'click');
+                        dropItem.initInnerTargetPosition();
                     }
                 });
             },
@@ -281,6 +306,7 @@
                  点击时元素A，元素为选中状态，记住ID
                  拖拽其他元素后，列表重新render，A 依然要处于选中状态
                  */
+                console.log('click', event)
                 let target = $.parents(event.target, '.sft-element');
                 if (target && target.classList.contains('sft-element')) {
                     const index = target.getAttribute('data-index'),

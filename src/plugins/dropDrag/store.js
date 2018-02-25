@@ -24,7 +24,6 @@ const store = {
     onDragMove(pos) {
         let index = this.collision(pos),
             params = null;
-
         if (index >= 0) {
 
             if (this.preIndex !== index) {
@@ -34,6 +33,7 @@ const store = {
                     params = {
                         el: this.targets[this.preIndex].el,
                         sourceEl: this.sourceEl,
+                        index: pos
                     };
                     this.dragLeaveHandleList[this.preIndex](params);
 
@@ -46,13 +46,14 @@ const store = {
                 params = {
                     el: this.targets[index].el,
                     sourceEl: this.sourceEl,
+                    index: pos
                 };
                 this.dragEnterHandleList[index](params);
             }
             params = {
                 el: this.targets[index].el,
                 sourceEl: this.sourceEl,
-                pos: pos,
+                index: pos,
             };
             // 在接收对象上移动 使用节流会有BUG，在从第一个接收对象进入第二个的时候会触发第一个的移动事件
             // util.throttle(this.dragMoverHandleList[index], params, this);
@@ -63,7 +64,7 @@ const store = {
                 params = {
                     el: this.targets[this.preIndex].el,
                     sourceEl: this.sourceEl,
-                    pos: pos,
+                    index: index,
                 };
                 this.isEnter = false;
                 this.dragLeaveHandleList[this.preIndex](params);
@@ -81,7 +82,6 @@ const store = {
                 data: data,
             }));
         } else {
-
             let params = {
                 el: this.targets[this.preIndex].el,
                 sourceEl: this.sourceEl,
@@ -100,9 +100,9 @@ const store = {
             index = -1,
             len = this.targets.length,
             i = 0;
-
         for (; i < len; i++) {
             targetPos = this.targetPosition[i];
+
             if (pos.left + pos.width >= targetPos.left
                 && pos.left <= targetPos.right
                 && pos.top + pos.height >= targetPos.top
