@@ -306,9 +306,14 @@
                  点击时元素A，元素为选中状态，记住ID
                  拖拽其他元素后，列表重新render，A 依然要处于选中状态
                  */
+<<<<<<< HEAD
                 console.log('click', event)
                 let target = $.parents(event.target, '.sft-element');
                 if (target && target.classList.contains('sft-element')) {
+=======
+                let target = utils.parents(event.target, '.sft-element');
+                if (target&&target.classList.contains('sft-element')) {
+>>>>>>> 2d2acdd56558e40c7eed165cccc59d7100de8895
                     const index = target.getAttribute('data-index'),
                         targetIndex = target.getAttribute('data-ref'),
                         name = target.getAttribute('data-type').split(this.$store.state.elementPrefix)[1],

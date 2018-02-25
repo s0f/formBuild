@@ -99,7 +99,6 @@
     .review-in {
         min-height: 400px;
         margin: 0 auto;
-        padding-top: 20px;
         background: #ffffff;
     }
 
