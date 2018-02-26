@@ -128,9 +128,6 @@
         text-align: center;
     }
 
-    .el-main {
-    }
-
     .el-form {
         text-align: left;
     }
