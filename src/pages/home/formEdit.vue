@@ -7,14 +7,18 @@
                     <h2 class="sft-content-title">{{formName}}</h2>
                     <div class="sft-content-body">
                         <section class="sft-form" ref="buildForm">
-                            <div class="sft-form-body" @click="toggleActive">
+                            <div class="sft-form-body">
                                 <div class="sft-flag" ref="flag">
                                     <strong>放在这里</strong>
                                 </div>
                                 <component v-for="(element ,index) in elementList" :key="index" :is="'E'+element.base.type" :data-type="$store.state.elementPrefix+element.base.type"
                                     :data-ref="element.index" :data="element" :data-index="index" :data-element="element.base.element" :class="[$store.state.activeComponentUUID === element.uuid ? 'clicked' : '','drag-item']"
-                                    v-if="element" :uuid="element.uuid">
+                                    :uuid="element.uuid">
                                 </component>
+                                <!-- <component v-for="(element ,index) in elementList" :key="index" :is="'E'+element.base.type" :data-type="$store.state.elementPrefix+element.base.type"
+                                    :data-ref="element.index" :data="element" :data-index="index" :data-element="element.base.element" :class="[$store.state.activeComponentUUID === element.uuid ? 'clicked' : '','drag-item']"
+                                    :uuid="element.uuid">
+                                </component> -->
                             </div>
                         </section>
                         <footer class="sft-content-footer">
@@ -34,6 +38,7 @@
         mapState,
         mapGetters
     } from 'vuex'
+    import { Sortable, Draggable } from '@shopify/draggable'
     import store from '../../store/index'
     import homeBar from '../../pages/home/homeBar'
     import homeSetting from '../../pages/home/homeSetting'
@@ -45,7 +50,6 @@
     import Esort from '../../components/element/Sort'
     import Ecommodity from '../../components/element/Commodity'
     import Ecity from '../../components/element/City'
-    import * as dropDrag from '../../plugins/dropDrag/main.js'
     import $ from '../../common/query'
     import utils from '../../common/utils'
     import PerfectScrollbar  from 'perfect-scrollbar'
@@ -61,7 +65,9 @@
     export default {
         name: 'formEdit',
         data() {
-            return {}
+            return {
+                _draggable: null,
+            }
         },
         store,
         components: {
@@ -78,7 +84,9 @@
         },
         computed: {
             ...mapState({
-                elementList: state => state.elementList,
+                elementList: state => {
+                    return state.elementList.filter(element => element)
+                },
                 formName: state => state.formName
             })
         },
@@ -89,30 +97,37 @@
             this.$store.commit('updateStep', {
                 step: 2
             });
-             self.$nextTick(function () {
+            self.$nextTick().then(()=>{
                 scrollbar = new PerfectScrollbar(this.$refs.buildCenter, {
                     whellSpeed: 2
                 });
-             });
-            /*this.$store.dispatch('recovery', {
-             loadFormDataEd() {
-             self.$nextTick(function () {
-             let list = document.querySelectorAll('.sft-form-build .sft-element');
-             dropItem.innerDrag.addList(list);
-             console.log(list)
-             });
-             self.$http.get('http://easy-mock.com/mock/5961e71e9adc231f357c229e/example/dragSate')
-             .then(function (res) {
-             dropItem.innerDragPosition.addList(res.data.data);
-             setTimeout(function () {
-             //                                self.$loading().close()
-             }, 200)
-             });
-             }
-             });*/
+            });
+
 
         },
         mounted() {
+            this._draggable = new Draggable(document.querySelector('.sft-form-body'), {
+                draggable: '.drag-item',
+                mirror: {
+                    constrainDimensions: true,
+                    appendTo: '.sft-form-body'
+                },
+            })
+
+            /* this._draggable.on('mirror:move', () => {
+                console.log('mirror:move')
+            }) */
+            this._draggable.on('drag:move', () => {
+                console.log('drag:move')
+            })
+            this._draggable.on('drag:pressure', () => {
+                console.log('drag:pressure')
+            })
+            this._draggable.on('drag:stop', () => {
+                console.log('drag:stop')
+            })
+        },
+        mounted2() {
             const self = this;
             // 页面自适应
             setTimeout(function(){
@@ -163,18 +178,14 @@
                     self.$refs.flag.style.display = 'none';
                 },
                 onInnerDrag(params) {
-                    // console.log('onInnerDrag', params.index)
                     params.target.appendChild(self.$refs.flag);
                     params.target.querySelector('.sft-flag').style.display = 'block';
                 },
                 onInnerDragLeave(params) {
-                    // console.log('onInnerDragLeave', params.index)
                     if( params.previous == 0){
                         params.target.insertBefore(self.$refs.flag, params.target.children[0]);
                         self.$refs.flag.style.display = 'block';
                     } else {
-
-                        // self.$refs.flag.style.display = 'none';
                     }
                 },
                 onInnerDrop(params) {
@@ -252,10 +263,10 @@
                     self.$refs.flag.style.display = 'none';
                 }
             });
-            dragItem2 = new dropDrag.Drag('.sft-form-body', {
+         /*    dragItem2 = new dropDrag.Drag('.sft-form-body', {
                 data: 'inner',
                 inner: true
-            });
+            }); */
 
             this.$refs.buildCenter.addEventListener('ps-scroll-y', ()=> {
                 dropItem.initInnerTargetPosition();
@@ -290,7 +301,7 @@
             },
             getClickedRefForActiveRef() {
                 /*
-                 更新 当前选择元素Ref，指向正确位置
+                更新 当前选择元素Ref，指向正确位置
                  */
                 let item = document.querySelector('[uuid="' + this.$store.state.activeComponentUUID + '"]');
                 if (item) {
@@ -303,8 +314,8 @@
             },
             toggleActive(event) {
                 /*
-                 点击时元素A，元素为选中状态，记住ID
-                 拖拽其他元素后，列表重新render，A 依然要处于选中状态
+                点击时元素A，元素为选中状态，记住ID
+                拖拽其他元素后，列表重新render，A 依然要处于选中状态
                  */
                 console.log('click', event)
                 let target = $.parents(event.target, '.sft-element');
@@ -358,7 +369,6 @@
                 }
                 if (winWidth < 1388) {
                     let oldLeft = Number.parseInt(this.$refs.buildLeft.$el.style.left || 0);
-                   
                     this.$refs.contain.style.width = winWidth + 'px';
                     if (oldLeft >= 0) {
                         this.$refs.buildLeft.$el.style.left = '20px';
@@ -370,12 +380,12 @@
                 if (leftBarHeight > winHeight) {
                     this.$refs.buildLeft.$el.querySelectorAll('.sft-left_item')[1].style.display = 'none';
                 }
-               
+
                 setTimeout(()=>{
-                     this.$refs.buildForm.style.minHeight = (this.$refs.buildCenter.clientHeight
-                     - document.querySelector('.sft-content-title').clientHeight-
-                      document.querySelector('.sft-content-footer').clientHeight - 
-                      document.querySelector('.sft-author').clientHeight  ) + 'px'; 
+                    this.$refs.buildForm.style.minHeight = (this.$refs.buildCenter.clientHeight
+                        - document.querySelector('.sft-content-title').clientHeight-
+                        document.querySelector('.sft-content-footer').clientHeight - 
+                        document.querySelector('.sft-author').clientHeight  ) + 'px'; 
                 },200)
 
             },
@@ -390,4 +400,7 @@
 </script>
 
 <style lang="scss" scoped>
+    .sft-form-body {
+        outline: 0;
+    }
 </style>
